@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 2 — Breadth (In Progress)
-- **Last completed chunk:** C2.2
-- **Next chunk to work on:** C2.3 — Flask standalone golden template
+- **Last completed chunk:** C2.3
+- **Next chunk to work on:** C2.4 — Django standalone golden template
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Added Flask standalone golden template with application factory pattern (create_app), modular blueprints (api_bp, health_bp), CORS, and py_compile smoke test — establishes standard synchronous/microframework Python backend option in Phase 2 — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Added NestJS standalone golden template with modular architecture (AppModule, AppController, AppService, HealthController), TypeScript decorators, CORS, and live smoke test — expands Node ecosystem support to enterprise-tier modular backend architecture — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Added Fastify standalone golden template with TypeScript, @fastify/cors, modular plugin routing, health check endpoint, and live smoke test — establishes high-performance Node backend alternative in Phase 2 — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Finalized v0.1.0 release packaging with comprehensive README documentation, CHANGELOG.md release notes, package metadata validation, and v0.1.0 git tag — completes Phase 1 (P0 Completion) with 100% verified test coverage across all four golden combinations — ARCHITECTURE.md & CHUNKS.md
@@ -43,7 +44,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C2.2 | NestJS standalone golden template | a1472ae | 2026-09-12 | packages/templates/node-nestjs-standalone/*, packages/templates/src/node-nestjs.smoke.test.ts, .github/workflows/ci.yml, vitest.config.ts |
+| C2.3 | Flask standalone golden template | e685acb | 2026-09-12 | packages/templates/python-flask-standalone/*, packages/templates/src/python-flask.smoke.test.ts, .github/workflows/ci.yml |
+| C2.2 | NestJS standalone golden template | 55b40f8 | 2026-09-12 | packages/templates/node-nestjs-standalone/*, packages/templates/src/node-nestjs.smoke.test.ts, .github/workflows/ci.yml, vitest.config.ts |
 | C2.1 | Fastify standalone golden template | 8cba637 | 2026-09-12 | packages/templates/node-fastify-standalone/*, packages/templates/src/node-fastify.smoke.test.ts, .github/workflows/ci.yml |
 | C1.10 | Publish v0.1.0 | d4ee0e6 | 2026-09-12 | README.md, CHANGELOG.md, package.json |
 | C1.9 | Extend CI matrix | 36b362d | 2026-09-12 | .github/workflows/ci.yml, package.json |
@@ -71,6 +73,8 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/python-flask-standalone/` | Flask standalone golden template with application factory pattern, blueprints, and CORS | C2.3 |
+| `packages/templates/src/python-flask.smoke.test.ts` | Integration and syntax verification smoke test for Flask template | C2.3 |
 | `packages/templates/node-nestjs-standalone/` | NestJS standalone golden template with TypeScript, modular controllers/services, and health routes | C2.2 |
 | `packages/templates/src/node-nestjs.smoke.test.ts` | Integration and smoke test executing NestJS template build and server health endpoints | C2.2 |
 | `packages/templates/node-fastify-standalone/` | Fastify standalone golden template with TypeScript, @fastify/cors, and health routes | C2.1 |
@@ -141,7 +145,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.3 (Flask standalone golden template).
+Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.4 (Django standalone golden template).
 
 ## Known Issues / Open Questions
 

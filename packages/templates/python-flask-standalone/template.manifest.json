@@ -1,0 +1,20 @@
+{
+  "id": "python-flask-standalone",
+  "name": "Python + Flask Standalone",
+  "description": "Production-ready Flask REST API application with application factory and blueprints",
+  "stack": "python",
+  "framework": "flask",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": [
+    "projectName",
+    "stack",
+    "framework",
+    "database",
+    "orm",
+    "appShape",
+    "architecture"
+  ],
+  "fragments": ["docker", "auth-jwt", "orm-sqlalchemy"]
+}

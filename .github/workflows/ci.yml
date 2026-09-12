@@ -67,6 +67,8 @@ jobs:
             test-file: 'packages/templates/src/node-nestjs.smoke.test.ts'
           - name: 'Python+FastAPI Standalone'
             test-file: 'packages/templates/src/python-fastapi.smoke.test.ts'
+          - name: 'Python+Flask Standalone'
+            test-file: 'packages/templates/src/python-flask.smoke.test.ts'
           - name: 'React+Vite Standalone'
             test-file: 'packages/templates/src/react-vite.smoke.test.ts'
           - name: 'React+Vite + FastAPI Full-Stack'

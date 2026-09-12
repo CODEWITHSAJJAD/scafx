@@ -10,11 +10,11 @@ import { FsTemplateSource } from './loader.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-describe('Python+FastAPI Standalone Golden Template Smoke Test', () => {
+describe('Python+Flask Standalone Golden Template Smoke Test', () => {
   let tempDir: string;
 
   beforeAll(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'fastapi-smoke-'));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'flask-smoke-'));
   });
 
   afterAll(async () => {
@@ -25,14 +25,14 @@ describe('Python+FastAPI Standalone Golden Template Smoke Test', () => {
     }
   });
 
-  it('generates a complete, valid FastAPI project with correct placeholder substitutions', async () => {
+  it('generates a complete, valid Flask project with correct placeholder substitutions', async () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
     const answer: Answer = {
-      projectName: 'my-fastapi-service',
+      projectName: 'my-flask-service',
       stack: 'python',
-      framework: 'fastapi',
+      framework: 'flask',
       appShape: 'standalone',
       architecture: 'layered',
       database: 'postgres',
@@ -57,18 +57,18 @@ describe('Python+FastAPI Standalone Golden Template Smoke Test', () => {
 
     // 4. Verify placeholder content substitutions
     const pyproject = await fs.readFile(path.join(tempDir, 'pyproject.toml'), 'utf-8');
-    expect(pyproject).toContain('name = "my-fastapi-service"');
+    expect(pyproject).toContain('name = "my-flask-service"');
 
     const mainPy = await fs.readFile(path.join(tempDir, 'src/app/main.py'), 'utf-8');
-    expect(mainPy).toContain('title="my-fastapi-service"');
+    expect(mainPy).toContain('Welcome to my-flask-service API');
 
     const healthPy = await fs.readFile(path.join(tempDir, 'src/app/routes/health.py'), 'utf-8');
-    expect(healthPy).toContain('service="my-fastapi-service"');
+    expect(healthPy).toContain('"service": "my-flask-service"');
 
     const apiPy = await fs.readFile(path.join(tempDir, 'src/app/routes/api.py'), 'utf-8');
-    expect(apiPy).toContain('message="Welcome to my-fastapi-service API"');
-    expect(apiPy).toContain('stack="python"');
-    expect(apiPy).toContain('framework="fastapi"');
+    expect(apiPy).toContain('"message": "Welcome to my-flask-service API"');
+    expect(apiPy).toContain('"stack": "python"');
+    expect(apiPy).toContain('"framework": "flask"');
 
     // 5. Verify Python syntax validity of generated files using python -m py_compile
     await new Promise<void>((resolve, reject) => {
