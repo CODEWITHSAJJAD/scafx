@@ -75,4 +75,68 @@ describe('CLI scaffold new command', () => {
     expect(answer.extras).toContain('git');
     expect(existsSync(path.join(outDir, '.git'))).toBe(true);
   });
+
+  it('halts with error when preflight checker fails requirements in non-interactive mode', async () => {
+    const outDir = path.join(tempDir, 'failing-preflight-app');
+
+    New.customCheckers = [
+      {
+        name: 'Node.js',
+        minVersionRequired: '22.0.0',
+        detect: async () => ({ found: true, version: '18.1.0' }),
+        manualInstallInstructions: () => 'Upgrade to Node.js 22+',
+      },
+    ];
+
+    try {
+      await expect(
+        New.run([
+          '--name',
+          'failing-preflight-app',
+          '--stack',
+          'node',
+          '--framework',
+          'express',
+          '--non-interactive',
+          '--out',
+          outDir,
+        ]),
+      ).rejects.toThrow(/Preflight check failed/);
+    } finally {
+      New.customCheckers = undefined;
+    }
+  });
+
+  it('proceeds with scaffolding when --force or --skip-preflight is passed despite failing preflight', async () => {
+    const outDir = path.join(tempDir, 'force-preflight-app');
+
+    New.customCheckers = [
+      {
+        name: 'Node.js',
+        minVersionRequired: '22.0.0',
+        detect: async () => ({ found: true, version: '18.1.0' }),
+        manualInstallInstructions: () => 'Upgrade to Node.js 22+',
+      },
+    ];
+
+    try {
+      const answer = await New.run([
+        '--name',
+        'force-preflight-app',
+        '--stack',
+        'node',
+        '--framework',
+        'express',
+        '--non-interactive',
+        '--force',
+        '--out',
+        outDir,
+      ]);
+
+      expect(answer).toBeDefined();
+      expect(existsSync(path.join(outDir, 'package.json'))).toBe(true);
+    } finally {
+      New.customCheckers = undefined;
+    }
+  });
 });

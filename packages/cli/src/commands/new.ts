@@ -14,6 +14,11 @@ import {
   type Orm,
   type Stack,
 } from '@project-scaffolder/core';
+import {
+  resolveRequiredCheckers,
+  runPreflightChecks,
+  type Checker,
+} from '@project-scaffolder/preflight';
 import { FsTemplateSource } from '@project-scaffolder/templates';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -92,6 +97,9 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
 export default class New extends Command {
   static override description = 'Scaffold a new project';
 
+  // Test hook for injected checkers
+  public static customCheckers?: Checker[];
+
   static override flags = {
     name: Flags.string({ char: 'n', description: 'Project name' }),
     stack: Flags.string({
@@ -119,6 +127,14 @@ export default class New extends Command {
     git: Flags.boolean({
       description: 'Initialize git repository and make initial commit',
       allowNo: true,
+    }),
+    'skip-preflight': Flags.boolean({
+      description: 'Skip runtime environment preflight checks',
+      default: false,
+    }),
+    force: Flags.boolean({
+      description: 'Bypass preflight check failures and proceed',
+      default: false,
     }),
     'frontend-stack': Flags.string({
       description: 'Frontend stack for full-stack project (react)',
@@ -166,6 +182,46 @@ export default class New extends Command {
       });
     } else {
       answer = await parseAnswerFromFlagsOrConfig(flags);
+    }
+
+    // Preflight checks (guided-manual tier)
+    if (!flags['skip-preflight']) {
+      const checkers = New.customCheckers ?? resolveRequiredCheckers(answer);
+      if (checkers.length > 0) {
+        const preflightReport = await runPreflightChecks(checkers);
+        if (!preflightReport.allPassed) {
+          if (!flags.silent) {
+            const failureNotes = preflightReport.failures
+              .map((f) => {
+                const status = f.found
+                  ? `Found version ${pc.yellow(f.version)}, but ${pc.cyan(`>= ${f.minVersionRequired}`)} is required.`
+                  : pc.red('Runtime not detected in PATH.');
+                return `${pc.bold(f.name)}: ${status}\n${pc.dim('Manual Installation:')}\n${f.manualInstructions}`;
+              })
+              .join('\n\n');
+
+            p.note(failureNotes, 'Runtime Environment Warning');
+          }
+
+          if (!flags.force) {
+            if (isInteractive) {
+              const proceed = await p.confirm({
+                message: 'Required runtimes are missing or outdated. Continue anyway?',
+                initialValue: false,
+              });
+              if (p.isCancel(proceed) || !proceed) {
+                p.cancel('Scaffolding aborted due to unsatisfied preflight requirements.');
+                this.error('Preflight check failed: runtime requirements not met.', { exit: 1 });
+              }
+            } else {
+              this.error(
+                'Preflight check failed: runtime requirements not met. Use --skip-preflight or --force to bypass.',
+                { exit: 1 },
+              );
+            }
+          }
+        }
+      }
     }
 
     const spinner = flags.silent ? null : p.spinner();

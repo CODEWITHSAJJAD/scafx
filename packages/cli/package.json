@@ -24,6 +24,7 @@
     "@clack/prompts": "^0.10.0",
     "@oclif/core": "^4.2.8",
     "@project-scaffolder/core": "workspace:*",
+    "@project-scaffolder/preflight": "workspace:*",
     "@project-scaffolder/templates": "workspace:*",
     "execa": "^10.0.1",
     "picocolors": "^1.1.1"

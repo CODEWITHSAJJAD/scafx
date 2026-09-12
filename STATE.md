@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 1 — P0 Completion
-- **Last completed chunk:** C1.7
-- **Next chunk to work on:** C1.8 (see `CHUNKS.md`)
+- **Last completed chunk:** C1.8
+- **Next chunk to work on:** C1.9 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Built @project-scaffolder/preflight package with Checker interface, NodeChecker, PythonChecker, and preflight runner wired into scaffold new with --force and --skip-preflight flags — delivers guided-manual runtime verification with actionable OS-specific install instructions — ARCHITECTURE.md "Environment preflight"
 - 2026-09-12 — Added post-generation Git initialization hook in CLI adapter with --git flag and local author fallback configuration — initializes clean git repo and creates initial commit seamlessly across all platforms — PRD.md & ARCHITECTURE.md "CLI shell"
 - 2026-09-12 — Added per-project README generation with stack-tailored configuration summary, structure overview, and exact actionable next commands for standalone and composed full-stack projects — ensures every scaffolded project provides immediate orientation and runnable next steps — PRD.md "Generated project README" & ARCHITECTURE.md "Generation flow"
 - 2026-09-12 — Added PostgreSQL + SQLAlchemy/Alembic database fragment with async session, models, Alembic migrations, and Docker Compose service — establishes ORM fragment composition mechanism on FastAPI — ARCHITECTURE.md "Composition, not combinatorics"
@@ -38,7 +39,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C1.7 | Post-generate git init + first commit step | 0668da9 | 2026-09-12 | packages/cli/src/git.ts, packages/cli/src/git.test.ts, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, pnpm-lock.yaml |
+| C1.8 | Preflight package (guided-manual tier only) | 598ae6b | 2026-09-12 | packages/preflight/*, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, packages/preflight/package.json, pnpm-lock.yaml |
+| C1.7 | Post-generate git init + first commit step | 1eba064 | 2026-09-12 | packages/cli/src/git.ts, packages/cli/src/git.test.ts, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, pnpm-lock.yaml |
 | C1.6 | Per-project README generation | 89b8eb6 | 2026-09-12 | packages/core/src/readme.ts, packages/core/src/readme.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts |
 | C1.5 | Database/ORM fragment: Postgres + SQLAlchemy/Alembic | 35fac3b | 2026-09-12 | packages/templates/fragments/postgres-sqlalchemy/*, packages/templates/src/postgres-sqlalchemy.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/merge.ts |
 | C1.4 | React+Vite + FastAPI full-stack golden combination | 3a5f5ef | 2026-09-12 | packages/templates/src/react-fastapi.smoke.test.ts, packages/cli/src/commands/new.ts |
@@ -61,6 +63,13 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/preflight/src/types.ts` | Preflight types, OS types, and Checker interfaces | C1.8 |
+| `packages/preflight/src/os.ts` | OS detection helper for runtime preflight | C1.8 |
+| `packages/preflight/src/checkers/node.ts` | Node.js runtime version checker | C1.8 |
+| `packages/preflight/src/checkers/python.ts` | Python runtime version checker | C1.8 |
+| `packages/preflight/src/runner.ts` | Preflight runner executing checkers and building structured report | C1.8 |
+| `packages/preflight/src/resolve.ts` | Required checker resolution mapping Answer to needed runtimes | C1.8 |
+| `packages/preflight/src/preflight.test.ts` | Unit tests for preflight checkers, OS instructions, and runner | C1.8 |
 | `packages/cli/src/git.ts` | Git initialization and initial commit post-generation execution helper | C1.7 |
 | `packages/cli/src/git.test.ts` | Unit tests for git repo initialization and commit verification | C1.7 |
 | `packages/core/src/readme.ts` | Dynamic per-project README generator producing stack summary and actionable next commands | C1.6 |
