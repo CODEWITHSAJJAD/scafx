@@ -28,6 +28,10 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
   db?: string;
   orm?: string;
   extras?: string;
+  'frontend-stack'?: string;
+  'frontend-framework'?: string;
+  'backend-stack'?: string;
+  'backend-framework'?: string;
   config?: string;
 }): Promise<Answer> {
   let fileConfig: Partial<Record<string, unknown>> = {};
@@ -55,6 +59,20 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
         : [],
     runtimeVersion:
       typeof fileConfig.runtimeVersion === 'string' ? fileConfig.runtimeVersion : undefined,
+    frontend:
+      flags['frontend-stack'] && flags['frontend-framework']
+        ? {
+            stack: flags['frontend-stack'] as Stack,
+            framework: flags['frontend-framework'] as Framework,
+          }
+        : (fileConfig.frontend as { stack: Stack; framework: Framework } | undefined),
+    backend:
+      flags['backend-stack'] && flags['backend-framework']
+        ? {
+            stack: flags['backend-stack'] as Stack,
+            framework: flags['backend-framework'] as Framework,
+          }
+        : (fileConfig.backend as { stack: Stack; framework: Framework } | undefined),
   };
 
   return AnswerSchema.parse(rawAnswer);
@@ -86,6 +104,18 @@ export default class New extends Command {
     }),
     extras: Flags.string({
       description: 'Comma-separated extras (docker,ci,lint,testing,env,git)',
+    }),
+    'frontend-stack': Flags.string({
+      description: 'Frontend stack for full-stack project (react)',
+    }),
+    'frontend-framework': Flags.string({
+      description: 'Frontend framework for full-stack project (vite, nextjs)',
+    }),
+    'backend-stack': Flags.string({
+      description: 'Backend stack for full-stack project (python, node, dotnet)',
+    }),
+    'backend-framework': Flags.string({
+      description: 'Backend framework for full-stack project (fastapi, express, webapi)',
     }),
     config: Flags.string({ char: 'c', description: 'Path to JSON config file containing answers' }),
     'non-interactive': Flags.boolean({

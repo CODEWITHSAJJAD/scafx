@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 1 — P0 Completion
-- **Last completed chunk:** C1.3
-- **Next chunk to work on:** C1.4 (see `CHUNKS.md`)
+- **Last completed chunk:** C1.4
+- **Next chunk to work on:** C1.5 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Composed React+Vite and FastAPI into full-stack golden combination via core composition mechanism — proves zero-bespoke-template full-stack monorepo generation — ARCHITECTURE.md "Composition, not combinatorics"
 - 2026-09-12 — Implemented generalized fragment merge engine and full-stack template composition in core — enables combining frontend + backend golden templates into monorepo layout with wired CORS and API base URL without bespoke combinatorics — ARCHITECTURE.md "Composition, not combinatorics"
 - 2026-09-12 — Added React+Vite standalone golden template with TypeScript, CSS modules/classes, and Vite build pipeline — establishes third P0 ecosystem reference template with JSX delimiter compatibility — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Added Python+FastAPI standalone golden template with Pydantic v2, CORS middleware, and modular routes — establishes second P0 ecosystem reference template — ARCHITECTURE.md "packages/templates/"
@@ -34,7 +35,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C1.3 | App-shape composition logic in core | 67dbd37 | 2026-09-12 | packages/core/src/merge.ts, packages/core/src/generate.ts, packages/core/src/schema/answer.ts, packages/core/src/merge.test.ts, packages/core/src/composition.test.ts, packages/templates/fragments/cors-api-wiring/*, packages/templates/src/loader.ts |
+| C1.4 | React+Vite + FastAPI full-stack golden combination | 0cbcf64 | 2026-09-12 | packages/templates/src/react-fastapi.smoke.test.ts, packages/cli/src/commands/new.ts |
+| C1.3 | App-shape composition logic in core | f958677 | 2026-09-12 | packages/core/src/merge.ts, packages/core/src/generate.ts, packages/core/src/schema/answer.ts, packages/core/src/merge.test.ts, packages/core/src/composition.test.ts, packages/templates/fragments/cors-api-wiring/*, packages/templates/src/loader.ts |
 | C1.2 | React+Vite standalone golden template | 965decc | 2026-09-12 | packages/templates/react-vite-standalone/*, packages/templates/src/react-vite.smoke.test.ts |
 | C1.1 | FastAPI standalone golden template | 230fd19 | 2026-09-12 | packages/templates/python-fastapi-standalone/*, packages/templates/src/python-fastapi.smoke.test.ts |
 | C0.9 | CI workflow | c55e412 | 2026-09-12 | .github/workflows/ci.yml |
@@ -53,6 +55,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/src/react-fastapi.smoke.test.ts` | Integration and bundle build smoke test for React+Vite + FastAPI full-stack composition | C1.4 |
 | `packages/core/src/merge.ts` | Fragment merge engine for JSON deep merge, env variables, gitignore, and FileOps | C1.3 |
 | `packages/core/src/merge.test.ts` | Unit tests for fragment merge utilities | C1.3 |
 | `packages/core/src/composition.test.ts` | Unit tests for fullstack frontend + backend template composition logic | C1.3 |
@@ -104,7 +107,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 1 (P0 Completion) — next is C1.4 (React+Vite + FastAPI full-stack golden combination).
+Full backlog lives in `CHUNKS.md`. On Phase 1 (P0 Completion) — next is C1.5 (Database/ORM fragment: Postgres + SQLAlchemy/Alembic).
 
 ## Known Issues / Open Questions
 
