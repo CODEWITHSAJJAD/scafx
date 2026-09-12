@@ -1,3 +1,4 @@
+import { DotnetChecker } from './checkers/dotnet.js';
 import { NodeChecker } from './checkers/node.js';
 import { PythonChecker } from './checkers/python.js';
 import type { Checker } from './types.js';
@@ -28,6 +29,10 @@ export function resolveRequiredCheckers(answer: AnswerLike): Checker[] {
 
   if (neededStacks.has('python')) {
     checkers.push(new PythonChecker());
+  }
+
+  if (neededStacks.has('dotnet')) {
+    checkers.push(new DotnetChecker());
   }
 
   return checkers;

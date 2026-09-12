@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 2 — Breadth (In Progress)
-- **Last completed chunk:** C2.5
-- **Next chunk to work on:** C2.6 — .NET Web API standalone golden template & .NET preflight checker
-- **Last updated:** 2026-09-12 by Antigravity
+- **Last completed chunk:** C2.6
+- **Next chunk to work on:** C2.7 — Flutter standard golden template & Flutter preflight checker
+- **Last updated:** 2026-09-13 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-13 — Added ASP.NET Core 8 Web API standalone golden template and DotnetChecker in preflight with C# 12 minimal API, Swagger OpenAPI, health checks, dynamic csproj rendering, and live dotnet build smoke test — expands ecosystem breadth to .NET/C# in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Environment preflight"
 - 2026-09-12 — Added React+Next.js 15 standalone golden template with App Router, TypeScript, dynamic health route (/api/health), CSS styling, and live next build smoke test — expands React ecosystem to full-stack SSR/SSG server components — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Added Django standalone golden template with modular project settings, ASGI/WSGI entrypoints, core app with JSON endpoints (/health, /api), CORS headers, and py_compile smoke test — establishes full-featured batteries-included Python web framework option in Phase 2 — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Added Flask standalone golden template with application factory pattern (create_app), modular blueprints (api_bp, health_bp), CORS, and py_compile smoke test — establishes standard synchronous/microframework Python backend option in Phase 2 — ARCHITECTURE.md "packages/templates/"
@@ -46,6 +47,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C2.6 | .NET Web API standalone golden template & .NET preflight checker | 5c66548 | 2026-09-13 | packages/templates/dotnet-webapi-standalone/*, packages/templates/src/dotnet-webapi.smoke.test.ts, packages/preflight/src/checkers/dotnet.ts, packages/preflight/src/resolve.ts, packages/preflight/src/preflight.test.ts, packages/preflight/src/index.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
 | C2.5 | Next.js standalone golden template | e0e43ee | 2026-09-12 | packages/templates/react-nextjs-standalone/*, packages/templates/src/react-nextjs.smoke.test.ts, .github/workflows/ci.yml, vitest.config.ts |
 | C2.4 | Django standalone golden template | f04c9c2 | 2026-09-12 | packages/templates/python-django-standalone/*, packages/templates/src/python-django.smoke.test.ts, .github/workflows/ci.yml |
 | C2.3 | Flask standalone golden template | adf3bd0 | 2026-09-12 | packages/templates/python-flask-standalone/*, packages/templates/src/python-flask.smoke.test.ts, .github/workflows/ci.yml |
@@ -77,6 +79,9 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/dotnet-webapi-standalone/` | ASP.NET Core 8 Web API standalone golden template with minimal API and OpenAPI | C2.6 |
+| `packages/templates/src/dotnet-webapi.smoke.test.ts` | Integration and live dotnet build smoke test for .NET Web API template | C2.6 |
+| `packages/preflight/src/checkers/dotnet.ts` | .NET SDK runtime version checker and OS install instructions | C2.6 |
 | `packages/templates/react-nextjs-standalone/` | Next.js standalone golden template with App Router, TypeScript, and API routes | C2.5 |
 | `packages/templates/src/react-nextjs.smoke.test.ts` | Integration and smoke test executing Next.js template generation and next build | C2.5 |
 | `packages/templates/python-django-standalone/` | Django standalone golden template with modular project settings, ASGI/WSGI, and core app | C2.4 |
@@ -153,7 +158,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.6 (.NET Web API standalone golden template & .NET preflight checker).
+Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.7 (Flutter standard golden template & Flutter preflight checker).
 
 ## Known Issues / Open Questions
 

@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { DotnetChecker } from './checkers/dotnet.js';
 import { NodeChecker } from './checkers/node.js';
 import { PythonChecker } from './checkers/python.js';
 import { resolveRequiredCheckers } from './resolve.js';
@@ -28,6 +29,13 @@ describe('Preflight Checker Suite', () => {
     expect(checker.manualInstallInstructions('linux')).toContain('apt install python3');
   });
 
+  it('DotnetChecker provides OS-specific installation instructions', () => {
+    const checker = new DotnetChecker('8.0.0');
+    expect(checker.manualInstallInstructions('win32')).toContain('Microsoft.DotNet.SDK.8');
+    expect(checker.manualInstallInstructions('darwin')).toContain('brew install --cask dotnet-sdk');
+    expect(checker.manualInstallInstructions('linux')).toContain('dotnet-sdk-8.0');
+  });
+
   it('resolveRequiredCheckers maps stacks to necessary checkers', () => {
     const nodeOnly = resolveRequiredCheckers({
       stack: 'node',
@@ -42,6 +50,13 @@ describe('Preflight Checker Suite', () => {
       appShape: 'standalone',
     });
     expect(pythonOnly.map((c) => c.name)).toEqual(['Python']);
+
+    const dotnetOnly = resolveRequiredCheckers({
+      stack: 'dotnet',
+      framework: 'webapi',
+      appShape: 'standalone',
+    });
+    expect(dotnetOnly.map((c) => c.name)).toEqual(['.NET SDK']);
 
     const fullstack = resolveRequiredCheckers({
       stack: 'react',

@@ -1,0 +1,21 @@
+{
+  "id": "dotnet-webapi-standalone",
+  "name": ".NET Web API Standalone",
+  "description": "Production-ready ASP.NET Core 8 Web API with minimal endpoints, Swagger/OpenAPI, health checks, and CORS configuration",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": [
+    "projectName",
+    "stack",
+    "framework",
+    "database",
+    "orm",
+    "appShape",
+    "architecture",
+    "port"
+  ],
+  "fragments": ["docker", "auth-jwt", "orm-efcore"]
+}

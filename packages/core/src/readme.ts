@@ -71,6 +71,23 @@ export function getNextCommands(answer: Answer): { label: string; commands: stri
     ];
   }
 
+  if (answer.stack === 'dotnet') {
+    return [
+      {
+        label: 'Restore and Build Project',
+        commands: [`cd ${answer.projectName}`, 'dotnet restore', 'dotnet build'],
+      },
+      {
+        label: 'Run Development Server',
+        commands: ['dotnet run'],
+      },
+      {
+        label: 'Publish for Production',
+        commands: ['dotnet publish -c Release'],
+      },
+    ];
+  }
+
   if (answer.stack === 'node' || answer.stack === 'react') {
     return [
       {
@@ -173,6 +190,15 @@ export function generateProjectReadme(answer: Answer): string {
       sections.push('');
       sections.push('# Run database migrations');
       sections.push('npx prisma migrate dev');
+      sections.push('```');
+    } else if (answer.orm === 'efcore') {
+      sections.push('This project uses **Entity Framework Core** for data access and migrations.');
+      sections.push('```bash');
+      sections.push('# Apply database migrations');
+      sections.push('dotnet ef database update');
+      sections.push('');
+      sections.push('# Add a new migration after editing models');
+      sections.push('dotnet ef migrations add <MigrationName>');
       sections.push('```');
     }
   }
