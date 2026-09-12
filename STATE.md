@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 1 — P0 Completion
-- **Last completed chunk:** C1.1
-- **Next chunk to work on:** C1.2 (see `CHUNKS.md`)
+- **Last completed chunk:** C1.2
+- **Next chunk to work on:** C1.3 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Added React+Vite standalone golden template with TypeScript, CSS modules/classes, and Vite build pipeline — establishes third P0 ecosystem reference template with JSX delimiter compatibility — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Added Python+FastAPI standalone golden template with Pydantic v2, CORS middleware, and modular routes — establishes second P0 ecosystem reference template — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Configured GitHub Actions multi-OS / multi-Node CI matrix running lint, format, build, unit tests, and live golden template smoke tests on every push/PR — prevents template rot and ensures cross-platform reliability — ARCHITECTURE.md "Testing strategy"
 - 2026-09-12 — Added `--config` JSON input and non-interactive flag fallback resolution with verified byte-identical generator output — guarantees non-interactive equivalence for future headless adapters and automated workflows — ARCHITECTURE.md "CLI shell (packages/cli)"
@@ -32,7 +33,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C1.1 | FastAPI standalone golden template | pending | 2026-09-12 | packages/templates/python-fastapi-standalone/*, packages/templates/src/python-fastapi.smoke.test.ts |
+| C1.2 | React+Vite standalone golden template | 3182336 | 2026-09-12 | packages/templates/react-vite-standalone/*, packages/templates/src/react-vite.smoke.test.ts |
+| C1.1 | FastAPI standalone golden template | 230fd19 | 2026-09-12 | packages/templates/python-fastapi-standalone/*, packages/templates/src/python-fastapi.smoke.test.ts |
 | C0.9 | CI workflow | c55e412 | 2026-09-12 | .github/workflows/ci.yml |
 | C0.8 | Non-interactive mode | ea3ce78 | 2026-09-12 | packages/cli/src/commands/new.ts, packages/cli/src/commands/non-interactive.test.ts |
 | C0.7 | CLI shell skeleton | fb87a3e | 2026-09-12 | packages/cli/bin/run.js, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/src/prompts/interactive.ts, packages/cli/src/index.ts, packages/cli/package.json, packages/templates/src/loader.ts, pnpm-lock.yaml |
@@ -49,6 +51,9 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/react-vite-standalone/` | Third golden template: runnable reference React+Vite SPA project | C1.2 |
+| `packages/templates/react-vite-standalone/template.manifest.json` | Manifest declaring compatibility, placeholders, and fragments for React+Vite | C1.2 |
+| `packages/templates/src/react-vite.smoke.test.ts` | Integration and bundle build smoke test for React+Vite template generation | C1.2 |
 | `packages/templates/python-fastapi-standalone/` | Second golden template: runnable reference Python+FastAPI standalone project | C1.1 |
 | `packages/templates/python-fastapi-standalone/template.manifest.json` | Manifest declaring compatibility, placeholders, and fragments for Python+FastAPI | C1.1 |
 | `packages/templates/src/python-fastapi.smoke.test.ts` | Integration and syntax validation smoke test for FastAPI template generation | C1.1 |
@@ -93,7 +98,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 1 (P0 Completion) — next is C1.2 (React+Vite standalone golden template).
+Full backlog lives in `CHUNKS.md`. On Phase 1 (P0 Completion) — next is C1.3 (App-shape composition logic in core).
 
 ## Known Issues / Open Questions
 
