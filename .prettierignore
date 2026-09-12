@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build/
+coverage/
+pnpm-lock.yaml
+
+# Keep root spec markdown files intact
+PRD.md
+ARCHITECTURE.md
+CHUNKS.md
+AGENTS.md
+STATE.md
