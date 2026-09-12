@@ -1,0 +1,20 @@
+{
+  "id": "python-fastapi-standalone",
+  "name": "Python + FastAPI Standalone",
+  "description": "Modern async FastAPI REST API server with Pydantic v2 and CORS support",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": [
+    "projectName",
+    "stack",
+    "framework",
+    "database",
+    "orm",
+    "appShape",
+    "architecture"
+  ],
+  "fragments": ["docker", "auth-jwt", "orm-sqlalchemy"]
+}
