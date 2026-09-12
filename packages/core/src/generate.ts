@@ -75,6 +75,36 @@ export async function generate(answer: Answer, templateSource: TemplateSource): 
   return generateStandalone(validatedAnswer, templateSource);
 }
 
+async function resolveAndMergeDatabaseFragments(
+  currentOps: FileOp[],
+  answer: Answer,
+  templateSource: TemplateSource,
+  context: Record<string, unknown>,
+  pathPrefix = '',
+): Promise<FileOp[]> {
+  if (!templateSource.getFragment || answer.database === 'none' || answer.orm === 'none') {
+    return currentOps;
+  }
+
+  const candidateFragmentIds = [
+    `${answer.stack}-${answer.database}-${answer.orm}`,
+    `${answer.database}-${answer.orm}`,
+    `orm-${answer.orm}`,
+    `db-${answer.database}`,
+  ];
+
+  for (const fragId of candidateFragmentIds) {
+    const fragment = await templateSource.getFragment(fragId);
+    if (fragment && fragment.files.length > 0) {
+      const fragmentOps = renderTemplateFiles(fragment.files, context, pathPrefix);
+      currentOps = mergeFileOps(currentOps, fragmentOps);
+      break;
+    }
+  }
+
+  return currentOps;
+}
+
 async function generateFullstack(
   answer: Answer,
   templateSource: TemplateSource,
@@ -191,6 +221,15 @@ async function generateFullstack(
     });
   }
 
+  // Apply Database / ORM fragment to backend if selected
+  fileOps = await resolveAndMergeDatabaseFragments(
+    fileOps,
+    backendAnswer,
+    templateSource,
+    backendContext,
+    'backend',
+  );
+
   // Merge any extras fragments requested in answer (e.g. docker, ci, auth)
   if (templateSource.getFragment) {
     for (const extra of answer.extras) {
@@ -249,6 +288,9 @@ async function generateStandalone(
   };
 
   let fileOps = renderTemplateFiles(files, context);
+
+  // Apply Database / ORM fragment if selected
+  fileOps = await resolveAndMergeDatabaseFragments(fileOps, answer, templateSource, context);
 
   // Merge any extra fragments requested in answer
   if (templateSource.getFragment) {

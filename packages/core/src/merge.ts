@@ -126,6 +126,48 @@ export function mergeGitignore(baseStr: string, fragmentStr: string): string {
 }
 
 /**
+ * Merges two requirements.txt files, appending new packages without duplicates.
+ */
+export function mergeRequirements(baseStr: string, fragmentStr: string): string {
+  const baseLines = baseStr.split(/\r?\n/);
+  const existingPkgs = new Set<string>();
+
+  for (const line of baseLines) {
+    const pkg = line
+      .split(/[>=<~!]/)[0]
+      .trim()
+      .toLowerCase();
+    if (pkg && !pkg.startsWith('#')) {
+      existingPkgs.add(pkg);
+    }
+  }
+
+  const fragmentLines = fragmentStr.split(/\r?\n/);
+  const toAdd: string[] = [];
+
+  for (const line of fragmentLines) {
+    const pkg = line
+      .split(/[>=<~!]/)[0]
+      .trim()
+      .toLowerCase();
+    if (pkg && !pkg.startsWith('#')) {
+      if (!existingPkgs.has(pkg)) {
+        toAdd.push(line.trim());
+        existingPkgs.add(pkg);
+      }
+    } else if (line.trim().startsWith('#')) {
+      toAdd.push(line.trim());
+    }
+  }
+
+  if (toAdd.length === 0) {
+    return baseStr.trimEnd() + '\n';
+  }
+
+  return baseStr.trimEnd() + '\n\n' + toAdd.join('\n') + '\n';
+}
+
+/**
  * Merges markdown files by appending fragment content.
  */
 export function mergeMarkdown(baseStr: string, fragmentStr: string): string {
@@ -138,7 +180,7 @@ export function mergeMarkdown(baseStr: string, fragmentStr: string): string {
 /**
  * Merges two lists of FileOps:
  * - New files from fragment are added.
- * - Existing files are merged based on extension (.json, .env, .gitignore, .md) or replaced.
+ * - Existing files are merged based on extension (.json, .env, .gitignore, .md, requirements.txt) or replaced.
  */
 export function mergeFileOps(baseOps: FileOp[], fragmentOps: FileOp[]): FileOp[] {
   const result: FileOp[] = baseOps.map((op) => ({ ...op }));
@@ -166,6 +208,11 @@ export function mergeFileOps(baseOps: FileOp[], fragmentOps: FileOp[]): FileOp[]
         existing.content = mergeGitignore(existing.content, fragOp.content);
       } else if (filename.endsWith('.md')) {
         existing.content = mergeMarkdown(existing.content, fragOp.content);
+      } else if (
+        filename.endsWith('requirements.txt') ||
+        filename.endsWith('requirements-dev.txt')
+      ) {
+        existing.content = mergeRequirements(existing.content, fragOp.content);
       } else {
         // By default, fragment overrides base file
         existing.content = fragOp.content;

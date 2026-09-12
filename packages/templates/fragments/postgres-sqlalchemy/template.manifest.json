@@ -1,0 +1,12 @@
+{
+  "id": "postgres-sqlalchemy",
+  "name": "PostgreSQL + SQLAlchemy 2.0 & Alembic",
+  "description": "Async SQLAlchemy 2.0 ORM with Alembic database migrations and Postgres Docker Compose service",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["postgres"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": ["projectName", "database", "orm"],
+  "fragments": []
+}
