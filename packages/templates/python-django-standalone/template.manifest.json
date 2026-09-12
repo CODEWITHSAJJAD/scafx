@@ -1,0 +1,20 @@
+{
+  "id": "python-django-standalone",
+  "name": "Python + Django Standalone",
+  "description": "Production-ready Django REST API application with CORS and modular apps",
+  "stack": "python",
+  "framework": "django",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": [
+    "projectName",
+    "stack",
+    "framework",
+    "database",
+    "orm",
+    "appShape",
+    "architecture"
+  ],
+  "fragments": ["docker", "auth-jwt", "orm-django"]
+}

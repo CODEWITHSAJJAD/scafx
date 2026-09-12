@@ -69,6 +69,8 @@ jobs:
             test-file: 'packages/templates/src/python-fastapi.smoke.test.ts'
           - name: 'Python+Flask Standalone'
             test-file: 'packages/templates/src/python-flask.smoke.test.ts'
+          - name: 'Python+Django Standalone'
+            test-file: 'packages/templates/src/python-django.smoke.test.ts'
           - name: 'React+Vite Standalone'
             test-file: 'packages/templates/src/react-vite.smoke.test.ts'
           - name: 'React+Vite + FastAPI Full-Stack'
