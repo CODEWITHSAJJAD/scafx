@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 1 — P0 Completion
-- **Last completed chunk:** C1.8
-- **Next chunk to work on:** C1.9 (see `CHUNKS.md`)
+- **Last completed chunk:** C1.9
+- **Next chunk to work on:** C1.10 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Extended CI matrix with multi-OS runners (Ubuntu, Windows, macOS), Node matrix (20.x, 22.x), Python 3.11 setup, and dedicated P0 golden combination smoke test jobs — ensures all four golden templates and fragments are continuously verified across operating systems — ARCHITECTURE.md "Testing strategy"
 - 2026-09-12 — Built @project-scaffolder/preflight package with Checker interface, NodeChecker, PythonChecker, and preflight runner wired into scaffold new with --force and --skip-preflight flags — delivers guided-manual runtime verification with actionable OS-specific install instructions — ARCHITECTURE.md "Environment preflight"
 - 2026-09-12 — Added post-generation Git initialization hook in CLI adapter with --git flag and local author fallback configuration — initializes clean git repo and creates initial commit seamlessly across all platforms — PRD.md & ARCHITECTURE.md "CLI shell"
 - 2026-09-12 — Added per-project README generation with stack-tailored configuration summary, structure overview, and exact actionable next commands for standalone and composed full-stack projects — ensures every scaffolded project provides immediate orientation and runnable next steps — PRD.md "Generated project README" & ARCHITECTURE.md "Generation flow"
@@ -39,7 +40,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C1.8 | Preflight package (guided-manual tier only) | 598ae6b | 2026-09-12 | packages/preflight/*, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, packages/preflight/package.json, pnpm-lock.yaml |
+| C1.9 | Extend CI matrix | 36b362d | 2026-09-12 | .github/workflows/ci.yml, package.json |
+| C1.8 | Preflight package (guided-manual tier only) | 5efb40e | 2026-09-12 | packages/preflight/*, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, packages/preflight/package.json, pnpm-lock.yaml |
 | C1.7 | Post-generate git init + first commit step | 1eba064 | 2026-09-12 | packages/cli/src/git.ts, packages/cli/src/git.test.ts, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, pnpm-lock.yaml |
 | C1.6 | Per-project README generation | 89b8eb6 | 2026-09-12 | packages/core/src/readme.ts, packages/core/src/readme.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts |
 | C1.5 | Database/ORM fragment: Postgres + SQLAlchemy/Alembic | 35fac3b | 2026-09-12 | packages/templates/fragments/postgres-sqlalchemy/*, packages/templates/src/postgres-sqlalchemy.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/merge.ts |

@@ -8,12 +8,12 @@ on:
 
 jobs:
   test:
-    name: Build & Test (Node ${{ matrix.node-version }} on ${{ matrix.os }})
+    name: Test (Node ${{ matrix.node-version }} on ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         node-version: [20.x, 22.x]
 
     steps:
@@ -31,6 +31,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Install dependencies
         run: pnpm install
 
@@ -43,5 +48,53 @@ jobs:
       - name: Build packages
         run: pnpm -r build
 
-      - name: Run unit, integration & golden template smoke tests
+      - name: Run unit & integration tests
         run: pnpm test
+
+  golden-smoke-matrix:
+    name: P0 Smoke Test (${{ matrix.combo.name }} on ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        combo:
+          - name: 'Node+Express Standalone'
+            test-file: 'packages/templates/src/node-express.smoke.test.ts'
+          - name: 'Python+FastAPI Standalone'
+            test-file: 'packages/templates/src/python-fastapi.smoke.test.ts'
+          - name: 'React+Vite Standalone'
+            test-file: 'packages/templates/src/react-vite.smoke.test.ts'
+          - name: 'React+Vite + FastAPI Full-Stack'
+            test-file: 'packages/templates/src/react-fastapi.smoke.test.ts'
+          - name: 'Postgres+SQLAlchemy Fragment'
+            test-file: 'packages/templates/src/postgres-sqlalchemy.smoke.test.ts'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.5.2
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'pnpm'
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages
+        run: pnpm -r build
+
+      - name: Execute ${{ matrix.combo.name }} smoke test
+        run: pnpm exec vitest run ${{ matrix.combo.test-file }}
