@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 0 — Prove the Engine
-- **Last completed chunk:** C0.4
-- **Next chunk to work on:** C0.5 (see `CHUNKS.md`)
+- **Last completed chunk:** C0.5
+- **Next chunk to work on:** C0.6 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Implemented `FileWriter` port with `DiskFileWriter` (using `fs-extra` and directory traversal guards) and `MemoryFileWriter` (in-memory test adapter) — cleanly separates generation domain logic from physical disk I/O — ARCHITECTURE.md "Architectural pattern: hexagonal / ports-and-adapters"
 - 2026-09-12 — Integrated `eta` with `{{` `}}` tags and automatic placeholder normalization in `generate()` — provides seamless compatibility with Mustache-style `{{var}}` placeholders and conditional template expressions without escaping code — ARCHITECTURE.md "Templating mechanism"
 - 2026-09-12 — Defined TemplateManifest zod schema with compatibility arrays and placeholder declarations in `@project-scaffolder/core` — enforces template contract integrity and runtime version compatibility — ARCHITECTURE.md "Core data contracts"
 - 2026-09-12 — Defined canonical Answer zod schema with scoped enums and exported inferred TypeScript types in `@project-scaffolder/core` — establishes single source of truth for generator input validation across CLI and future adapters — ARCHITECTURE.md "Core data contracts"
@@ -26,7 +27,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C0.4 | `core.generate()` skeleton | e3847a1 | 2026-09-12 | packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/types/file-op.ts, packages/core/src/ports/template-source.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
+| C0.5 | FileWriter adapter | 814e952 | 2026-09-12 | packages/core/src/ports/file-writer.ts, packages/core/src/adapters/disk-file-writer.ts, packages/core/src/adapters/memory-file-writer.ts, packages/core/src/adapters/disk-file-writer.test.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
+| C0.4 | `core.generate()` skeleton | a424845 | 2026-09-12 | packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/types/file-op.ts, packages/core/src/ports/template-source.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
 | C0.3 | Template manifest schema | 554a549 | 2026-09-12 | packages/core/src/schema/manifest.ts, packages/core/src/schema/manifest.test.ts, packages/core/test/fixtures/valid-manifest.json, packages/core/test/fixtures/malformed-manifest.json, packages/core/src/index.ts |
 | C0.2 | Answer-object schema | fd5fb98 | 2026-09-12 | packages/core/src/schema/answer.ts, packages/core/src/schema/answer.test.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
 | C0.1 | Repo skeleton | 089ffcd | 2026-09-12 | package.json, pnpm-workspace.yaml, tsconfig.base.json, packages/{core,cli,preflight,templates}, README.md, LICENSE, .gitignore, eslint.config.mjs, .prettierrc, .prettierignore, vitest.config.ts |
@@ -37,6 +39,10 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/core/src/ports/file-writer.ts` | FileWriter port interface | C0.5 |
+| `packages/core/src/adapters/disk-file-writer.ts` | Real disk file writer adapter using fs-extra with path traversal protection | C0.5 |
+| `packages/core/src/adapters/memory-file-writer.ts` | In-memory file writer adapter for virtual file operations and tests | C0.5 |
+| `packages/core/src/adapters/disk-file-writer.test.ts` | Integration tests for DiskFileWriter and unit tests for MemoryFileWriter | C0.5 |
 | `packages/core/src/generate.ts` | Pure generate() pipeline mapping Answer + TemplateSource to FileOp[] | C0.4 |
 | `packages/core/src/generate.test.ts` | Unit tests for generator execution and placeholder substitution | C0.4 |
 | `packages/core/src/types/file-op.ts` | FileOp interface data contract | C0.4 |
@@ -64,7 +70,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. Currently on Phase 0 — next is C0.5 (FileWriter adapter).
+Full backlog lives in `CHUNKS.md`. Currently on Phase 0 — next is C0.6 (First golden template: Node+Express standalone).
 
 ## Known Issues / Open Questions
 
