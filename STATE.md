@@ -8,15 +8,16 @@ Update this file **in the same commit** as the chunk work it describes — never
 
 ## Current Status
 
-- **Phase:** 1 — P0 Completion
-- **Last completed chunk:** C1.9
-- **Next chunk to work on:** C1.10 (see `CHUNKS.md`)
+- **Phase:** 1 — P0 Completion (Complete)
+- **Last completed chunk:** C1.10
+- **Next chunk to work on:** Phase 2 — Breadth (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Finalized v0.1.0 release packaging with comprehensive README documentation, CHANGELOG.md release notes, package metadata validation, and v0.1.0 git tag — completes Phase 1 (P0 Completion) with 100% verified test coverage across all four golden combinations — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-12 — Extended CI matrix with multi-OS runners (Ubuntu, Windows, macOS), Node matrix (20.x, 22.x), Python 3.11 setup, and dedicated P0 golden combination smoke test jobs — ensures all four golden templates and fragments are continuously verified across operating systems — ARCHITECTURE.md "Testing strategy"
 - 2026-09-12 — Built @project-scaffolder/preflight package with Checker interface, NodeChecker, PythonChecker, and preflight runner wired into scaffold new with --force and --skip-preflight flags — delivers guided-manual runtime verification with actionable OS-specific install instructions — ARCHITECTURE.md "Environment preflight"
 - 2026-09-12 — Added post-generation Git initialization hook in CLI adapter with --git flag and local author fallback configuration — initializes clean git repo and creates initial commit seamlessly across all platforms — PRD.md & ARCHITECTURE.md "CLI shell"
@@ -40,6 +41,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C1.10 | Publish v0.1.0 | d4ee0e6 | 2026-09-12 | README.md, CHANGELOG.md, package.json |
 | C1.9 | Extend CI matrix | 36b362d | 2026-09-12 | .github/workflows/ci.yml, package.json |
 | C1.8 | Preflight package (guided-manual tier only) | 5efb40e | 2026-09-12 | packages/preflight/*, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, packages/preflight/package.json, pnpm-lock.yaml |
 | C1.7 | Post-generate git init + first commit step | 1eba064 | 2026-09-12 | packages/cli/src/git.ts, packages/cli/src/git.test.ts, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, pnpm-lock.yaml |
@@ -65,6 +67,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `CHANGELOG.md` | Release notes and version history log | C1.10 |
 | `packages/preflight/src/types.ts` | Preflight types, OS types, and Checker interfaces | C1.8 |
 | `packages/preflight/src/os.ts` | OS detection helper for runtime preflight | C1.8 |
 | `packages/preflight/src/checkers/node.ts` | Node.js runtime version checker | C1.8 |
