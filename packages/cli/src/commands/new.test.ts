@@ -54,4 +54,25 @@ describe('CLI scaffold new command', () => {
     const pkgJson = JSON.parse(pkgJsonRaw);
     expect(pkgJson.name).toBe('my-cli-api');
   });
+
+  it('scaffolds project and initializes git repository when --git is passed', async () => {
+    const outDir = path.join(tempDir, 'my-git-app');
+
+    const answer = await New.run([
+      '--name',
+      'my-git-app',
+      '--stack',
+      'node',
+      '--framework',
+      'express',
+      '--shape',
+      'standalone',
+      '--git',
+      '--out',
+      outDir,
+    ]);
+
+    expect(answer.extras).toContain('git');
+    expect(existsSync(path.join(outDir, '.git'))).toBe(true);
+  });
 });

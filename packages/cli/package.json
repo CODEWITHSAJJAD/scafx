@@ -25,6 +25,7 @@
     "@oclif/core": "^4.2.8",
     "@project-scaffolder/core": "workspace:*",
     "@project-scaffolder/templates": "workspace:*",
+    "execa": "^10.0.1",
     "picocolors": "^1.1.1"
   }
 }

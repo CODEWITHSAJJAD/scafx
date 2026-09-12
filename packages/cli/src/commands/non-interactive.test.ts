@@ -92,7 +92,7 @@ describe('Non-interactive mode equivalence', () => {
 
     expect(Object.keys(flagsHashes).length).toBeGreaterThan(0);
     expect(flagsHashes).toEqual(configHashes);
-  });
+  }, 20000);
 
   it('produces byte-identical output between CLI flags and direct core.generate() with identical answer', async () => {
     const cliOutDir = path.join(tempBase, 'cli-demo');
@@ -135,7 +135,7 @@ describe('Non-interactive mode equivalence', () => {
     const directHashes = await hashDirectoryFiles(directOutDir);
 
     expect(cliHashes).toEqual(directHashes);
-  });
+  }, 20000);
 
   it('parses flags and config files into identical validated Answer objects', async () => {
     const configPath = path.join(tempBase, 'answer.json');

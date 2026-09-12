@@ -4,6 +4,7 @@ import {
   AnswerSchema,
   DiskFileWriter,
   generate,
+  getNextCommands,
   type Answer,
   type AppShape,
   type Architecture,
@@ -17,6 +18,7 @@ import { FsTemplateSource } from '@project-scaffolder/templates';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import pc from 'picocolors';
+import { initGitRepository } from '../git.js';
 import { promptInteractive } from '../prompts/interactive.js';
 
 export async function parseAnswerFromFlagsOrConfig(flags: {
@@ -28,6 +30,7 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
   db?: string;
   orm?: string;
   extras?: string;
+  git?: boolean;
   'frontend-stack'?: string;
   'frontend-framework'?: string;
   'backend-stack'?: string;
@@ -42,6 +45,18 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
     fileConfig = JSON.parse(rawConfig);
   }
 
+  let extras: Extra[] = flags.extras
+    ? (flags.extras.split(',').map((e) => e.trim()) as Extra[])
+    : Array.isArray(fileConfig.extras)
+      ? (fileConfig.extras as Extra[])
+      : [];
+
+  if (flags.git === true && !extras.includes('git')) {
+    extras.push('git');
+  } else if (flags.git === false) {
+    extras = extras.filter((e) => e !== 'git');
+  }
+
   const rawAnswer = {
     projectName: flags.name ?? fileConfig.projectName ?? fileConfig.name,
     stack: (flags.stack ?? fileConfig.stack) as Stack,
@@ -52,11 +67,7 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
       ((flags.arch ?? fileConfig.architecture ?? fileConfig.arch) as Architecture) || 'layered',
     database: ((flags.db ?? fileConfig.database ?? fileConfig.db) as Database) || 'none',
     orm: ((flags.orm ?? fileConfig.orm) as Orm) || 'none',
-    extras: flags.extras
-      ? (flags.extras.split(',').map((e) => e.trim()) as Extra[])
-      : Array.isArray(fileConfig.extras)
-        ? (fileConfig.extras as Extra[])
-        : [],
+    extras,
     runtimeVersion:
       typeof fileConfig.runtimeVersion === 'string' ? fileConfig.runtimeVersion : undefined,
     frontend:
@@ -104,6 +115,10 @@ export default class New extends Command {
     }),
     extras: Flags.string({
       description: 'Comma-separated extras (docker,ci,lint,testing,env,git)',
+    }),
+    git: Flags.boolean({
+      description: 'Initialize git repository and make initial commit',
+      allowNo: true,
     }),
     'frontend-stack': Flags.string({
       description: 'Frontend stack for full-stack project (react)',
@@ -171,18 +186,29 @@ export default class New extends Command {
       const fileWriter = new DiskFileWriter({ overwrite: false });
       await fileWriter.write(targetDir, fileOps);
 
+      // Post-generation git initialization if requested
+      if (answer.extras.includes('git')) {
+        const gitResult = await initGitRepository(targetDir);
+        if (!gitResult.success && !flags.silent) {
+          this.warn(`Failed to initialize git repository: ${gitResult.error}`);
+        }
+      }
+
       if (spinner) {
         spinner.stop(`Successfully scaffolded ${pc.green(answer.projectName)}!`);
 
-        p.note(
-          [
-            pc.bold('Next steps:'),
-            `  1. ${pc.cyan(`cd ${answer.projectName}`)}`,
-            `  2. ${pc.cyan('npm install')}`,
-            `  3. ${pc.cyan('npm run dev')}`,
-          ].join('\n'),
-          'Get Started',
-        );
+        const nextSteps = getNextCommands(answer);
+        const stepLines: string[] = [pc.bold('Next steps:')];
+        let counter = 1;
+        for (const step of nextSteps) {
+          for (const cmd of step.commands) {
+            if (!cmd.startsWith('#')) {
+              stepLines.push(`  ${counter++}. ${pc.cyan(cmd)}`);
+            }
+          }
+        }
+
+        p.note(stepLines.join('\n'), 'Get Started');
       }
 
       return answer;
