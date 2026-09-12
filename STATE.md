@@ -8,15 +8,16 @@ Update this file **in the same commit** as the chunk work it describes — never
 
 ## Current Status
 
-- **Phase:** 1 — P0 Completion (Complete)
-- **Last completed chunk:** C1.10
-- **Next chunk to work on:** Phase 2 — Breadth (see `CHUNKS.md`)
+- **Phase:** 2 — Breadth (In Progress)
+- **Last completed chunk:** C2.1
+- **Next chunk to work on:** C2.2 — NestJS standalone golden template
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Added Fastify standalone golden template with TypeScript, @fastify/cors, modular plugin routing, health check endpoint, and live smoke test — establishes high-performance Node backend alternative in Phase 2 — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Finalized v0.1.0 release packaging with comprehensive README documentation, CHANGELOG.md release notes, package metadata validation, and v0.1.0 git tag — completes Phase 1 (P0 Completion) with 100% verified test coverage across all four golden combinations — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-12 — Extended CI matrix with multi-OS runners (Ubuntu, Windows, macOS), Node matrix (20.x, 22.x), Python 3.11 setup, and dedicated P0 golden combination smoke test jobs — ensures all four golden templates and fragments are continuously verified across operating systems — ARCHITECTURE.md "Testing strategy"
 - 2026-09-12 — Built @project-scaffolder/preflight package with Checker interface, NodeChecker, PythonChecker, and preflight runner wired into scaffold new with --force and --skip-preflight flags — delivers guided-manual runtime verification with actionable OS-specific install instructions — ARCHITECTURE.md "Environment preflight"
@@ -41,6 +42,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C2.1 | Fastify standalone golden template | 7a58fa9 | 2026-09-12 | packages/templates/node-fastify-standalone/*, packages/templates/src/node-fastify.smoke.test.ts, .github/workflows/ci.yml |
 | C1.10 | Publish v0.1.0 | d4ee0e6 | 2026-09-12 | README.md, CHANGELOG.md, package.json |
 | C1.9 | Extend CI matrix | 36b362d | 2026-09-12 | .github/workflows/ci.yml, package.json |
 | C1.8 | Preflight package (guided-manual tier only) | 5efb40e | 2026-09-12 | packages/preflight/*, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/package.json, packages/preflight/package.json, pnpm-lock.yaml |
@@ -67,6 +69,8 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/node-fastify-standalone/` | Fastify standalone golden template with TypeScript, @fastify/cors, and health routes | C2.1 |
+| `packages/templates/src/node-fastify.smoke.test.ts` | Integration and smoke test executing Fastify template build and server health endpoints | C2.1 |
 | `CHANGELOG.md` | Release notes and version history log | C1.10 |
 | `packages/preflight/src/types.ts` | Preflight types, OS types, and Checker interfaces | C1.8 |
 | `packages/preflight/src/os.ts` | OS detection helper for runtime preflight | C1.8 |
@@ -133,7 +137,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 1 (P0 Completion) — next is C1.6 (Per-project README generation).
+Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.2 (NestJS standalone golden template).
 
 ## Known Issues / Open Questions
 

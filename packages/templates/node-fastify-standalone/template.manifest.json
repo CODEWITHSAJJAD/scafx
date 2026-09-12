@@ -1,0 +1,20 @@
+{
+  "id": "node-fastify-standalone",
+  "name": "Node + Fastify Standalone",
+  "description": "High-performance Fastify REST API server in TypeScript",
+  "stack": "node",
+  "framework": "fastify",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": [
+    "projectName",
+    "stack",
+    "framework",
+    "database",
+    "orm",
+    "appShape",
+    "architecture"
+  ],
+  "fragments": ["docker", "auth-jwt", "orm-prisma"]
+}

@@ -35,9 +35,23 @@ Status values: `todo`, `in_progress`, `done`. The live status for each chunk liv
 - **C1.9 — Extend CI matrix** to cover all four P0 combinations.
 - **C1.10 — Publish v0.1.0.** npm publish, git tag, `CHANGELOG.md` entry.
 
-## Phase 2 — Breadth (plan only at this granularity; break down in detail once Phase 1 ships)
+## Phase 2 — Breadth
 
-Remaining frameworks (Flask, Django, NestJS, Fastify, ASP.NET Core, Flutter, Next.js), remaining database/ORM fragments, Docker/CI/auth extras, `.NET` and `Flutter` preflight checkers. Do not pre-break this into fine chunks now — re-plan against the actual Phase 0/1 codebase once it exists, since the fragment mechanism's real shape may change the right chunk boundaries here.
+**Goal:** cover remaining P1 ecosystems, frameworks, database/ORM fragments, extras, and preflight checkers.
+
+- **C2.1 — Fastify standalone golden template.** `packages/templates/node-fastify-standalone/` with TypeScript, layered routes/plugins, health check, and smoke test.
+- **C2.2 — NestJS standalone golden template.** `packages/templates/node-nestjs-standalone/` with TypeScript decorators, modular architecture, health controller, and smoke test.
+- **C2.3 — Flask standalone golden template.** `packages/templates/python-flask-standalone/` with application factory, blueprints, config, and pytest smoke test.
+- **C2.4 — Django standalone golden template.** `packages/templates/python-django-standalone/` with settings, ASGI/WSGI, app structure, and smoke test.
+- **C2.5 — Next.js standalone golden template.** `packages/templates/react-nextjs-standalone/` with App Router, TypeScript, Tailwind/CSS modules, and build smoke test.
+- **C2.6 — .NET Web API standalone golden template & .NET preflight checker.** `packages/templates/dotnet-webapi-standalone/` with C# 12 / .NET 8 minimal API + `DotnetChecker` in `@project-scaffolder/preflight`.
+- **C2.7 — Flutter standard golden template & Flutter preflight checker.** `packages/templates/flutter-standard/` with feature-first folder architecture + `FlutterChecker` in `@project-scaffolder/preflight`.
+- **C2.8 — Prisma ORM fragment for Node.js.** `packages/templates/fragments/node-prisma/` with schema, client initialization, migration scripts, and Postgres/MySQL/SQLite compatibility.
+- **C2.9 — MongoDB database fragments.** `packages/templates/fragments/mongo-mongoose/` (Node) and `packages/templates/fragments/mongo-motor/` (Python) + Docker Compose services.
+- **C2.10 — Docker & CI workflow generator extras.** Fragments generating user project `Dockerfile`, root `docker-compose.yml`, and `.github/workflows/ci.yml`.
+- **C2.11 — JWT Authentication boilerplate fragment.** Composable JWT authentication middleware and login/register endpoints for Node and Python backends.
+- **C2.12 — Publish v0.2.0.** Documentation update, CHANGELOG entry, and release tagging for Phase 2.
+
 
 ## Phase 3 — Microservices Mode
 
