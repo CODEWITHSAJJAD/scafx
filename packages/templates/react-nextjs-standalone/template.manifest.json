@@ -1,0 +1,20 @@
+{
+  "id": "react-nextjs-standalone",
+  "name": "React + Next.js Standalone",
+  "description": "Production-ready Next.js application with App Router, TypeScript, and API routes",
+  "stack": "react",
+  "framework": "nextjs",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": [
+    "projectName",
+    "stack",
+    "framework",
+    "database",
+    "orm",
+    "appShape",
+    "architecture"
+  ],
+  "fragments": ["docker", "auth-jwt", "tailwind"]
+}

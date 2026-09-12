@@ -73,6 +73,8 @@ jobs:
             test-file: 'packages/templates/src/python-django.smoke.test.ts'
           - name: 'React+Vite Standalone'
             test-file: 'packages/templates/src/react-vite.smoke.test.ts'
+          - name: 'React+Next.js Standalone'
+            test-file: 'packages/templates/src/react-nextjs.smoke.test.ts'
           - name: 'React+Vite + FastAPI Full-Stack'
             test-file: 'packages/templates/src/react-fastapi.smoke.test.ts'
           - name: 'Postgres+SQLAlchemy Fragment'
