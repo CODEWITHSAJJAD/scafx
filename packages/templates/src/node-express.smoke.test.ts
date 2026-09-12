@@ -69,7 +69,11 @@ describe('Node+Express Standalone Golden Template Smoke Test', () => {
   });
 
   afterAll(async () => {
-    await fs.remove(tempDir);
+    try {
+      await fs.remove(tempDir);
+    } catch {
+      // Ignore temporary file locking on Windows
+    }
   });
 
   it('generates, builds, starts, and serves endpoints correctly', async () => {

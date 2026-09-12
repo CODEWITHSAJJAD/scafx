@@ -63,6 +63,8 @@ jobs:
             test-file: 'packages/templates/src/node-express.smoke.test.ts'
           - name: 'Node+Fastify Standalone'
             test-file: 'packages/templates/src/node-fastify.smoke.test.ts'
+          - name: 'Node+NestJS Standalone'
+            test-file: 'packages/templates/src/node-nestjs.smoke.test.ts'
           - name: 'Python+FastAPI Standalone'
             test-file: 'packages/templates/src/python-fastapi.smoke.test.ts'
           - name: 'React+Vite Standalone'
