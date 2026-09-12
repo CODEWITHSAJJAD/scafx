@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 0 — Prove the Engine
-- **Last completed chunk:** C0.6
-- **Next chunk to work on:** C0.7 (see `CHUNKS.md`)
+- **Last completed chunk:** C0.7
+- **Next chunk to work on:** C0.8 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Built `scaffold new` command in `@project-scaffolder/cli` using `oclif` and `@clack/prompts` with dynamic selection tree — wires interactive and flag inputs directly into `core.generate()` and `DiskFileWriter` — ARCHITECTURE.md "CLI shell (packages/cli)"
 - 2026-09-12 — Built `node-express-standalone` as a runnable reference Express TypeScript project with health routes, and implemented `FsTemplateSource` loader in `@project-scaffolder/templates` — satisfies template runnable requirement and enables filesystem template resolution — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Implemented `FileWriter` port with `DiskFileWriter` (using `fs-extra` and directory traversal guards) and `MemoryFileWriter` (in-memory test adapter) — cleanly separates generation domain logic from physical disk I/O — ARCHITECTURE.md "Architectural pattern: hexagonal / ports-and-adapters"
 - 2026-09-12 — Integrated `eta` with `{{` `}}` tags and automatic placeholder normalization in `generate()` — provides seamless compatibility with Mustache-style `{{var}}` placeholders and conditional template expressions without escaping code — ARCHITECTURE.md "Templating mechanism"
@@ -28,7 +29,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C0.6 | First golden template: Node+Express standalone | 2579250 | 2026-09-12 | packages/templates/node-express-standalone/*, packages/templates/src/loader.ts, packages/templates/src/node-express.smoke.test.ts, packages/templates/src/index.ts, packages/templates/package.json, pnpm-lock.yaml |
+| C0.7 | CLI shell skeleton | 286da38 | 2026-09-12 | packages/cli/bin/run.js, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/src/prompts/interactive.ts, packages/cli/src/index.ts, packages/cli/package.json, packages/templates/src/loader.ts, pnpm-lock.yaml |
+| C0.6 | First golden template: Node+Express standalone | 9f28bb0 | 2026-09-12 | packages/templates/node-express-standalone/*, packages/templates/src/loader.ts, packages/templates/src/node-express.smoke.test.ts, packages/templates/src/index.ts, packages/templates/package.json, pnpm-lock.yaml |
 | C0.5 | FileWriter adapter | 7532e94 | 2026-09-12 | packages/core/src/ports/file-writer.ts, packages/core/src/adapters/disk-file-writer.ts, packages/core/src/adapters/memory-file-writer.ts, packages/core/src/adapters/disk-file-writer.test.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
 | C0.4 | `core.generate()` skeleton | a424845 | 2026-09-12 | packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/types/file-op.ts, packages/core/src/ports/template-source.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
 | C0.3 | Template manifest schema | 554a549 | 2026-09-12 | packages/core/src/schema/manifest.ts, packages/core/src/schema/manifest.test.ts, packages/core/test/fixtures/valid-manifest.json, packages/core/test/fixtures/malformed-manifest.json, packages/core/src/index.ts |
@@ -41,6 +43,10 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/cli/bin/run.js` | Executable CLI binary entrypoint | C0.7 |
+| `packages/cli/src/commands/new.ts` | oclif `scaffold new` command orchestrating prompts, generation, and file writing | C0.7 |
+| `packages/cli/src/commands/new.test.ts` | End-to-end integration tests for `scaffold new` command | C0.7 |
+| `packages/cli/src/prompts/interactive.ts` | Interactive `@clack/prompts` selection flow matching PRD decision tree | C0.7 |
 | `packages/templates/node-express-standalone/` | First golden template: runnable reference Node+Express standalone project | C0.6 |
 | `packages/templates/node-express-standalone/template.manifest.json` | Manifest declaring compatibility, placeholders, and fragments for Node+Express | C0.6 |
 | `packages/templates/src/loader.ts` | FsTemplateSource filesystem adapter implementing TemplateSource port | C0.6 |
@@ -76,7 +82,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. Currently on Phase 0 — next is C0.7 (CLI shell skeleton).
+Full backlog lives in `CHUNKS.md`. Currently on Phase 0 — next is C0.8 (Non-interactive mode).
 
 ## Known Issues / Open Questions
 

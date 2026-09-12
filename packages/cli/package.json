@@ -2,9 +2,29 @@
   "name": "@project-scaffolder/cli",
   "version": "0.1.0",
   "type": "module",
+  "bin": {
+    "scaffold": "./bin/run.js"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": [
+    "/bin",
+    "/dist"
+  ],
   "scripts": {
     "build": "tsc"
+  },
+  "oclif": {
+    "bin": "scaffold",
+    "dirname": "scaffold",
+    "commands": "./dist/commands",
+    "topicSeparator": " "
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "@oclif/core": "^4.2.8",
+    "@project-scaffolder/core": "workspace:*",
+    "@project-scaffolder/templates": "workspace:*",
+    "picocolors": "^1.1.1"
   }
 }

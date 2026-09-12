@@ -16,8 +16,23 @@ export class FsTemplateSource implements TemplateSource {
   private readonly baseDir: string;
 
   constructor(baseDir?: string) {
-    // Default baseDir to the package root (one level up from src/dist)
-    this.baseDir = baseDir ?? path.resolve(__dirname, '..');
+    if (baseDir) {
+      this.baseDir = baseDir;
+    } else {
+      // Find the templates package directory
+      const candidates = [
+        path.resolve(__dirname, '..'),
+        path.resolve(__dirname, '../../templates'),
+        path.resolve(__dirname, '../../../packages/templates'),
+        path.resolve(process.cwd(), 'packages/templates'),
+      ];
+
+      const found = candidates.find((c) =>
+        fs.existsSync(path.join(c, 'node-express-standalone/template.manifest.json')),
+      );
+
+      this.baseDir = found ?? path.resolve(__dirname, '..');
+    }
   }
 
   async getTemplate(answer: Answer): Promise<Template> {
