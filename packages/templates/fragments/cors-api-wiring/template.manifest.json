@@ -1,0 +1,12 @@
+{
+  "id": "cors-api-wiring",
+  "name": "CORS & API Base URL Full-Stack Wiring",
+  "description": "Environment variable and CORS configuration for connecting frontend and backend",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["fullstack", "frontend-backend"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName", "frontendPort", "backendPort", "apiUrl"],
+  "fragments": []
+}

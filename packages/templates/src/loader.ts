@@ -85,6 +85,24 @@ export class FsTemplateSource implements TemplateSource {
     };
   }
 
+  async getFragment(fragmentId: string): Promise<Template | null> {
+    const fragmentDir = path.join(this.baseDir, 'fragments', fragmentId);
+    const manifestFile = path.join(fragmentDir, 'template.manifest.json');
+
+    if (await fs.pathExists(manifestFile)) {
+      const rawManifest = await fs.readJson(manifestFile);
+      const manifest = TemplateManifestSchema.parse(rawManifest);
+      const files: TemplateFile[] = [];
+      await this.collectFiles(fragmentDir, fragmentDir, files);
+      return {
+        manifest,
+        files,
+      };
+    }
+
+    return null;
+  }
+
   private async collectFiles(
     currentDir: string,
     templateRoot: string,

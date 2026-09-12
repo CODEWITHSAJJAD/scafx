@@ -60,6 +60,12 @@ export type Orm = z.infer<typeof OrmEnum>;
 export const ExtraEnum = z.enum(['auth', 'docker', 'ci', 'lint', 'testing', 'env', 'git']);
 export type Extra = z.infer<typeof ExtraEnum>;
 
+export const SubStackSchema = z.object({
+  stack: StackEnum,
+  framework: FrameworkEnum,
+});
+export type SubStack = z.infer<typeof SubStackSchema>;
+
 export const AnswerSchema = z.object({
   projectName: z
     .string()
@@ -76,6 +82,8 @@ export const AnswerSchema = z.object({
   orm: OrmEnum,
   extras: z.array(ExtraEnum).default([]),
   runtimeVersion: z.string().optional(),
+  frontend: SubStackSchema.optional(),
+  backend: SubStackSchema.optional(),
 });
 
 export type Answer = z.infer<typeof AnswerSchema>;
