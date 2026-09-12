@@ -8,15 +8,16 @@ Update this file **in the same commit** as the chunk work it describes — never
 
 ## Current Status
 
-- **Phase:** 0 — Prove the Engine
-- **Last completed chunk:** C0.8
-- **Next chunk to work on:** C0.9 (see `CHUNKS.md`)
+- **Phase:** 1 — P0 Completion (Phase 0 complete!)
+- **Last completed chunk:** C0.9
+- **Next chunk to work on:** C1.1 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Configured GitHub Actions multi-OS / multi-Node CI matrix running lint, format, build, unit tests, and live golden template smoke tests on every push/PR — prevents template rot and ensures cross-platform reliability — ARCHITECTURE.md "Testing strategy"
 - 2026-09-12 — Added `--config` JSON input and non-interactive flag fallback resolution with verified byte-identical generator output — guarantees non-interactive equivalence for future headless adapters and automated workflows — ARCHITECTURE.md "CLI shell (packages/cli)"
 - 2026-09-12 — Built `scaffold new` command in `@project-scaffolder/cli` using `oclif` and `@clack/prompts` with dynamic selection tree — wires interactive and flag inputs directly into `core.generate()` and `DiskFileWriter` — ARCHITECTURE.md "CLI shell (packages/cli)"
 - 2026-09-12 — Built `node-express-standalone` as a runnable reference Express TypeScript project with health routes, and implemented `FsTemplateSource` loader in `@project-scaffolder/templates` — satisfies template runnable requirement and enables filesystem template resolution — ARCHITECTURE.md "packages/templates/"
@@ -30,7 +31,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C0.8 | Non-interactive mode | 4a0a698 | 2026-09-12 | packages/cli/src/commands/new.ts, packages/cli/src/commands/non-interactive.test.ts |
+| C0.9 | CI workflow | 7e27593 | 2026-09-12 | .github/workflows/ci.yml |
+| C0.8 | Non-interactive mode | ea3ce78 | 2026-09-12 | packages/cli/src/commands/new.ts, packages/cli/src/commands/non-interactive.test.ts |
 | C0.7 | CLI shell skeleton | fb87a3e | 2026-09-12 | packages/cli/bin/run.js, packages/cli/src/commands/new.ts, packages/cli/src/commands/new.test.ts, packages/cli/src/prompts/interactive.ts, packages/cli/src/index.ts, packages/cli/package.json, packages/templates/src/loader.ts, pnpm-lock.yaml |
 | C0.6 | First golden template: Node+Express standalone | 9f28bb0 | 2026-09-12 | packages/templates/node-express-standalone/*, packages/templates/src/loader.ts, packages/templates/src/node-express.smoke.test.ts, packages/templates/src/index.ts, packages/templates/package.json, pnpm-lock.yaml |
 | C0.5 | FileWriter adapter | 7532e94 | 2026-09-12 | packages/core/src/ports/file-writer.ts, packages/core/src/adapters/disk-file-writer.ts, packages/core/src/adapters/memory-file-writer.ts, packages/core/src/adapters/disk-file-writer.test.ts, packages/core/src/index.ts, packages/core/package.json, pnpm-lock.yaml |
@@ -45,6 +47,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `.github/workflows/ci.yml` | GitHub Actions multi-OS / multi-Node CI pipeline | C0.9 |
 | `packages/cli/src/commands/non-interactive.test.ts` | Non-interactive equivalence tests asserting byte-identical output between flags, config file, and core.generate() | C0.8 |
 | `packages/cli/bin/run.js` | Executable CLI binary entrypoint | C0.7 |
 | `packages/cli/src/commands/new.ts` | oclif `scaffold new` command orchestrating prompts, flags/config parsing, generation, and file writing | C0.7 |
@@ -85,7 +88,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. Currently on Phase 0 — next is C0.9 (CI workflow).
+Full backlog lives in `CHUNKS.md`. Phase 0 (Prove the Engine) is complete. Next is Phase 1 (P0 Completion) starting with C1.1 (FastAPI standalone golden template).
 
 ## Known Issues / Open Questions
 
