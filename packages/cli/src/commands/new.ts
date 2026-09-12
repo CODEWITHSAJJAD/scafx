@@ -14,9 +14,51 @@ import {
   type Stack,
 } from '@project-scaffolder/core';
 import { FsTemplateSource } from '@project-scaffolder/templates';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import pc from 'picocolors';
 import { promptInteractive } from '../prompts/interactive.js';
+
+export async function parseAnswerFromFlagsOrConfig(flags: {
+  name?: string;
+  stack?: string;
+  framework?: string;
+  shape?: string;
+  arch?: string;
+  db?: string;
+  orm?: string;
+  extras?: string;
+  config?: string;
+}): Promise<Answer> {
+  let fileConfig: Partial<Record<string, unknown>> = {};
+
+  if (flags.config) {
+    const configPath = path.resolve(flags.config);
+    const rawConfig = await fs.readFile(configPath, 'utf-8');
+    fileConfig = JSON.parse(rawConfig);
+  }
+
+  const rawAnswer = {
+    projectName: flags.name ?? fileConfig.projectName ?? fileConfig.name,
+    stack: (flags.stack ?? fileConfig.stack) as Stack,
+    framework: (flags.framework ?? fileConfig.framework) as Framework,
+    appShape:
+      ((flags.shape ?? fileConfig.appShape ?? fileConfig.shape) as AppShape) || 'standalone',
+    architecture:
+      ((flags.arch ?? fileConfig.architecture ?? fileConfig.arch) as Architecture) || 'layered',
+    database: ((flags.db ?? fileConfig.database ?? fileConfig.db) as Database) || 'none',
+    orm: ((flags.orm ?? fileConfig.orm) as Orm) || 'none',
+    extras: flags.extras
+      ? (flags.extras.split(',').map((e) => e.trim()) as Extra[])
+      : Array.isArray(fileConfig.extras)
+        ? (fileConfig.extras as Extra[])
+        : [],
+    runtimeVersion:
+      typeof fileConfig.runtimeVersion === 'string' ? fileConfig.runtimeVersion : undefined,
+  };
+
+  return AnswerSchema.parse(rawAnswer);
+}
 
 export default class New extends Command {
   static override description = 'Scaffold a new project';
@@ -45,7 +87,12 @@ export default class New extends Command {
     extras: Flags.string({
       description: 'Comma-separated extras (docker,ci,lint,testing,env,git)',
     }),
+    config: Flags.string({ char: 'c', description: 'Path to JSON config file containing answers' }),
+    'non-interactive': Flags.boolean({
+      description: 'Disable interactive prompts and use flag/config defaults',
+    }),
     out: Flags.string({ char: 'o', description: 'Output destination directory' }),
+    silent: Flags.boolean({ description: 'Suppress console output and spinners', default: false }),
   };
 
   public async run(): Promise<Answer> {
@@ -53,8 +100,11 @@ export default class New extends Command {
 
     let answer: Answer;
 
-    // Check if enough flags are passed for non-interactive / partially non-interactive
-    const isInteractive = !flags.name || !flags.stack || !flags.framework;
+    // Check if interactive mode is requested
+    const isInteractive =
+      !flags['non-interactive'] &&
+      !flags.config &&
+      (!flags.name || !flags.stack || !flags.framework);
 
     if (isInteractive) {
       answer = await promptInteractive({
@@ -65,26 +115,20 @@ export default class New extends Command {
         architecture: flags.arch as Architecture,
         database: flags.db as Database,
         orm: flags.orm as Orm,
-        extras: flags.extras ? (flags.extras.split(',') as Extra[]) : undefined,
+        extras: flags.extras
+          ? (flags.extras.split(',').map((e) => e.trim()) as Extra[])
+          : undefined,
       });
     } else {
-      const rawAnswer = {
-        projectName: flags.name,
-        stack: flags.stack as Stack,
-        framework: flags.framework as Framework,
-        appShape: (flags.shape as AppShape) || 'standalone',
-        architecture: (flags.arch as Architecture) || 'layered',
-        database: (flags.db as Database) || 'none',
-        orm: (flags.orm as Orm) || 'none',
-        extras: flags.extras ? (flags.extras.split(',') as Extra[]) : [],
-      };
-      answer = AnswerSchema.parse(rawAnswer);
+      answer = await parseAnswerFromFlagsOrConfig(flags);
     }
 
-    const spinner = p.spinner();
-    spinner.start(
-      `Scaffolding ${pc.cyan(answer.projectName)} (${answer.stack} + ${answer.framework})...`,
-    );
+    const spinner = flags.silent ? null : p.spinner();
+    if (spinner) {
+      spinner.start(
+        `Scaffolding ${pc.cyan(answer.projectName)} (${answer.stack} + ${answer.framework})...`,
+      );
+    }
 
     try {
       const templateSource = new FsTemplateSource();
@@ -97,21 +141,25 @@ export default class New extends Command {
       const fileWriter = new DiskFileWriter({ overwrite: false });
       await fileWriter.write(targetDir, fileOps);
 
-      spinner.stop(`Successfully scaffolded ${pc.green(answer.projectName)}!`);
+      if (spinner) {
+        spinner.stop(`Successfully scaffolded ${pc.green(answer.projectName)}!`);
 
-      p.note(
-        [
-          pc.bold('Next steps:'),
-          `  1. ${pc.cyan(`cd ${answer.projectName}`)}`,
-          `  2. ${pc.cyan('npm install')}`,
-          `  3. ${pc.cyan('npm run dev')}`,
-        ].join('\n'),
-        'Get Started',
-      );
+        p.note(
+          [
+            pc.bold('Next steps:'),
+            `  1. ${pc.cyan(`cd ${answer.projectName}`)}`,
+            `  2. ${pc.cyan('npm install')}`,
+            `  3. ${pc.cyan('npm run dev')}`,
+          ].join('\n'),
+          'Get Started',
+        );
+      }
 
       return answer;
     } catch (err: unknown) {
-      spinner.stop(pc.red('Scaffolding failed.'));
+      if (spinner) {
+        spinner.stop(pc.red('Scaffolding failed.'));
+      }
       const errorMsg = err instanceof Error ? err.message : String(err);
       this.error(errorMsg);
     }
