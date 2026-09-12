@@ -1,0 +1,19 @@
+{
+  "id": "node-express-standalone",
+  "name": "Node + Express Standalone",
+  "description": "Standard layered Express API server in TypeScript",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": [
+    {
+      "name": "projectName",
+      "description": "The name of the project",
+      "files": ["package.json", "README.md"]
+    },
+    "port"
+  ],
+  "fragments": ["docker", "auth-jwt", "orm-prisma"]
+}
