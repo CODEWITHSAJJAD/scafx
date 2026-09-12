@@ -41,6 +41,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
       - name: Install dependencies
         run: pnpm install
 
@@ -78,6 +83,8 @@ jobs:
             test-file: 'packages/templates/src/python-django.smoke.test.ts'
           - name: '.NET Web API Standalone'
             test-file: 'packages/templates/src/dotnet-webapi.smoke.test.ts'
+          - name: 'Flutter Standard Standalone'
+            test-file: 'packages/templates/src/flutter-standard.smoke.test.ts'
           - name: 'React+Vite Standalone'
             test-file: 'packages/templates/src/react-vite.smoke.test.ts'
           - name: 'React+Next.js Standalone'
@@ -111,6 +118,11 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
 
       - name: Install dependencies
         run: pnpm install

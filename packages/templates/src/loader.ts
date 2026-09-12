@@ -56,7 +56,9 @@ export class FsTemplateSource implements TemplateSource {
             if (
               parsed.success &&
               parsed.data.stack === answer.stack &&
-              parsed.data.framework === answer.framework &&
+              (parsed.data.framework === answer.framework ||
+                (answer.stack === 'flutter' &&
+                  (parsed.data.framework === 'flutter' || parsed.data.framework === 'none'))) &&
               parsed.data.compatibleShapes.includes(answer.appShape)
             ) {
               templatePath = candidate;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DotnetChecker } from './checkers/dotnet.js';
+import { FlutterChecker } from './checkers/flutter.js';
 import { NodeChecker } from './checkers/node.js';
 import { PythonChecker } from './checkers/python.js';
 import { resolveRequiredCheckers } from './resolve.js';
@@ -36,6 +37,13 @@ describe('Preflight Checker Suite', () => {
     expect(checker.manualInstallInstructions('linux')).toContain('dotnet-sdk-8.0');
   });
 
+  it('FlutterChecker provides OS-specific installation instructions', () => {
+    const checker = new FlutterChecker('3.19.0');
+    expect(checker.manualInstallInstructions('win32')).toContain('Google.Flutter');
+    expect(checker.manualInstallInstructions('darwin')).toContain('brew install --cask flutter');
+    expect(checker.manualInstallInstructions('linux')).toContain('snap install flutter');
+  });
+
   it('resolveRequiredCheckers maps stacks to necessary checkers', () => {
     const nodeOnly = resolveRequiredCheckers({
       stack: 'node',
@@ -57,6 +65,13 @@ describe('Preflight Checker Suite', () => {
       appShape: 'standalone',
     });
     expect(dotnetOnly.map((c) => c.name)).toEqual(['.NET SDK']);
+
+    const flutterOnly = resolveRequiredCheckers({
+      stack: 'flutter',
+      framework: 'flutter',
+      appShape: 'standalone',
+    });
+    expect(flutterOnly.map((c) => c.name)).toEqual(['Flutter SDK']);
 
     const fullstack = resolveRequiredCheckers({
       stack: 'react',

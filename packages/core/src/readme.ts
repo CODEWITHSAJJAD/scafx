@@ -88,6 +88,23 @@ export function getNextCommands(answer: Answer): { label: string; commands: stri
     ];
   }
 
+  if (answer.stack === 'flutter') {
+    return [
+      {
+        label: 'Get Dependencies',
+        commands: [`cd ${answer.projectName}`, 'flutter pub get'],
+      },
+      {
+        label: 'Run Application',
+        commands: ['flutter run'],
+      },
+      {
+        label: 'Run Tests',
+        commands: ['flutter test'],
+      },
+    ];
+  }
+
   if (answer.stack === 'node' || answer.stack === 'react') {
     return [
       {

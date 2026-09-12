@@ -1,4 +1,5 @@
 import { DotnetChecker } from './checkers/dotnet.js';
+import { FlutterChecker } from './checkers/flutter.js';
 import { NodeChecker } from './checkers/node.js';
 import { PythonChecker } from './checkers/python.js';
 import type { Checker } from './types.js';
@@ -33,6 +34,10 @@ export function resolveRequiredCheckers(answer: AnswerLike): Checker[] {
 
   if (neededStacks.has('dotnet')) {
     checkers.push(new DotnetChecker());
+  }
+
+  if (neededStacks.has('flutter')) {
+    checkers.push(new FlutterChecker());
   }
 
   return checkers;

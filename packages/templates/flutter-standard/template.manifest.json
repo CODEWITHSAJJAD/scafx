@@ -1,0 +1,12 @@
+{
+  "id": "flutter-standard",
+  "name": "Flutter Standard",
+  "description": "Standard Flutter cross-platform mobile, web, and desktop application with feature-first architecture and state management",
+  "stack": "flutter",
+  "framework": "flutter",
+  "compatibleShapes": ["standalone", "frontend-backend"],
+  "compatibleDatabases": ["sqlite", "none"],
+  "minRuntimeVersion": ">=3.19.0",
+  "placeholders": ["projectName", "stack", "framework", "appShape", "architecture"],
+  "fragments": ["orm-drift"]
+}
