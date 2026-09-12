@@ -6,5 +6,12 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc"
+  },
+  "dependencies": {
+    "@project-scaffolder/core": "workspace:*",
+    "fs-extra": "^11.4.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4"
   }
 }

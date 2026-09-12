@@ -50,7 +50,18 @@ importers:
 
   packages/preflight: {}
 
-  packages/templates: {}
+  packages/templates:
+    dependencies:
+      '@project-scaffolder/core':
+        specifier: workspace:*
+        version: link:../core
+      fs-extra:
+        specifier: ^11.4.0
+        version: 11.4.0
+    devDependencies:
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
 
 packages:
 
