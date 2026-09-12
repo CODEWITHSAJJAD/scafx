@@ -66,7 +66,7 @@ describe('core.generate()', () => {
 
     const fileOps = await generate(answer, inMemorySource);
 
-    expect(fileOps).toHaveLength(4);
+    expect(fileOps).toHaveLength(5);
 
     // Verify paths
     expect(fileOps.map((f) => f.path)).toEqual([
@@ -74,6 +74,7 @@ describe('core.generate()', () => {
       'src/index.ts',
       'config/my-awesome-api.env',
       'docker-compose.yml',
+      'README.md',
     ]);
 
     // Verify content substitutions
@@ -93,6 +94,11 @@ describe('core.generate()', () => {
 
     const dockerOp = fileOps.find((f) => f.path === 'docker-compose.yml');
     expect(dockerOp!.content).toContain('version: "3.8"');
+
+    const readmeOp = fileOps.find((f) => f.path === 'README.md');
+    expect(readmeOp).toBeDefined();
+    expect(readmeOp!.content).toContain('# my-awesome-api');
+    expect(readmeOp!.content).toContain('npm install');
   });
 
   it('throws GeneratorError when template is incompatible with app shape', async () => {

@@ -3,6 +3,7 @@ import { AnswerSchema, type Answer, type Extra } from './schema/answer.js';
 import type { Template, TemplateFile, TemplateSource } from './ports/template-source.js';
 import type { FileOp } from './types/file-op.js';
 import { mergeFileOps } from './merge.js';
+import { generateProjectReadme } from './readme.js';
 
 export class GeneratorError extends Error {
   constructor(message: string) {
@@ -213,13 +214,12 @@ async function generateFullstack(
     fileOps = mergeFileOps(fileOps, defaultWiring);
   }
 
-  // Ensure root README.md exists for fullstack project if not provided
-  if (!fileOps.some((op) => op.path === 'README.md')) {
-    fileOps.push({
-      path: 'README.md',
-      content: `# ${answer.projectName}\n\nFull-stack application scaffolded with **Universal Project Scaffolder**.\n\n- **Frontend**: ${frontendStack} + ${frontendFramework} (\`/frontend\`)\n- **Backend**: ${backendStack} + ${backendFramework} (\`/backend\`)\n\n## Getting Started\n\n### 1. Frontend\n\`\`\`bash\ncd frontend\nnpm install\nnpm run dev\n\`\`\`\n\n### 2. Backend\n\`\`\`bash\ncd backend\n# Follow backend instructions\n\`\`\`\n`,
-    });
-  }
+  // Generate tailored root README.md
+  const readmeOp: FileOp = {
+    path: 'README.md',
+    content: generateProjectReadme(answer),
+  };
+  fileOps = mergeFileOps(fileOps, [readmeOp]);
 
   // Apply Database / ORM fragment to backend if selected
   fileOps = await resolveAndMergeDatabaseFragments(
@@ -291,6 +291,13 @@ async function generateStandalone(
 
   // Apply Database / ORM fragment if selected
   fileOps = await resolveAndMergeDatabaseFragments(fileOps, answer, templateSource, context);
+
+  // Apply tailored README.md
+  const readmeOp: FileOp = {
+    path: 'README.md',
+    content: generateProjectReadme(answer),
+  };
+  fileOps = mergeFileOps(fileOps, [readmeOp]);
 
   // Merge any extra fragments requested in answer
   if (templateSource.getFragment) {

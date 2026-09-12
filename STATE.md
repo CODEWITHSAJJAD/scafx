@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 1 — P0 Completion
-- **Last completed chunk:** C1.5
-- **Next chunk to work on:** C1.6 (see `CHUNKS.md`)
+- **Last completed chunk:** C1.6
+- **Next chunk to work on:** C1.7 (see `CHUNKS.md`)
 - **Last updated:** 2026-09-12 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-12 — Added per-project README generation with stack-tailored configuration summary, structure overview, and exact actionable next commands for standalone and composed full-stack projects — ensures every scaffolded project provides immediate orientation and runnable next steps — PRD.md "Generated project README" & ARCHITECTURE.md "Generation flow"
 - 2026-09-12 — Added PostgreSQL + SQLAlchemy/Alembic database fragment with async session, models, Alembic migrations, and Docker Compose service — establishes ORM fragment composition mechanism on FastAPI — ARCHITECTURE.md "Composition, not combinatorics"
 - 2026-09-12 — Composed React+Vite and FastAPI into full-stack golden combination via core composition mechanism — proves zero-bespoke-template full-stack monorepo generation — ARCHITECTURE.md "Composition, not combinatorics"
 - 2026-09-12 — Implemented generalized fragment merge engine and full-stack template composition in core — enables combining frontend + backend golden templates into monorepo layout with wired CORS and API base URL without bespoke combinatorics — ARCHITECTURE.md "Composition, not combinatorics"
@@ -36,6 +37,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C1.6 | Per-project README generation | ad17fb6 | 2026-09-12 | packages/core/src/readme.ts, packages/core/src/readme.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts |
 | C1.5 | Database/ORM fragment: Postgres + SQLAlchemy/Alembic | 35fac3b | 2026-09-12 | packages/templates/fragments/postgres-sqlalchemy/*, packages/templates/src/postgres-sqlalchemy.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/merge.ts |
 | C1.4 | React+Vite + FastAPI full-stack golden combination | 3a5f5ef | 2026-09-12 | packages/templates/src/react-fastapi.smoke.test.ts, packages/cli/src/commands/new.ts |
 | C1.3 | App-shape composition logic in core | f958677 | 2026-09-12 | packages/core/src/merge.ts, packages/core/src/generate.ts, packages/core/src/schema/answer.ts, packages/core/src/merge.test.ts, packages/core/src/composition.test.ts, packages/templates/fragments/cors-api-wiring/*, packages/templates/src/loader.ts |
@@ -57,6 +59,8 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/core/src/readme.ts` | Dynamic per-project README generator producing stack summary and actionable next commands | C1.6 |
+| `packages/core/src/readme.test.ts` | Unit tests for per-project README generator across standalone and fullstack configurations | C1.6 |
 | `packages/templates/fragments/postgres-sqlalchemy/` | Reusable database/ORM fragment for Postgres + SQLAlchemy 2.0 / Alembic | C1.5 |
 | `packages/templates/src/postgres-sqlalchemy.smoke.test.ts` | Integration and migration syntax smoke test for Postgres+SQLAlchemy fragment | C1.5 |
 | `packages/templates/src/react-fastapi.smoke.test.ts` | Integration and bundle build smoke test for React+Vite + FastAPI full-stack composition | C1.4 |
