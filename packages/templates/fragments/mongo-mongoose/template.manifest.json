@@ -1,0 +1,12 @@
+{
+  "id": "mongo-mongoose",
+  "name": "MongoDB + Mongoose ODM",
+  "description": "Mongoose ODM connection lifecycle, User schema model, and MongoDB Docker Compose service",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["mongodb"],
+  "minRuntimeVersion": ">=20.0.0",
+  "placeholders": ["projectName", "database", "orm"],
+  "fragments": []
+}

@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 2 — Breadth (In Progress)
-- **Last completed chunk:** C2.8
-- **Next chunk to work on:** C2.9 — MongoDB database fragments
+- **Last completed chunk:** C2.9
+- **Next chunk to work on:** C2.10 — Docker & CI workflow generator extras
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Added MongoDB database fragments for Node.js (mongo-mongoose) and Python (mongo-motor) with connection lifecycle management, data models, Docker Compose mongo service with healthchecks, and live smoke tests — expands database support to NoSQL document store in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-14 — Added Prisma ORM fragment for Node.js (Postgres, MySQL, SQLite) with dynamic datasource provider, User model, Prisma client singleton, package.json scripts, docker-compose db services, and live prisma generate smoke test — expands database/ORM ecosystem to Node backends in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-13 — Added Flutter standard golden template and FlutterChecker in preflight with feature-first folder architecture, Material 3 theming, domain state models, and live flutter test smoke test — expands ecosystem breadth to cross-platform mobile/desktop in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Environment preflight"
 - 2026-09-13 — Added ASP.NET Core 8 Web API standalone golden template and DotnetChecker in preflight with C# 12 minimal API, Swagger OpenAPI, health checks, dynamic csproj rendering, and live dotnet build smoke test — expands ecosystem breadth to .NET/C# in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Environment preflight"
@@ -49,6 +50,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C2.9 | MongoDB database fragments | 9e943c6 | 2026-09-14 | packages/templates/fragments/mongo-mongoose/*, packages/templates/fragments/mongo-motor/*, packages/templates/src/mongodb-fragments.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
 | C2.8 | Prisma ORM fragment for Node.js | c1dbca8 | 2026-09-14 | packages/templates/fragments/node-prisma/*, packages/templates/src/node-prisma.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/merge.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
 | C2.7 | Flutter standard golden template & Flutter preflight checker | 8e9504d | 2026-09-13 | packages/templates/flutter-standard/*, packages/templates/src/flutter-standard.smoke.test.ts, packages/preflight/src/checkers/flutter.ts, packages/preflight/src/resolve.ts, packages/preflight/src/preflight.test.ts, packages/preflight/src/index.ts, packages/core/src/readme.ts, packages/templates/src/loader.ts, .github/workflows/ci.yml |
 | C2.6 | .NET Web API standalone golden template & .NET preflight checker | 5c66548 | 2026-09-13 | packages/templates/dotnet-webapi-standalone/*, packages/templates/src/dotnet-webapi.smoke.test.ts, packages/preflight/src/checkers/dotnet.ts, packages/preflight/src/resolve.ts, packages/preflight/src/preflight.test.ts, packages/preflight/src/index.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
@@ -83,6 +85,9 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/fragments/mongo-mongoose/` | Reusable MongoDB + Mongoose ODM fragment for Node.js with connection lifecycle, user model, and Docker Compose | C2.9 |
+| `packages/templates/fragments/mongo-motor/` | Reusable MongoDB + Motor async driver fragment for Python with async connection manager, Pydantic models, and Docker Compose | C2.9 |
+| `packages/templates/src/mongodb-fragments.smoke.test.ts` | Integration and live npm build / python py_compile smoke test for MongoDB fragments | C2.9 |
 | `packages/templates/fragments/node-prisma/` | Reusable Prisma ORM fragment for Node.js (PostgreSQL, MySQL, SQLite) with dynamic schema and client | C2.8 |
 | `packages/templates/src/node-prisma.smoke.test.ts` | Integration and live prisma generate / build smoke test for Node Prisma fragment | C2.8 |
 | `packages/templates/flutter-standard/` | Flutter standard golden template with feature-first architecture, Material 3, and widget tests | C2.7 |
@@ -167,7 +172,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.9 (MongoDB database fragments).
+Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.10 (Docker & CI workflow generator extras).
 
 ## Known Issues / Open Questions
 

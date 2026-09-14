@@ -1,0 +1,12 @@
+{
+  "id": "mongo-motor",
+  "name": "MongoDB + Motor Async Driver",
+  "description": "Async Motor driver client lifecycle, collection helpers, and MongoDB Docker Compose service",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["mongodb"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": ["projectName", "database", "orm"],
+  "fragments": []
+}

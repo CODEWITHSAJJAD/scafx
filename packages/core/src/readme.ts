@@ -221,6 +221,18 @@ export function generateProjectReadme(answer: Answer): string {
       sections.push('# Add a new migration after editing models');
       sections.push('dotnet ef migrations add <MigrationName>');
       sections.push('```');
+    } else if (answer.orm === 'mongoose') {
+      sections.push('This project uses **Mongoose** for MongoDB object modeling and validation.');
+      sections.push('```bash');
+      sections.push('# Start MongoDB using Docker Compose');
+      sections.push('docker compose up -d mongo');
+      sections.push('```');
+    } else if (answer.orm === 'motor' || answer.orm === 'pymongo') {
+      sections.push('This project uses **Motor** for asynchronous MongoDB access.');
+      sections.push('```bash');
+      sections.push('# Start MongoDB using Docker Compose');
+      sections.push('docker compose up -d mongo');
+      sections.push('```');
     }
   }
 

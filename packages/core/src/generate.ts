@@ -87,12 +87,16 @@ async function resolveAndMergeDatabaseFragments(
     return currentOps;
   }
 
+  const dbAlias = answer.database === 'mongodb' ? 'mongo' : answer.database;
   const candidateFragmentIds = [
     `${answer.stack}-${answer.database}-${answer.orm}`,
+    `${answer.stack}-${dbAlias}-${answer.orm}`,
     `${answer.stack}-${answer.orm}`,
     `${answer.database}-${answer.orm}`,
+    `${dbAlias}-${answer.orm}`,
     `orm-${answer.orm}`,
     `db-${answer.database}`,
+    `db-${dbAlias}`,
   ];
 
   for (const fragId of candidateFragmentIds) {

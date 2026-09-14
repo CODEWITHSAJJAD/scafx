@@ -95,6 +95,8 @@ jobs:
             test-file: 'packages/templates/src/postgres-sqlalchemy.smoke.test.ts'
           - name: 'Node+Prisma Fragment'
             test-file: 'packages/templates/src/node-prisma.smoke.test.ts'
+          - name: 'MongoDB Database Fragments'
+            test-file: 'packages/templates/src/mongodb-fragments.smoke.test.ts'
 
     steps:
       - name: Checkout repository
