@@ -168,4 +168,53 @@ describe('Non-interactive mode equivalence', () => {
 
     expect(fromConfig).toEqual(fromFlags);
   });
+
+  it('parses microservices configuration from JSON config file', async () => {
+    const configPath = path.join(tempBase, 'microservices.config.json');
+    await fs.writeFile(
+      configPath,
+      JSON.stringify({
+        projectName: 'mesh-pos',
+        stack: 'node',
+        framework: 'express',
+        appShape: 'microservices',
+        architecture: 'layered',
+        database: 'none',
+        orm: 'none',
+        extras: ['docker', 'env'],
+        gateway: {
+          stack: 'node',
+          framework: 'express',
+          port: 8000,
+        },
+        services: [
+          {
+            name: 'auth-service',
+            stack: 'node',
+            framework: 'express',
+            port: 8001,
+            database: 'postgres',
+            orm: 'prisma',
+            extras: ['auth'],
+          },
+          {
+            name: 'catalog-service',
+            stack: 'python',
+            framework: 'fastapi',
+            port: 8002,
+            database: 'mongodb',
+            orm: 'motor',
+            extras: [],
+          },
+        ],
+      }),
+      'utf-8',
+    );
+
+    const fromConfig = await parseAnswerFromFlagsOrConfig({ config: configPath });
+    expect(fromConfig.appShape).toBe('microservices');
+    expect(fromConfig.gateway?.port).toBe(8000);
+    expect(fromConfig.services?.length).toBe(2);
+    expect(fromConfig.services?.[0].name).toBe('auth-service');
+  });
 });

@@ -92,6 +92,10 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
       options: [
         { value: 'standalone', label: 'Standalone' },
         { value: 'fullstack', label: 'Full-stack (composed frontend + backend)' },
+        {
+          value: 'microservices',
+          label: 'Microservices (API Gateway + isolated downstream services)',
+        },
       ],
       initialValue: 'standalone',
     }));
@@ -103,8 +107,58 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
 
   let frontend: { stack: Stack; framework: Framework } | undefined;
   let backend: { stack: Stack; framework: Framework } | undefined;
+  let gateway: { stack: Stack; framework: Framework; port: number } | undefined;
+  let services:
+    | {
+        name: string;
+        stack: Stack;
+        framework: Framework;
+        port: number;
+        database?: Database;
+        orm?: Orm;
+        extras?: Extra[];
+      }[]
+    | undefined;
 
-  if (appShape === 'fullstack') {
+  if (appShape === 'microservices') {
+    const gatewayPort = await p.text({
+      message: 'API Gateway Port:',
+      defaultValue: '8000',
+      placeholder: '8000',
+      validate: (v) => (!v || isNaN(Number(v)) ? 'Port must be a valid number' : undefined),
+    });
+    if (p.isCancel(gatewayPort)) {
+      p.cancel('Scaffolding cancelled.');
+      process.exit(0);
+    }
+
+    gateway = {
+      stack: 'node',
+      framework: 'express',
+      port: Number(gatewayPort),
+    };
+
+    services = [
+      {
+        name: 'auth-service',
+        stack: 'node',
+        framework: 'express',
+        port: 8001,
+        database: 'postgres',
+        orm: 'prisma',
+        extras: ['auth'],
+      },
+      {
+        name: 'catalog-service',
+        stack: 'python',
+        framework: 'fastapi',
+        port: 8002,
+        database: 'mongodb',
+        orm: 'motor',
+        extras: [],
+      },
+    ];
+  } else if (appShape === 'fullstack') {
     const fStack = await p.select<Stack>({
       message: 'Select frontend stack:',
       options: [{ value: 'react', label: 'React' }],
@@ -248,6 +302,8 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
     extras: (extras as Extra[]) || [],
     ...(frontend ? { frontend } : {}),
     ...(backend ? { backend } : {}),
+    ...(gateway ? { gateway } : {}),
+    ...(services ? { services } : {}),
   };
 
   return AnswerSchema.parse(rawAnswer);

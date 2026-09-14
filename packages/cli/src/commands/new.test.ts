@@ -139,4 +139,35 @@ describe('CLI scaffold new command', () => {
       New.customCheckers = undefined;
     }
   });
+
+  it('scaffolds a microservices project end-to-end via CLI flags', async () => {
+    const outDir = path.join(tempDir, 'my-microservices-app');
+
+    const answer = await New.run([
+      '--name',
+      'my-microservices-app',
+      '--shape',
+      'microservices',
+      '--gateway-port',
+      '8000',
+      '--services',
+      'auth-service:node:express:8001:postgres:prisma:auth,catalog-service:python:fastapi:8002:mongodb:motor',
+      '--extras',
+      'docker,env',
+      '--out',
+      outDir,
+    ]);
+
+    expect(answer).toBeDefined();
+    expect(answer.appShape).toBe('microservices');
+    expect(answer.gateway?.port).toBe(8000);
+    expect(answer.services?.length).toBe(2);
+
+    // Verify gateway and services directories created on disk
+    expect(existsSync(path.join(outDir, 'gateway/src/index.ts'))).toBe(true);
+    expect(existsSync(path.join(outDir, 'services/auth-service/src/index.ts'))).toBe(true);
+    expect(existsSync(path.join(outDir, 'services/catalog-service/src/app/main.py'))).toBe(true);
+    expect(existsSync(path.join(outDir, 'docker-compose.yml'))).toBe(true);
+    expect(existsSync(path.join(outDir, 'README.md'))).toBe(true);
+  });
 });

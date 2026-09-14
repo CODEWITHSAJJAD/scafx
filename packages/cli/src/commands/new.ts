@@ -11,7 +11,9 @@ import {
   type Database,
   type Extra,
   type Framework,
+  type GatewayDefinition,
   type Orm,
+  type ServiceDefinition,
   type Stack,
 } from '@project-scaffolder/core';
 import {
@@ -25,6 +27,56 @@ import path from 'node:path';
 import pc from 'picocolors';
 import { initGitRepository } from '../git.js';
 import { promptInteractive } from '../prompts/interactive.js';
+
+export function parseServicesSpec(
+  servicesFlag?: string,
+  servicesConfig?: unknown,
+): ServiceDefinition[] {
+  if (Array.isArray(servicesConfig) && servicesConfig.length > 0) {
+    return servicesConfig as ServiceDefinition[];
+  }
+
+  if (servicesFlag) {
+    const parts = servicesFlag
+      .split(',')
+      .map((p) => p.trim())
+      .filter(Boolean);
+    return parts.map((part, idx) => {
+      const [name, stack, framework, portStr, database, orm, extrasStr] = part.split(':');
+      return {
+        name: name || `service-${idx + 1}`,
+        stack: (stack as Stack) || 'node',
+        framework: (framework as Framework) || 'express',
+        port: portStr ? parseInt(portStr, 10) : 8001 + idx,
+        database: (database as Database) || 'none',
+        orm: (orm as Orm) || 'none',
+        extras: extrasStr ? (extrasStr.split('+') as Extra[]) : [],
+      };
+    });
+  }
+
+  // Default reference microservices if none specified
+  return [
+    {
+      name: 'auth-service',
+      stack: 'node',
+      framework: 'express',
+      port: 8001,
+      database: 'postgres',
+      orm: 'prisma',
+      extras: ['auth'],
+    },
+    {
+      name: 'catalog-service',
+      stack: 'python',
+      framework: 'fastapi',
+      port: 8002,
+      database: 'mongodb',
+      orm: 'motor',
+      extras: [],
+    },
+  ];
+}
 
 export async function parseAnswerFromFlagsOrConfig(flags: {
   name?: string;
@@ -40,6 +92,10 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
   'frontend-framework'?: string;
   'backend-stack'?: string;
   'backend-framework'?: string;
+  'gateway-stack'?: string;
+  'gateway-framework'?: string;
+  'gateway-port'?: number;
+  services?: string;
   config?: string;
 }): Promise<Answer> {
   let fileConfig: Partial<Record<string, unknown>> = {};
@@ -62,12 +118,14 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
     extras = extras.filter((e) => e !== 'git');
   }
 
+  const appShape =
+    ((flags.shape ?? fileConfig.appShape ?? fileConfig.shape) as AppShape) || 'standalone';
+
   const rawAnswer = {
     projectName: flags.name ?? fileConfig.projectName ?? fileConfig.name,
-    stack: (flags.stack ?? fileConfig.stack) as Stack,
-    framework: (flags.framework ?? fileConfig.framework) as Framework,
-    appShape:
-      ((flags.shape ?? fileConfig.appShape ?? fileConfig.shape) as AppShape) || 'standalone',
+    stack: ((flags.stack ?? fileConfig.stack) as Stack) || 'node',
+    framework: ((flags.framework ?? fileConfig.framework) as Framework) || 'express',
+    appShape,
     architecture:
       ((flags.arch ?? fileConfig.architecture ?? fileConfig.arch) as Architecture) || 'layered',
     database: ((flags.db ?? fileConfig.database ?? fileConfig.db) as Database) || 'none',
@@ -89,6 +147,25 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
             framework: flags['backend-framework'] as Framework,
           }
         : (fileConfig.backend as { stack: Stack; framework: Framework } | undefined),
+    gateway:
+      appShape === 'microservices'
+        ? {
+            stack: (flags['gateway-stack'] ??
+              (fileConfig.gateway as GatewayDefinition | undefined)?.stack ??
+              'node') as Stack,
+            framework: (flags['gateway-framework'] ??
+              (fileConfig.gateway as GatewayDefinition | undefined)?.framework ??
+              'express') as Framework,
+            port:
+              flags['gateway-port'] ??
+              (fileConfig.gateway as GatewayDefinition | undefined)?.port ??
+              8000,
+          }
+        : undefined,
+    services:
+      appShape === 'microservices'
+        ? parseServicesSpec(flags.services, fileConfig.services)
+        : undefined,
   };
 
   return AnswerSchema.parse(rawAnswer);
@@ -148,6 +225,19 @@ export default class New extends Command {
     'backend-framework': Flags.string({
       description: 'Backend framework for full-stack project (fastapi, express, webapi)',
     }),
+    'gateway-stack': Flags.string({
+      description: 'API Gateway stack for microservices (node)',
+    }),
+    'gateway-framework': Flags.string({
+      description: 'API Gateway framework for microservices (express)',
+    }),
+    'gateway-port': Flags.integer({
+      description: 'API Gateway port for microservices (default: 8000)',
+    }),
+    services: Flags.string({
+      description:
+        'Microservices list spec (e.g. auth-service:node:express:8001:postgres:prisma:auth,catalog-service:python:fastapi:8002:mongodb:motor)',
+    }),
     config: Flags.string({ char: 'c', description: 'Path to JSON config file containing answers' }),
     'non-interactive': Flags.boolean({
       description: 'Disable interactive prompts and use flag/config defaults',
@@ -162,10 +252,11 @@ export default class New extends Command {
     let answer: Answer;
 
     // Check if interactive mode is requested
+    const isMicroservices = flags.shape === 'microservices';
     const isInteractive =
       !flags['non-interactive'] &&
       !flags.config &&
-      (!flags.name || !flags.stack || !flags.framework);
+      (!flags.name || (!isMicroservices && (!flags.stack || !flags.framework)));
 
     if (isInteractive) {
       answer = await promptInteractive({
