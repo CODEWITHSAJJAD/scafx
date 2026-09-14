@@ -5,13 +5,13 @@ Next-Generation Multi-Ecosystem Architecture & Project Scaffolder CLI.
 ## Quick Start
 
 ```bash
-npx scafx new
+npx @codewithsajjad01/scafx new
 ```
 
 Or install globally:
 
 ```bash
-npm install -g scafx
+npm install -g @codewithsajjad01/scafx
 scafx new
 ```
 

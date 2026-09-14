@@ -16,7 +16,11 @@ import {
   type ServiceDefinition,
   type Stack,
 } from '@codewithsajjad01/core';
-import { resolveRequiredCheckers, runPreflightChecks, type Checker } from '@codewithsajjad01/preflight';
+import {
+  resolveRequiredCheckers,
+  runPreflightChecks,
+  type Checker,
+} from '@codewithsajjad01/preflight';
 import { FsTemplateSource } from '@codewithsajjad01/templates';
 import fs from 'node:fs/promises';
 import path from 'node:path';

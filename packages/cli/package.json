@@ -1,5 +1,5 @@
 {
-  "name": "scafx",
+  "name": "@codewithsajjad01/scafx",
   "version": "0.3.0",
   "type": "module",
   "description": "Deterministic project scaffolder across Node, Python, .NET, React, and Flutter",
@@ -11,13 +11,13 @@
   },
   "homepage": "https://github.com/CODEWITHSAJJAD/scafx#readme",
   "bin": {
-    "scafx": "./bin/run.js"
+    "scafx": "bin/run.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": [
-    "/bin",
-    "/dist"
+    "bin",
+    "dist"
   ],
   "scripts": {
     "build": "tsc"

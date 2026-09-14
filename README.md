@@ -12,7 +12,7 @@
 
 **Next-Generation Multi-Ecosystem Architecture & Project Scaffolder**
 
-[![npm version](https://img.shields.io/npm/v/scafx.svg?style=flat-square&color=000000)](https://www.npmjs.com/package/scafx)
+[![npm version](https://img.shields.io/npm/v/@codewithsajjad01/scafx.svg?style=flat-square&color=000000)](https://www.npmjs.com/package/@codewithsajjad01/scafx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Vitest](https://img.shields.io/badge/tested%20with-vitest-yellow?style=flat-square&logo=vitest)](https://vitest.dev/)
@@ -28,13 +28,13 @@
 Run instantly with zero installation via `npx`:
 
 ```bash
-npx scafx new
+npx @codewithsajjad01/scafx new
 ```
 
 Or install globally:
 
 ```bash
-npm install -g scafx
+npm install -g @codewithsajjad01/scafx
 scafx new
 ```
 
