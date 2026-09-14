@@ -43,4 +43,3 @@ authRouter.post('/login', async (req, res) => {
 authRouter.get('/me', authenticateJwt, (req, res) => {
   res.json({ user: (req as AuthenticatedRequest).user });
 });
-

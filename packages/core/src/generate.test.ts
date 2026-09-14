@@ -103,20 +103,34 @@ describe('core.generate()', () => {
     expect(readmeOp!.content).toContain('npm install');
   });
 
-  it('throws GeneratorError when template is incompatible with app shape', async () => {
+  it('throws GeneratorError when template is incompatible with app shape in standalone mode', async () => {
+    const incompatibleManifest = {
+      ...sampleManifest,
+      compatibleShapes: ['fullstack' as const],
+    };
+    const incompatibleTemplate = {
+      ...sampleTemplate,
+      manifest: incompatibleManifest,
+    };
+    const incompatibleSource: TemplateSource = {
+      getTemplate: () => incompatibleTemplate,
+    };
+
     const answer: Answer = {
       projectName: 'my-service',
       stack: 'node',
       framework: 'express',
-      appShape: 'microservices', // incompatible with fixture's ['standalone']
+      appShape: 'standalone',
       architecture: 'clean',
       database: 'none',
       orm: 'none',
       extras: [],
     };
 
-    await expect(generate(answer, inMemorySource)).rejects.toThrow(GeneratorError);
-    await expect(generate(answer, inMemorySource)).rejects.toThrow(/does not support app shape/);
+    await expect(generate(answer, incompatibleSource)).rejects.toThrow(GeneratorError);
+    await expect(generate(answer, incompatibleSource)).rejects.toThrow(
+      /does not support app shape/,
+    );
   });
 
   it('throws GeneratorError when template is incompatible with database', async () => {
@@ -152,5 +166,80 @@ describe('core.generate()', () => {
     };
 
     await expect(generate(answer, emptySource)).rejects.toThrow(GeneratorError);
+  });
+
+  it('generates a complete microservices project structure with gateway and downstream services', async () => {
+    const microservicesAnswer: Answer = {
+      projectName: 'pos-platform',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'microservices',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: ['env'],
+      gateway: {
+        stack: 'node',
+        framework: 'express',
+        port: 8000,
+      },
+      services: [
+        {
+          name: 'auth-service',
+          stack: 'node',
+          framework: 'express',
+          port: 8001,
+          database: 'postgres',
+          orm: 'prisma',
+          extras: ['auth'],
+        },
+        {
+          name: 'catalog-service',
+          stack: 'node',
+          framework: 'express',
+          port: 8002,
+          database: 'postgres',
+          orm: 'prisma',
+          extras: [],
+        },
+      ],
+    };
+
+    const fileOps = await generate(microservicesAnswer, inMemorySource);
+    expect(fileOps.length).toBeGreaterThan(0);
+
+    const paths = fileOps.map((f) => f.path);
+
+    // Gateway files
+    expect(paths).toContain('gateway/package.json');
+    expect(paths).toContain('gateway/tsconfig.json');
+    expect(paths).toContain('gateway/src/index.ts');
+    expect(paths).toContain('gateway/.env.example');
+
+    // Downstream services files
+    expect(paths).toContain('services/auth-service/package.json');
+    expect(paths).toContain('services/auth-service/src/index.ts');
+    expect(paths).toContain('services/auth-service/.env.example');
+
+    expect(paths).toContain('services/catalog-service/package.json');
+    expect(paths).toContain('services/catalog-service/src/index.ts');
+    expect(paths).toContain('services/catalog-service/.env.example');
+
+    // Root files
+    expect(paths).toContain('.env.example');
+    expect(paths).toContain('README.md');
+
+    // Verify Gateway code contains proxy routing
+    const gatewayIndex = fileOps.find((f) => f.path === 'gateway/src/index.ts');
+    expect(gatewayIndex?.content).toContain("app.use(\n  '/api/auth'");
+    expect(gatewayIndex?.content).toContain("app.use(\n  '/api/catalog'");
+    expect(gatewayIndex?.content).toContain('AUTH_SERVICE_URL');
+    expect(gatewayIndex?.content).toContain('CATALOG_SERVICE_URL');
+
+    // Verify root env contains service ports
+    const rootEnv = fileOps.find((f) => f.path === '.env.example');
+    expect(rootEnv?.content).toContain('GATEWAY_PORT=8000');
+    expect(rootEnv?.content).toContain('AUTH_SERVICE_URL=http://localhost:8001');
+    expect(rootEnv?.content).toContain('CATALOG_SERVICE_URL=http://localhost:8002');
   });
 });

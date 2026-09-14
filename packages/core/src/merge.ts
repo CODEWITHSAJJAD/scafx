@@ -224,7 +224,7 @@ export function mergeDockerCompose(baseStr: string, fragmentStr: string): string
       }
 
       if (currentSection === 'services') {
-        const serviceHeaderMatch = line.match(/^  ([a-zA-Z0-9_-]+):/);
+        const serviceHeaderMatch = line.match(/^ {2}([a-zA-Z0-9_-]+):/);
         if (serviceHeaderMatch) {
           if (currentServiceName) {
             services.set(currentServiceName, currentServiceLines);

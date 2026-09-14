@@ -8,15 +8,16 @@ Update this file **in the same commit** as the chunk work it describes — never
 
 ## Current Status
 
-- **Phase:** 2 — Breadth (100% Complete)
-- **Last completed chunk:** C2.12
-- **Next chunk to work on:** Phase 3 — Microservices Mode
+- **Phase:** 3 — Microservices Mode (In Progress)
+- **Last completed chunk:** C3.1
+- **Next chunk to work on:** C3.2 — API Gateway Golden Template & Reverse Proxy
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Implemented Microservices Answer schema contracts (ServiceDefinition, GatewayDefinition) and multi-service generator pipeline in core with reverse proxy routing, per-service isolation (gateway/, services/*), and tailored README/env generation — establishes foundational microservices composition engine in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Finalized v0.2.0 release packaging with comprehensive README documentation, CHANGELOG.md release notes, package version bumps to 0.2.0, and v0.2.0 git tag — completes Phase 2 (Breadth) with 100% verified test coverage across all 5 ecosystems and fragments — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Added composable JWT Authentication boilerplate fragments for Node.js (auth-jwt-node) and Python (auth-jwt-python) with token creation/verification, password hashing, Express/FastAPI routes (/register, /login, /me), and README documentation — delivers standard token-based authentication in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-14 — Added Dockerfile, root docker-compose.yml, .dockerignore, and GitHub Actions CI workflow generator extras with stack-tailored multi-stage builds and automated testing pipelines — delivers complete developer operational boilerplate in Phase 2 — ARCHITECTURE.md "packages/core/" & "Composition, not combinatorics"
@@ -53,6 +54,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C3.1 | Microservices Answer Schema & Core Generator Pipeline | 1168c7f | 2026-09-14 | packages/core/src/schema/answer.ts, packages/core/src/schema/answer.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/readme.ts, packages/core/src/merge.ts, CHUNKS.md, STATE.md |
 | C2.12 | Publish v0.2.0 | 976a102 | 2026-09-14 | package.json, packages/*/package.json, CHANGELOG.md, README.md |
 | C2.11 | JWT Authentication boilerplate fragment | 7daadf3 | 2026-09-14 | packages/templates/fragments/auth-jwt-node/*, packages/templates/fragments/auth-jwt-python/*, packages/templates/src/jwt-auth.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, packages/core/src/readme.test.ts, .github/workflows/ci.yml |
 | C2.10 | Docker & CI workflow generator extras | 677316e | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/core/src/ci.ts, packages/core/src/ci.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts, packages/core/src/merge.ts, packages/core/src/merge.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts, .github/workflows/ci.yml |

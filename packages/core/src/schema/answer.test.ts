@@ -130,4 +130,72 @@ describe('AnswerSchema', () => {
       expect(issue).toBeDefined();
     }
   });
+
+  it('validates a valid microservices answer object', () => {
+    const microservicesAnswer: Answer = {
+      projectName: 'my-microservices-app',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'microservices',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: ['docker', 'ci'],
+      gateway: {
+        stack: 'node',
+        framework: 'express',
+        port: 8000,
+      },
+      services: [
+        {
+          name: 'auth-service',
+          stack: 'node',
+          framework: 'express',
+          port: 8001,
+          database: 'postgres',
+          orm: 'prisma',
+          extras: ['auth'],
+        },
+        {
+          name: 'catalog-service',
+          stack: 'python',
+          framework: 'fastapi',
+          port: 8002,
+          database: 'mongodb',
+          orm: 'motor',
+          extras: [],
+        },
+      ],
+    };
+
+    const parsed = AnswerSchema.parse(microservicesAnswer);
+    expect(parsed.appShape).toBe('microservices');
+    expect(parsed.services).toHaveLength(2);
+    expect(parsed.gateway?.port).toBe(8000);
+    expect(parsed.services?.[0].name).toBe('auth-service');
+    expect(parsed.services?.[1].name).toBe('catalog-service');
+  });
+
+  it('rejects an invalid microservice service name', () => {
+    const invalid = {
+      projectName: 'my-microservices-app',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'microservices',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      services: [
+        {
+          name: 'invalid service name with spaces',
+          stack: 'node',
+          framework: 'express',
+          port: 8001,
+        },
+      ],
+    };
+
+    const result = AnswerSchema.safeParse(invalid);
+    expect(result.success).toBe(false);
+  });
 });

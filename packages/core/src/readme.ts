@@ -48,6 +48,26 @@ export function getNextCommands(answer: Answer): { label: string; commands: stri
     return result;
   }
 
+  if (answer.appShape === 'microservices') {
+    return [
+      {
+        label: 'Start All Microservices with Docker Compose',
+        commands: ['docker compose up --build'],
+      },
+      {
+        label: 'Start API Gateway locally',
+        commands: ['cd gateway', 'npm install', 'npm run dev'],
+      },
+      {
+        label: 'Start Downstream Services',
+        commands: [
+          '# Run each service in its directory (e.g. services/auth-service)',
+          'cd services/auth-service && npm install && npm run dev',
+        ],
+      },
+    ];
+  }
+
   // Standalone Next Steps
   if (answer.stack === 'python') {
     return [
@@ -180,6 +200,27 @@ export function generateProjectReadme(answer: Answer): string {
     sections.push('- **Cross-Wiring**: API Base URL and CORS pre-configured in `.env.example`.');
   }
 
+  if (answer.appShape === 'microservices') {
+    const gatewayPort = answer.gateway?.port ?? 8000;
+    const services =
+      answer.services && answer.services.length > 0
+        ? answer.services
+        : [
+            { name: 'auth-service', stack: 'node', framework: 'express', port: 8001 },
+            { name: 'catalog-service', stack: 'python', framework: 'fastapi', port: 8002 },
+          ];
+
+    sections.push('\n### Microservices Architecture');
+    sections.push(
+      `- **API Gateway**: Port \`${gatewayPort}\` in \`/gateway\` (Unified entrypoint, reverse proxy routing, CORS)`,
+    );
+    services.forEach((svc) => {
+      sections.push(
+        `- **${svc.name}**: \`${svc.stack}\` (\`${svc.framework}\`) on port \`${svc.port}\` located in \`/services/${svc.name}\``,
+      );
+    });
+  }
+
   // Next Steps / Quick Start
   sections.push('\n## Getting Started');
   const nextSteps = getNextCommands(answer);
@@ -257,6 +298,16 @@ export function generateProjectReadme(answer: Answer): string {
     sections.push('cp .env.example .env');
     sections.push('cp frontend/.env.example frontend/.env');
     sections.push('cp backend/.env.example backend/.env');
+  } else if (answer.appShape === 'microservices') {
+    sections.push('cp .env.example .env');
+    sections.push('cp gateway/.env.example gateway/.env');
+    const services =
+      answer.services && answer.services.length > 0
+        ? answer.services
+        : [{ name: 'auth-service' }, { name: 'catalog-service' }];
+    services.forEach((s) => {
+      sections.push(`cp services/${s.name}/.env.example services/${s.name}/.env`);
+    });
   } else {
     sections.push('cp .env.example .env');
   }
@@ -264,4 +315,3 @@ export function generateProjectReadme(answer: Answer): string {
 
   return sections.join('\n') + '\n';
 }
-

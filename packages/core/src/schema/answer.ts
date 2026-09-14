@@ -66,6 +66,27 @@ export const SubStackSchema = z.object({
 });
 export type SubStack = z.infer<typeof SubStackSchema>;
 
+export const ServiceDefinitionSchema = z.object({
+  name: z
+    .string()
+    .min(1, 'Service name is required')
+    .regex(/^[a-zA-Z0-9~_-]+$/, 'Service name must be alphanumeric with hyphens or underscores'),
+  stack: StackEnum,
+  framework: FrameworkEnum,
+  port: z.number().int().positive(),
+  database: DatabaseEnum.default('none'),
+  orm: OrmEnum.default('none'),
+  extras: z.array(ExtraEnum).default([]),
+});
+export type ServiceDefinition = z.infer<typeof ServiceDefinitionSchema>;
+
+export const GatewayDefinitionSchema = z.object({
+  stack: StackEnum.default('node'),
+  framework: FrameworkEnum.default('express'),
+  port: z.number().int().positive().default(8000),
+});
+export type GatewayDefinition = z.infer<typeof GatewayDefinitionSchema>;
+
 export const AnswerSchema = z.object({
   projectName: z
     .string()
@@ -84,6 +105,8 @@ export const AnswerSchema = z.object({
   runtimeVersion: z.string().optional(),
   frontend: SubStackSchema.optional(),
   backend: SubStackSchema.optional(),
+  services: z.array(ServiceDefinitionSchema).optional(),
+  gateway: GatewayDefinitionSchema.optional(),
 });
 
 export type Answer = z.infer<typeof AnswerSchema>;

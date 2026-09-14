@@ -55,7 +55,15 @@ Status values: `todo`, `in_progress`, `done`. The live status for each chunk liv
 
 ## Phase 3 — Microservices Mode
 
-Gateway + N-service generation modeled on the LedgerPOS reference architecture (see the research doc, section on architecture-at-a-glance). Plan in detail once Phase 2's fragment system has a few real database/ORM fragments proven out, since microservices mode is itself a large fragment/composition exercise.
+Gateway + N-service generation modeled on the LedgerPOS reference architecture (API Gateway + Auth Service + Domain/Catalog Services + shared network/Docker Compose).
+
+- **C3.1 — Microservices Answer Schema & Core Generator Pipeline.** Extend `AnswerSchema` with microservices contracts (`services` definitions, gateway configuration) and implement multi-service orchestration in `core.generate()`. *Acceptance:* Unit test in `generate.test.ts` asserts complete multi-service directory layout (`gateway/`, `services/auth-service/`, `services/catalog-service/`), root environment configs, and port allocations.
+- **C3.2 — API Gateway Golden Template & Reverse Proxy.** `packages/templates/gateway-express/` with dynamic reverse proxy routing to downstream microservices, request correlation IDs (`x-request-id`), aggregated `/health` healthcheck endpoint, and CORS handling. *Acceptance:* Integration test verifies gateway routes and proxying configuration.
+- **C3.3 — Microservice Service Template Composition & Auth Inter-service Wiring.** Generalize service composition so that downstream services can be scaffolded from any existing golden template (Express, Fastify, NestJS, FastAPI, Flask, etc.) with automatic microservice-mode adjustments (service-specific ports, internal env configs, and JWT verification). *Acceptance:* Unit/integration test verifies multi-stack services composed under `services/`.
+- **C3.4 — Microservices Docker Compose & Network Orchestration.** Generate unified root `docker-compose.yml` defining gateway, all microservice containers, dedicated database containers (Postgres, Mongo), bridge network (`microservices-net`), service discovery hostnames, and healthcheck dependencies. *Acceptance:* Docker generator test verifies complete multi-service docker compose spec.
+- **C3.5 — Microservices CLI Prompt Flow & Flags.** CLI interactive prompt tree and non-interactive flags / `--config` JSON for microservices mode (`scaffold new --shape microservices`). *Acceptance:* CLI test validates interactive flow and non-interactive microservices configuration.
+- **C3.6 — Microservices Integration & Live Smoke Test.** End-to-end integration and build smoke test verifying generated microservices project compiles and orchestrates cleanly. *Acceptance:* Generated gateway + Node auth-service + FastAPI catalog-service builds without error.
+- **C3.7 — Publish v0.3.0.** Bump package versions, update CHANGELOG.md, update README.md with Microservices Mode documentation and architecture diagram, git tag `v0.3.0`.
 
 ## Phase 4 — Community & Optional Web UI
 

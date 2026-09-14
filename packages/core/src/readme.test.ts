@@ -112,4 +112,3 @@ describe('Per-project README generation', () => {
     expect(readme).toContain('GET /api/auth/me');
   });
 });
-

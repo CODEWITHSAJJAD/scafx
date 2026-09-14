@@ -161,4 +161,3 @@ describe('Prisma ORM Fragment Smoke Test', () => {
     expect(dockerCompose).toContain('fastify-prisma-postgres');
   });
 });
-

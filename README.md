@@ -19,13 +19,13 @@
 
 ## Supported Ecosystems & Frameworks
 
-| Ecosystem | Frameworks | Database Options | ORMs / ODMs | Extras |
-|---|---|---|---|---|
-| **Node.js** | Express, Fastify, NestJS | PostgreSQL, MySQL, SQLite, MongoDB | Prisma, Mongoose | Docker, CI, JWT Auth, Git, Env |
-| **Python** | FastAPI, Flask, Django | PostgreSQL, MongoDB, SQLite | SQLAlchemy / Alembic, Motor | Docker, CI, JWT Auth, Git, Env |
-| **.NET** | ASP.NET Core Web API (Minimal API) | PostgreSQL, SQLite | Entity Framework Core | Docker, CI, Git, Env |
-| **React** | Vite (SPA), Next.js 15 (App Router) | None (Full-Stack Composable) | None | Docker, CI, Git, Env |
-| **Flutter** | Flutter Standard (Material 3) | SQLite / Local | Drift / Local | CI, Git, Env |
+| Ecosystem   | Frameworks                          | Database Options                   | ORMs / ODMs                 | Extras                         |
+| ----------- | ----------------------------------- | ---------------------------------- | --------------------------- | ------------------------------ |
+| **Node.js** | Express, Fastify, NestJS            | PostgreSQL, MySQL, SQLite, MongoDB | Prisma, Mongoose            | Docker, CI, JWT Auth, Git, Env |
+| **Python**  | FastAPI, Flask, Django              | PostgreSQL, MongoDB, SQLite        | SQLAlchemy / Alembic, Motor | Docker, CI, JWT Auth, Git, Env |
+| **.NET**    | ASP.NET Core Web API (Minimal API)  | PostgreSQL, SQLite                 | Entity Framework Core       | Docker, CI, Git, Env           |
+| **React**   | Vite (SPA), Next.js 15 (App Router) | None (Full-Stack Composable)       | None                        | Docker, CI, Git, Env           |
+| **Flutter** | Flutter Standard (Material 3)       | SQLite / Local                     | Drift / Local               | CI, Git, Env                   |
 
 ---
 
@@ -147,4 +147,3 @@ pnpm --filter @project-scaffolder/cli exec scaffold new --config scaffold.config
 ## License
 
 MIT © Universal Project Scaffolder Team
-

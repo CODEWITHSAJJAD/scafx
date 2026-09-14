@@ -1,5 +1,5 @@
 import { Eta } from 'eta';
-import { AnswerSchema, type Answer, type Extra } from './schema/answer.js';
+import { AnswerSchema, type Answer, type Extra, type ServiceDefinition } from './schema/answer.js';
 import type { Template, TemplateFile, TemplateSource } from './ports/template-source.js';
 import type { FileOp } from './types/file-op.js';
 import { mergeFileOps } from './merge.js';
@@ -66,10 +66,14 @@ export function renderTemplateFiles(
 
 /**
  * Pure generator function: (answer, templateSource) -> FileOp[]
- * Performs no disk I/O. Supports standalone templates, fullstack composition, and fragment merging.
+ * Performs no disk I/O. Supports standalone templates, fullstack composition, microservices, and fragment merging.
  */
 export async function generate(answer: Answer, templateSource: TemplateSource): Promise<FileOp[]> {
   const validatedAnswer = AnswerSchema.parse(answer);
+
+  if (validatedAnswer.appShape === 'microservices') {
+    return generateMicroservices(validatedAnswer, templateSource);
+  }
 
   if (validatedAnswer.appShape === 'fullstack' || validatedAnswer.appShape === 'frontend-backend') {
     return generateFullstack(validatedAnswer, templateSource);
@@ -381,6 +385,293 @@ async function generateStandalone(
         fileOps = mergeFileOps(fileOps, extraOps);
       }
     }
+  }
+
+  return fileOps;
+}
+
+async function generateMicroservices(
+  answer: Answer,
+  templateSource: TemplateSource,
+): Promise<FileOp[]> {
+  const gateway = answer.gateway ?? { stack: 'node', framework: 'express', port: 8000 };
+  const services: ServiceDefinition[] =
+    answer.services && answer.services.length > 0
+      ? answer.services
+      : [
+          {
+            name: 'auth-service',
+            stack: 'node',
+            framework: 'express',
+            port: 8001,
+            database: 'postgres',
+            orm: 'prisma',
+            extras: ['auth'],
+          },
+          {
+            name: 'catalog-service',
+            stack: 'python',
+            framework: 'fastapi',
+            port: 8002,
+            database: 'mongodb',
+            orm: 'motor',
+            extras: [],
+          },
+        ];
+
+  let fileOps: FileOp[] = [];
+
+  // 1. Generate Gateway
+  const gatewayAnswer: Answer = {
+    projectName: `${answer.projectName}-gateway`,
+    stack: gateway.stack,
+    framework: gateway.framework,
+    appShape: 'standalone',
+    architecture: 'layered',
+    database: 'none',
+    orm: 'none',
+    extras: [],
+  };
+
+  let gatewayTemplate: Template | null = null;
+  if (templateSource.getTemplate) {
+    try {
+      const candidate = await templateSource.getTemplate({
+        ...gatewayAnswer,
+        projectName: 'gateway',
+      });
+      if (candidate && candidate.manifest && candidate.manifest.id.includes('gateway')) {
+        gatewayTemplate = candidate;
+      }
+    } catch {
+      gatewayTemplate = null;
+    }
+  }
+
+  const gatewayContext = {
+    ...gatewayAnswer,
+    gatewayPort: gateway.port,
+    services,
+    hasExtra: (extraName: string) => answer.extras.includes(extraName as Extra),
+  };
+
+  if (gatewayTemplate && gatewayTemplate.files.length > 0) {
+    const gatewayOps = renderTemplateFiles(gatewayTemplate.files, gatewayContext, 'gateway');
+    fileOps = mergeFileOps(fileOps, gatewayOps);
+  } else {
+    // Generate default Node/Express Gateway proxy
+    const defaultGatewayOps: FileOp[] = [
+      {
+        path: 'gateway/package.json',
+        content:
+          JSON.stringify(
+            {
+              name: `${answer.projectName}-gateway`,
+              version: '0.1.0',
+              private: true,
+              type: 'module',
+              scripts: {
+                build: 'tsc',
+                start: 'node dist/index.js',
+                dev: 'tsx watch src/index.ts',
+              },
+              dependencies: {
+                dotenv: '^16.4.7',
+                express: '^4.21.2',
+                'http-proxy-middleware': '^3.0.3',
+                cors: '^2.8.5',
+              },
+              devDependencies: {
+                '@types/cors': '^2.8.17',
+                '@types/express': '^5.0.0',
+                '@types/node': '^22.13.10',
+                tsx: '^4.19.3',
+                typescript: '^5.8.2',
+              },
+            },
+            null,
+            2,
+          ) + '\n',
+      },
+      {
+        path: 'gateway/tsconfig.json',
+        content:
+          JSON.stringify(
+            {
+              compilerOptions: {
+                target: 'ES2022',
+                module: 'NodeNext',
+                moduleResolution: 'NodeNext',
+                outDir: './dist',
+                rootDir: './src',
+                strict: true,
+                esModuleInterop: true,
+                skipLibCheck: true,
+              },
+              include: ['src/**/*'],
+            },
+            null,
+            2,
+          ) + '\n',
+      },
+      {
+        path: 'gateway/src/index.ts',
+        content: `import express, { Request, Response } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.GATEWAY_PORT || ${gateway.port};
+
+app.use(cors());
+app.use(express.json());
+
+// Correlation ID & Request Logger Middleware
+app.use((req, res, next) => {
+  const requestId =
+    req.headers['x-request-id'] ||
+    \`req-\${Date.now()}-\${Math.random().toString(36).slice(2, 7)}\`;
+  req.headers['x-request-id'] = requestId;
+  res.setHeader('X-Request-Id', requestId as string);
+  console.log(\`[\${new Date().toISOString()}] [\${requestId}] \${req.method} \${req.originalUrl}\`);
+  next();
+});
+
+// Gateway Aggregated Health Check
+app.get('/health', (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'api-gateway',
+    timestamp: new Date().toISOString(),
+    routes: [
+${services.map((s) => `      { path: '/api/${s.name.replace(/-service$/, '')}', target: process.env.${s.name.toUpperCase().replace(/-/g, '_')}_URL || 'http://localhost:${s.port}' }`).join(',\n')}
+    ],
+  });
+});
+
+// Reverse Proxy Route Registration
+${services
+  .map((s) => {
+    const routePrefix = `/api/${s.name.replace(/-service$/, '')}`;
+    const envVar = `${s.name.toUpperCase().replace(/-/g, '_')}_URL`;
+    return `// Proxy to ${s.name}
+app.use(
+  '${routePrefix}',
+  createProxyMiddleware({
+    target: process.env.${envVar} || 'http://localhost:${s.port}',
+    changeOrigin: true,
+    pathRewrite: { '^${routePrefix}': '' },
+  }),
+);`;
+  })
+  .join('\n\n')}
+
+app.listen(PORT, () => {
+  console.log(\`🚀 API Gateway is running on http://localhost:\${PORT}\`);
+});
+`,
+      },
+      {
+        path: 'gateway/.env.example',
+        content:
+          `GATEWAY_PORT=${gateway.port}\n` +
+          services
+            .map(
+              (s) => `${s.name.toUpperCase().replace(/-/g, '_')}_URL=http://localhost:${s.port}\n`,
+            )
+            .join(''),
+      },
+    ];
+    fileOps = mergeFileOps(fileOps, defaultGatewayOps);
+  }
+
+  // 2. Generate each downstream Service
+  for (const service of services) {
+    const serviceAnswer: Answer = {
+      ...answer,
+      projectName: service.name,
+      stack: service.stack,
+      framework: service.framework,
+      appShape: 'standalone',
+      architecture: 'layered',
+      database: service.database ?? 'none',
+      orm: service.orm ?? 'none',
+      extras: service.extras ?? [],
+    };
+
+    const serviceTemplate = await templateSource.getTemplate(serviceAnswer);
+    if (!serviceTemplate || !serviceTemplate.manifest) {
+      throw new GeneratorError(
+        `No template found for microservice "${service.name}" (stack: ${service.stack}, framework: ${service.framework})`,
+      );
+    }
+
+    const serviceContext = {
+      ...serviceAnswer,
+      servicePort: service.port,
+      port: service.port,
+      hasExtra: (extraName: string) => serviceAnswer.extras.includes(extraName as Extra),
+    };
+
+    const servicePathPrefix = `services/${service.name}`;
+    let serviceOps = renderTemplateFiles(serviceTemplate.files, serviceContext, servicePathPrefix);
+
+    // Apply database/orm fragment to this service if configured
+    serviceOps = await resolveAndMergeDatabaseFragments(
+      serviceOps,
+      serviceAnswer,
+      templateSource,
+      serviceContext,
+      servicePathPrefix,
+    );
+
+    // Apply auth fragment to this service if configured
+    serviceOps = await resolveAndMergeAuthFragments(
+      serviceOps,
+      serviceAnswer,
+      templateSource,
+      serviceContext,
+      servicePathPrefix,
+    );
+
+    // Ensure service .env.example declares its service port
+    const serviceEnvOp: FileOp = {
+      path: `${servicePathPrefix}/.env.example`,
+      content: `PORT=${service.port}\nSERVICE_NAME=${service.name}\n`,
+    };
+    serviceOps = mergeFileOps(serviceOps, [serviceEnvOp]);
+
+    fileOps = mergeFileOps(fileOps, serviceOps);
+  }
+
+  // 3. Root files: .env.example, README.md, docker, ci
+  let rootEnv = `# Microservices Root Environment Configuration\nGATEWAY_PORT=${gateway.port}\n`;
+  for (const s of services) {
+    rootEnv += `${s.name.toUpperCase().replace(/-/g, '_')}_URL=http://localhost:${s.port}\n`;
+  }
+  fileOps = mergeFileOps(fileOps, [{ path: '.env.example', content: rootEnv }]);
+
+  // README
+  fileOps = mergeFileOps(fileOps, [
+    {
+      path: 'README.md',
+      content: generateProjectReadme(answer),
+    },
+  ]);
+
+  // Docker
+  if (answer.extras.includes('docker')) {
+    const dockerOps = generateProjectDocker(answer);
+    fileOps = mergeFileOps(fileOps, dockerOps);
+  }
+
+  // CI
+  if (answer.extras.includes('ci')) {
+    const ciOps = generateProjectCi(answer);
+    fileOps = mergeFileOps(fileOps, ciOps);
   }
 
   return fileOps;

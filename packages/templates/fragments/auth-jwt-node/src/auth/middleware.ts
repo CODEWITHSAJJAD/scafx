@@ -5,7 +5,11 @@ export interface AuthenticatedRequest extends Request {
   user?: JwtPayload;
 }
 
-export const authenticateJwt: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
+export const authenticateJwt: RequestHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     res.status(401).json({ error: 'Missing or invalid Authorization header' });
@@ -21,4 +25,3 @@ export const authenticateJwt: RequestHandler = (req: Request, res: Response, nex
     res.status(403).json({ error: 'Invalid or expired token' });
   }
 };
-
