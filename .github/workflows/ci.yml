@@ -93,6 +93,8 @@ jobs:
             test-file: 'packages/templates/src/react-fastapi.smoke.test.ts'
           - name: 'Postgres+SQLAlchemy Fragment'
             test-file: 'packages/templates/src/postgres-sqlalchemy.smoke.test.ts'
+          - name: 'Node+Prisma Fragment'
+            test-file: 'packages/templates/src/node-prisma.smoke.test.ts'
 
     steps:
       - name: Checkout repository

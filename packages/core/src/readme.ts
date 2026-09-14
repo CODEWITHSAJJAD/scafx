@@ -106,10 +106,14 @@ export function getNextCommands(answer: Answer): { label: string; commands: stri
   }
 
   if (answer.stack === 'node' || answer.stack === 'react') {
+    const installCommands = [`cd ${answer.projectName}`, 'npm install'];
+    if (answer.stack === 'node' && answer.orm === 'prisma') {
+      installCommands.push('npx prisma generate', 'npm run db:push');
+    }
     return [
       {
         label: 'Install Dependencies',
-        commands: [`cd ${answer.projectName}`, 'npm install'],
+        commands: installCommands,
       },
       {
         label: 'Start Development Server',

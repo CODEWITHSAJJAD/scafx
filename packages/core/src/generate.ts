@@ -89,6 +89,7 @@ async function resolveAndMergeDatabaseFragments(
 
   const candidateFragmentIds = [
     `${answer.stack}-${answer.database}-${answer.orm}`,
+    `${answer.stack}-${answer.orm}`,
     `${answer.database}-${answer.orm}`,
     `orm-${answer.orm}`,
     `db-${answer.database}`,

@@ -1,0 +1,12 @@
+{
+  "id": "node-prisma",
+  "name": "Node.js + Prisma ORM",
+  "description": "Prisma ORM with client initialization, schema migrations, and multi-database support (PostgreSQL, MySQL, SQLite)",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite"],
+  "minRuntimeVersion": ">=20.0.0",
+  "placeholders": ["projectName", "database", "orm"],
+  "fragments": []
+}

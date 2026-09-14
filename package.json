@@ -9,6 +9,7 @@
     "test:unit": "vitest run --exclude \"**/*.smoke.test.ts\"",
     "test:smoke": "vitest run smoke.test",
     "lint": "eslint .",
+    "scaffold": "node packages/cli/bin/run.js",
     "format": "prettier --check \"**/*.{ts,js,json,md,yaml,yml}\"",
     "format:fix": "prettier --write \"**/*.{ts,js,json,md,yaml,yml}\""
   },

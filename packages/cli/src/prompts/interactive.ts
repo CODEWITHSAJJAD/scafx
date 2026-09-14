@@ -64,10 +64,7 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
       { value: 'flask', label: 'Flask' },
       { value: 'django', label: 'Django' },
     ],
-    dotnet: [
-      { value: 'webapi', label: 'ASP.NET Core Web API' },
-      { value: 'mvc', label: 'ASP.NET Core MVC' },
-    ],
+    dotnet: [{ value: 'webapi', label: 'ASP.NET Core Web API' }],
     react: [
       { value: 'vite', label: 'Vite SPA' },
       { value: 'nextjs', label: 'Next.js' },
@@ -94,9 +91,7 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
       message: 'Select app shape:',
       options: [
         { value: 'standalone', label: 'Standalone' },
-        { value: 'frontend-backend', label: 'Frontend + Backend (separate)' },
-        { value: 'fullstack', label: 'Full-stack (same repository)' },
-        { value: 'microservices', label: 'Microservices (gateway + services)' },
+        { value: 'fullstack', label: 'Full-stack (composed frontend + backend)' },
       ],
       initialValue: 'standalone',
     }));
@@ -104,6 +99,62 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
   if (p.isCancel(appShape)) {
     p.cancel('Scaffolding cancelled.');
     process.exit(0);
+  }
+
+  let frontend: { stack: Stack; framework: Framework } | undefined;
+  let backend: { stack: Stack; framework: Framework } | undefined;
+
+  if (appShape === 'fullstack') {
+    const fStack = await p.select<Stack>({
+      message: 'Select frontend stack:',
+      options: [{ value: 'react', label: 'React' }],
+      initialValue: 'react',
+    });
+    if (p.isCancel(fStack)) {
+      p.cancel('Scaffolding cancelled.');
+      process.exit(0);
+    }
+
+    const fFramework = await p.select<Framework>({
+      message: 'Select frontend framework:',
+      options: [
+        { value: 'vite', label: 'Vite SPA' },
+        { value: 'nextjs', label: 'Next.js' },
+      ],
+      initialValue: 'vite',
+    });
+    if (p.isCancel(fFramework)) {
+      p.cancel('Scaffolding cancelled.');
+      process.exit(0);
+    }
+
+    frontend = { stack: fStack, framework: fFramework };
+
+    const bStack = await p.select<Stack>({
+      message: 'Select backend stack:',
+      options: [
+        { value: 'python', label: 'Python' },
+        { value: 'node', label: 'Node.js' },
+        { value: 'dotnet', label: '.NET (C#)' },
+      ],
+      initialValue: 'python',
+    });
+    if (p.isCancel(bStack)) {
+      p.cancel('Scaffolding cancelled.');
+      process.exit(0);
+    }
+
+    const bFramework = await p.select<Framework>({
+      message: 'Select backend framework:',
+      options: frameworkOptions[bStack] || [{ value: 'none', label: 'Standard' }],
+      initialValue: frameworkOptions[bStack][0]?.value ?? 'none',
+    });
+    if (p.isCancel(bFramework)) {
+      p.cancel('Scaffolding cancelled.');
+      process.exit(0);
+    }
+
+    backend = { stack: bStack, framework: bFramework };
   }
 
   const architecture =
@@ -195,6 +246,8 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
     database,
     orm,
     extras: (extras as Extra[]) || [],
+    ...(frontend ? { frontend } : {}),
+    ...(backend ? { backend } : {}),
   };
 
   return AnswerSchema.parse(rawAnswer);

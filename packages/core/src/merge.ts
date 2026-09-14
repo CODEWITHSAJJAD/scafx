@@ -191,6 +191,10 @@ export function mergeFileOps(baseOps: FileOp[], fragmentOps: FileOp[]): FileOp[]
   });
 
   for (const fragOp of fragmentOps) {
+    if (!fragOp.content || fragOp.content.trim().length === 0) {
+      continue;
+    }
+
     const existingIndex = fileMap.get(fragOp.path);
 
     if (existingIndex === undefined) {
