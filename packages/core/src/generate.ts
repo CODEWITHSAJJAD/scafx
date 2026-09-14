@@ -589,6 +589,13 @@ app.listen(PORT, () => {
     fileOps = mergeFileOps(fileOps, defaultGatewayOps);
   }
 
+  const authService = services.find(
+    (s) => s.name.includes('auth') || (s.extras && s.extras.includes('auth')),
+  );
+  const authServiceUrl = authService
+    ? `http://localhost:${authService.port}`
+    : 'http://localhost:8001';
+
   // 2. Generate each downstream Service
   for (const service of services) {
     const serviceAnswer: Answer = {
@@ -614,6 +621,8 @@ app.listen(PORT, () => {
       ...serviceAnswer,
       servicePort: service.port,
       port: service.port,
+      authServiceUrl,
+      gatewayPort: gateway.port,
       hasExtra: (extraName: string) => serviceAnswer.extras.includes(extraName as Extra),
     };
 
@@ -638,10 +647,36 @@ app.listen(PORT, () => {
       servicePathPrefix,
     );
 
-    // Ensure service .env.example declares its service port
+    // Ensure service .env.example declares its service port, auth wiring, and database config
+    const envPath = `${servicePathPrefix}/.env.example`;
+    const existingEnvOp = serviceOps.find((op) => op.path === envPath);
+    if (existingEnvOp) {
+      if (/^PORT=\d+/m.test(existingEnvOp.content)) {
+        existingEnvOp.content = existingEnvOp.content.replace(/^PORT=\d+/m, `PORT=${service.port}`);
+      } else {
+        existingEnvOp.content = `PORT=${service.port}\n` + existingEnvOp.content;
+      }
+    }
+
+    let serviceEnvAdditions = `SERVICE_NAME=${service.name}\nGATEWAY_URL=http://localhost:${gateway.port}\nAUTH_SERVICE_URL=${authServiceUrl}\n`;
+    if (service.extras?.includes('auth') || answer.extras.includes('auth')) {
+      if (!existingEnvOp?.content.includes('JWT_SECRET=')) {
+        serviceEnvAdditions += `JWT_SECRET=super-secret-key-change-in-production\n`;
+      }
+    }
+    if (service.database === 'postgres' && !existingEnvOp?.content.includes('DATABASE_URL=')) {
+      const dbName = `${service.name.replace(/[^a-zA-Z0-9]/g, '_')}_db`;
+      serviceEnvAdditions += `DATABASE_URL=postgresql://postgres:postgres@localhost:5432/${dbName}\n`;
+    } else if (service.database === 'mongodb' && !existingEnvOp?.content.includes('MONGODB_URI=')) {
+      const dbName = `${service.name.replace(/[^a-zA-Z0-9]/g, '_')}_db`;
+      serviceEnvAdditions += `MONGODB_URI=mongodb://localhost:27017/${dbName}\n`;
+    } else if (service.database === 'sqlite' && !existingEnvOp?.content.includes('DATABASE_URL=')) {
+      serviceEnvAdditions += `DATABASE_URL=file:./dev.db\n`;
+    }
+
     const serviceEnvOp: FileOp = {
-      path: `${servicePathPrefix}/.env.example`,
-      content: `PORT=${service.port}\nSERVICE_NAME=${service.name}\n`,
+      path: envPath,
+      content: serviceEnvAdditions,
     };
     serviceOps = mergeFileOps(serviceOps, [serviceEnvOp]);
 
