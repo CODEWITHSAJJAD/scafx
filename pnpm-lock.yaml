@@ -36,13 +36,13 @@ importers:
         specifier: ^0.10.0
         version: 0.10.1
       '@codewithsajjad01/core':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
       '@codewithsajjad01/preflight':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../preflight
       '@codewithsajjad01/templates':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../templates
       '@oclif/core':
         specifier: ^4.2.8
@@ -86,7 +86,7 @@ importers:
   packages/templates:
     dependencies:
       '@codewithsajjad01/core':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../core
       fs-extra:
         specifier: ^11.4.0

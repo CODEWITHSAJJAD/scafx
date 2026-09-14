@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@codewithsajjad01/core": "workspace:*",
+    "@codewithsajjad01/core": "workspace:^",
     "fs-extra": "^11.4.0"
   },
   "devDependencies": {
