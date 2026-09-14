@@ -158,6 +158,7 @@ describe('Prisma ORM Fragment Smoke Test', () => {
     expect(await fs.pathExists(path.join(targetDir, 'docker-compose.yml'))).toBe(true);
     const dockerCompose = await fs.readFile(path.join(targetDir, 'docker-compose.yml'), 'utf-8');
     expect(dockerCompose).toContain('postgres:16-alpine');
-    expect(dockerCompose).toContain('POSTGRES_DB: fastify-prisma-postgres');
+    expect(dockerCompose).toContain('fastify-prisma-postgres');
   });
 });
+

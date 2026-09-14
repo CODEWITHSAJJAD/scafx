@@ -66,7 +66,7 @@ describe('core.generate()', () => {
 
     const fileOps = await generate(answer, inMemorySource);
 
-    expect(fileOps).toHaveLength(5);
+    expect(fileOps).toHaveLength(7);
 
     // Verify paths
     expect(fileOps.map((f) => f.path)).toEqual([
@@ -75,6 +75,8 @@ describe('core.generate()', () => {
       'config/my-awesome-api.env',
       'docker-compose.yml',
       'README.md',
+      'Dockerfile',
+      '.dockerignore',
     ]);
 
     // Verify content substitutions
@@ -93,7 +95,7 @@ describe('core.generate()', () => {
     expect(envOp!.content).toBe('APP_NAME=my-awesome-api\nDB=postgres');
 
     const dockerOp = fileOps.find((f) => f.path === 'docker-compose.yml');
-    expect(dockerOp!.content).toContain('version: "3.8"');
+    expect(dockerOp!.content).toContain("version: '3.8'");
 
     const readmeOp = fileOps.find((f) => f.path === 'README.md');
     expect(readmeOp).toBeDefined();

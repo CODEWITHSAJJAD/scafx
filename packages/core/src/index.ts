@@ -7,5 +7,7 @@ export * from './adapters/disk-file-writer.js';
 export * from './adapters/memory-file-writer.js';
 export * from './merge.js';
 export * from './readme.js';
+export * from './docker.js';
+export * from './ci.js';
 export * from './generate.js';
 export const CORE_VERSION = '0.1.0';

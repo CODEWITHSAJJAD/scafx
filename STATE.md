@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 2 — Breadth (In Progress)
-- **Last completed chunk:** C2.9
-- **Next chunk to work on:** C2.10 — Docker & CI workflow generator extras
+- **Last completed chunk:** C2.10
+- **Next chunk to work on:** C2.11 — JWT Authentication boilerplate fragment
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Added Dockerfile, root docker-compose.yml, .dockerignore, and GitHub Actions CI workflow generator extras with stack-tailored multi-stage builds and automated testing pipelines — delivers complete developer operational boilerplate in Phase 2 — ARCHITECTURE.md "packages/core/" & "Composition, not combinatorics"
 - 2026-09-14 — Added MongoDB database fragments for Node.js (mongo-mongoose) and Python (mongo-motor) with connection lifecycle management, data models, Docker Compose mongo service with healthchecks, and live smoke tests — expands database support to NoSQL document store in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-14 — Added Prisma ORM fragment for Node.js (Postgres, MySQL, SQLite) with dynamic datasource provider, User model, Prisma client singleton, package.json scripts, docker-compose db services, and live prisma generate smoke test — expands database/ORM ecosystem to Node backends in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-13 — Added Flutter standard golden template and FlutterChecker in preflight with feature-first folder architecture, Material 3 theming, domain state models, and live flutter test smoke test — expands ecosystem breadth to cross-platform mobile/desktop in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Environment preflight"
@@ -50,6 +51,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C2.10 | Docker & CI workflow generator extras | 677316e | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/core/src/ci.ts, packages/core/src/ci.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts, packages/core/src/merge.ts, packages/core/src/merge.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts, .github/workflows/ci.yml |
 | C2.9 | MongoDB database fragments | 9e943c6 | 2026-09-14 | packages/templates/fragments/mongo-mongoose/*, packages/templates/fragments/mongo-motor/*, packages/templates/src/mongodb-fragments.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
 | C2.8 | Prisma ORM fragment for Node.js | c1dbca8 | 2026-09-14 | packages/templates/fragments/node-prisma/*, packages/templates/src/node-prisma.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/merge.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
 | C2.7 | Flutter standard golden template & Flutter preflight checker | 8e9504d | 2026-09-13 | packages/templates/flutter-standard/*, packages/templates/src/flutter-standard.smoke.test.ts, packages/preflight/src/checkers/flutter.ts, packages/preflight/src/resolve.ts, packages/preflight/src/preflight.test.ts, packages/preflight/src/index.ts, packages/core/src/readme.ts, packages/templates/src/loader.ts, .github/workflows/ci.yml |
@@ -85,6 +87,11 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/core/src/docker.ts` | Multi-stage Dockerfile and Docker Compose generator supporting all standalone and fullstack stacks | C2.10 |
+| `packages/core/src/docker.test.ts` | Unit tests for stack-aware Dockerfile and Compose generator logic | C2.10 |
+| `packages/core/src/ci.ts` | GitHub Actions CI workflow generator supporting Node, Python, .NET, React, and Flutter test suites | C2.10 |
+| `packages/core/src/ci.test.ts` | Unit tests for stack-aware CI workflow generation | C2.10 |
+| `packages/templates/src/docker-ci-extras.smoke.test.ts` | Integration smoke test for Docker and CI workflow extras generation | C2.10 |
 | `packages/templates/fragments/mongo-mongoose/` | Reusable MongoDB + Mongoose ODM fragment for Node.js with connection lifecycle, user model, and Docker Compose | C2.9 |
 | `packages/templates/fragments/mongo-motor/` | Reusable MongoDB + Motor async driver fragment for Python with async connection manager, Pydantic models, and Docker Compose | C2.9 |
 | `packages/templates/src/mongodb-fragments.smoke.test.ts` | Integration and live npm build / python py_compile smoke test for MongoDB fragments | C2.9 |
@@ -172,7 +179,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.10 (Docker & CI workflow generator extras).
+Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.11 (JWT Authentication boilerplate fragment).
 
 ## Known Issues / Open Questions
 

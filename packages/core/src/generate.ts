@@ -4,6 +4,8 @@ import type { Template, TemplateFile, TemplateSource } from './ports/template-so
 import type { FileOp } from './types/file-op.js';
 import { mergeFileOps } from './merge.js';
 import { generateProjectReadme } from './readme.js';
+import { generateProjectDocker } from './docker.js';
+import { generateProjectCi } from './ci.js';
 
 export class GeneratorError extends Error {
   constructor(message: string) {
@@ -236,6 +238,16 @@ async function generateFullstack(
   );
 
   // Merge any extras fragments requested in answer (e.g. docker, ci, auth)
+  if (answer.extras.includes('docker')) {
+    const dockerOps = generateProjectDocker(answer);
+    fileOps = mergeFileOps(fileOps, dockerOps);
+  }
+
+  if (answer.extras.includes('ci')) {
+    const ciOps = generateProjectCi(answer);
+    fileOps = mergeFileOps(fileOps, ciOps);
+  }
+
   if (templateSource.getFragment) {
     for (const extra of answer.extras) {
       const extraFragment = await templateSource.getFragment(extra);
@@ -303,6 +315,18 @@ async function generateStandalone(
     content: generateProjectReadme(answer),
   };
   fileOps = mergeFileOps(fileOps, [readmeOp]);
+
+  // Apply Docker extra if selected
+  if (answer.extras.includes('docker')) {
+    const dockerOps = generateProjectDocker(answer);
+    fileOps = mergeFileOps(fileOps, dockerOps);
+  }
+
+  // Apply CI extra if selected
+  if (answer.extras.includes('ci')) {
+    const ciOps = generateProjectCi(answer);
+    fileOps = mergeFileOps(fileOps, ciOps);
+  }
 
   // Merge any extra fragments requested in answer
   if (templateSource.getFragment) {

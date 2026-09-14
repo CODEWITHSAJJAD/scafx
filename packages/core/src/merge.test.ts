@@ -81,6 +81,41 @@ describe('Merge utilities', () => {
     });
   });
 
+  describe('mergeDockerCompose', () => {
+    it('combines services and volumes from multiple docker compose definitions', () => {
+      const base = `version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+`;
+      const fragment = `version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres_data:
+`;
+      const merged = mergeFileOps(
+        [{ path: 'docker-compose.yml', content: base }],
+        [{ path: 'docker-compose.yml', content: fragment }],
+      );
+
+      const content = merged[0].content;
+      expect(content).toContain('app:');
+      expect(content).toContain('db:');
+      expect(content).toContain('postgres:16-alpine');
+      expect(content).toContain('volumes:');
+      expect(content).toContain('postgres_data:');
+    });
+  });
+
   describe('mergeFileOps', () => {
     it('merges non-overlapping and overlapping FileOps correctly', () => {
       const baseOps: FileOp[] = [
@@ -104,3 +139,4 @@ describe('Merge utilities', () => {
     });
   });
 });
+

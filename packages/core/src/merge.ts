@@ -178,9 +178,115 @@ export function mergeMarkdown(baseStr: string, fragmentStr: string): string {
 }
 
 /**
+ * Merges two docker-compose.yml strings, combining services and volumes sections.
+ */
+export function mergeDockerCompose(baseStr: string, fragmentStr: string): string {
+  if (!baseStr.trim()) return fragmentStr;
+  if (!fragmentStr.trim()) return baseStr;
+
+  function parseCompose(content: string) {
+    const lines = content.split(/\r?\n/);
+    const versionMatch = lines.find((l) => l.trim().startsWith('version:'));
+    const versionLine = versionMatch ? versionMatch.trim() : "version: '3.8'";
+
+    const services = new Map<string, string[]>();
+    const volumes: string[] = [];
+
+    let currentSection: 'root' | 'services' | 'volumes' | 'other' = 'root';
+    let currentServiceName = '';
+    let currentServiceLines: string[] = [];
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) {
+        if (currentSection === 'services' && currentServiceName) {
+          currentServiceLines.push(line);
+        }
+        continue;
+      }
+
+      if (line.match(/^[a-zA-Z0-9_-]+:/)) {
+        if (currentServiceName) {
+          services.set(currentServiceName, currentServiceLines);
+          currentServiceName = '';
+          currentServiceLines = [];
+        }
+        if (trimmed.startsWith('services:')) {
+          currentSection = 'services';
+        } else if (trimmed.startsWith('volumes:')) {
+          currentSection = 'volumes';
+        } else if (trimmed.startsWith('version:')) {
+          currentSection = 'root';
+        } else {
+          currentSection = 'other';
+        }
+        continue;
+      }
+
+      if (currentSection === 'services') {
+        const serviceHeaderMatch = line.match(/^  ([a-zA-Z0-9_-]+):/);
+        if (serviceHeaderMatch) {
+          if (currentServiceName) {
+            services.set(currentServiceName, currentServiceLines);
+          }
+          currentServiceName = serviceHeaderMatch[1];
+          currentServiceLines = [line];
+        } else if (currentServiceName) {
+          currentServiceLines.push(line);
+        }
+      } else if (currentSection === 'volumes') {
+        if (trimmed) {
+          volumes.push(line);
+        }
+      }
+    }
+
+    if (currentServiceName) {
+      services.set(currentServiceName, currentServiceLines);
+    }
+
+    return { versionLine, services, volumes };
+  }
+
+  const base = parseCompose(baseStr);
+  const fragment = parseCompose(fragmentStr);
+
+  const mergedVersion = fragment.versionLine || base.versionLine;
+  const mergedServices = new Map<string, string[]>(base.services);
+
+  for (const [sName, sLines] of fragment.services.entries()) {
+    mergedServices.set(sName, sLines);
+  }
+
+  const mergedVolumesSet = new Set<string>();
+  const mergedVolumes: string[] = [];
+
+  for (const volLine of [...base.volumes, ...fragment.volumes]) {
+    const trimmed = volLine.trim();
+    if (trimmed && !mergedVolumesSet.has(trimmed)) {
+      mergedVolumesSet.add(trimmed);
+      mergedVolumes.push(volLine);
+    }
+  }
+
+  const serviceBlocks: string[] = [];
+  for (const [, lines] of mergedServices.entries()) {
+    serviceBlocks.push(lines.join('\n'));
+  }
+
+  let result = `${mergedVersion}\n\nservices:\n${serviceBlocks.join('\n\n')}\n`;
+
+  if (mergedVolumes.length > 0) {
+    result += `\nvolumes:\n${mergedVolumes.join('\n')}\n`;
+  }
+
+  return result;
+}
+
+/**
  * Merges two lists of FileOps:
  * - New files from fragment are added.
- * - Existing files are merged based on extension (.json, .env, .gitignore, .md, requirements.txt) or replaced.
+ * - Existing files are merged based on extension (.json, .env, .gitignore, .md, requirements.txt, docker-compose.yml) or replaced.
  */
 export function mergeFileOps(baseOps: FileOp[], fragmentOps: FileOp[]): FileOp[] {
   const result: FileOp[] = baseOps.map((op) => ({ ...op }));
@@ -217,6 +323,11 @@ export function mergeFileOps(baseOps: FileOp[], fragmentOps: FileOp[]): FileOp[]
         filename.endsWith('requirements-dev.txt')
       ) {
         existing.content = mergeRequirements(existing.content, fragOp.content);
+      } else if (
+        filename.endsWith('docker-compose.yml') ||
+        filename.endsWith('docker-compose.yaml')
+      ) {
+        existing.content = mergeDockerCompose(existing.content, fragOp.content);
       } else {
         // By default, fragment overrides base file
         existing.content = fragOp.content;
