@@ -1,6 +1,6 @@
 # Universal Project Scaffolder
 
-> A modular, architecture- and database-aware universal project scaffolder CLI supporting Node, Python, .NET, React, and Flutter ecosystems.
+> A modular, architecture- and database-aware universal project scaffolder CLI supporting Node.js, Python, .NET, React, and Flutter ecosystems.
 
 ---
 
@@ -8,20 +8,40 @@
 
 - **Hexagonal / Ports-and-Adapters Architecture**: Core domain logic is completely decoupled from disk I/O, prompts, and CLI runtime.
 - **Composition over Combinatorics**: Composes frontend + backend templates into unified full-stack monorepos with automatic CORS and API base URL cross-wiring without bespoke combinatorics.
-- **Database & ORM Fragments**: Integrates database services (e.g. PostgreSQL 16 via Docker Compose) and ORMs (e.g. SQLAlchemy 2.0 with Alembic async migrations).
-- **Environment Preflight (Guided-Manual Tier)**: Detects installed runtime environments (Node.js, Python), compares semver requirements, and provides actionable OS-specific install instructions with interactive bypass or `--force`/`--skip-preflight` flags.
+- **Rich Database & ORM Fragments**: Integrates database services (PostgreSQL, MongoDB, MySQL, SQLite via Docker Compose) and ORMs (Prisma, SQLAlchemy 2.0/Alembic, Mongoose, Motor).
+- **Environment Preflight (Guided-Manual Tier)**: Detects installed runtime environments (Node.js, Python, .NET SDK, Flutter SDK), compares semver requirements, and provides actionable OS-specific install instructions with interactive bypass or `--force`/`--skip-preflight` flags.
+- **Production-Ready Extras**: Multi-stage Dockerfiles, root `docker-compose.yml`, GitHub Actions CI workflows, and JWT authentication boilerplate (`/register`, `/login`, `/me`).
 - **Non-Interactive Equivalence**: Supports flag-based parameters and JSON configuration files (`--config scaffold.config.json`) producing byte-identical generated projects.
 - **Automated Git Initialization**: Automatically runs `git init`, stages files, and creates the initial repository commit via `--git`.
 - **Per-Project Custom README**: Automatically produces detailed, customized quick-start documentation and exact executable commands for every scaffolded project.
 
 ---
 
-## P0 Golden Combinations
+## Supported Ecosystems & Frameworks
+
+| Ecosystem | Frameworks | Database Options | ORMs / ODMs | Extras |
+|---|---|---|---|---|
+| **Node.js** | Express, Fastify, NestJS | PostgreSQL, MySQL, SQLite, MongoDB | Prisma, Mongoose | Docker, CI, JWT Auth, Git, Env |
+| **Python** | FastAPI, Flask, Django | PostgreSQL, MongoDB, SQLite | SQLAlchemy / Alembic, Motor | Docker, CI, JWT Auth, Git, Env |
+| **.NET** | ASP.NET Core Web API (Minimal API) | PostgreSQL, SQLite | Entity Framework Core | Docker, CI, Git, Env |
+| **React** | Vite (SPA), Next.js 15 (App Router) | None (Full-Stack Composable) | None | Docker, CI, Git, Env |
+| **Flutter** | Flutter Standard (Material 3) | SQLite / Local | Drift / Local | CI, Git, Env |
+
+---
+
+## Golden Templates & Combinations
 
 1. **Node.js + Express Standalone**: TypeScript, structured layered architecture (routes, controllers), health check endpoints, and Vitest test suite.
-2. **Python + FastAPI Standalone**: Modern FastAPI with Pydantic v2, CORS middleware, modular API routers, and pytest test suite.
-3. **React + Vite Standalone**: React 18+ with TypeScript, CSS modules, and production Vite build configuration.
-4. **React + FastAPI Full-Stack Monorepo**: React+Vite frontend and FastAPI backend composed into a single repository with shared root configuration and environment cross-wiring.
+2. **Node.js + Fastify Standalone**: High-performance TypeScript API with `@fastify/cors`, modular plugins, and health routes.
+3. **Node.js + NestJS Standalone**: Enterprise-tier modular architecture with TypeScript decorators, controllers, and services.
+4. **Python + FastAPI Standalone**: Modern FastAPI with Pydantic v2, CORS middleware, modular API routers, and pytest test suite.
+5. **Python + Flask Standalone**: Application factory pattern (`create_app`), modular Blueprints, and CORS support.
+6. **Python + Django Standalone**: Batteries-included web framework with modular settings, ASGI/WSGI entrypoints, and JSON API routes.
+7. **React + Vite Standalone**: React 18+ with TypeScript, CSS modules, and production Vite build configuration.
+8. **React + Next.js 15 Standalone**: Next.js App Router with TypeScript, API route handlers, and Tailwind CSS.
+9. **.NET 8 Web API Standalone**: C# 12 minimal API, OpenAPI/Swagger documentation, and health check endpoints.
+10. **Flutter Standard Standalone**: Feature-first domain architecture with Material 3 design and widget test suites.
+11. **React + FastAPI Full-Stack Monorepo**: React+Vite frontend and FastAPI backend composed into a single repository with shared root configuration and environment cross-wiring.
 
 ---
 
@@ -29,9 +49,9 @@
 
 ```
 packages/
-  core/          # Pure domain logic & schema contracts (AnswerSchema, ManifestSchema, FileOp, generate, merge)
+  core/          # Pure domain logic & schema contracts (AnswerSchema, ManifestSchema, FileOp, generate, merge, docker, ci, readme)
   cli/           # CLI shell adapter (oclif commands + @clack/prompts interactive UI)
-  preflight/     # Runtime environment checkers (NodeChecker, PythonChecker) & preflight runner
+  preflight/     # Runtime environment checkers (NodeChecker, PythonChecker, DotnetChecker, FlutterChecker) & preflight runner
   templates/     # Golden templates, reusable fragments, and filesystem loader adapter
 ```
 
@@ -42,7 +62,9 @@ packages/
 ### Prerequisites
 
 - Node.js >= 20.x
-- Python >= 3.10 (for Python/FastAPI smoke tests)
+- Python >= 3.10
+- .NET SDK >= 8.0 (optional, for .NET templates)
+- Flutter SDK >= 3.x (optional, for Flutter templates)
 - pnpm >= 9.x
 
 ### Build & Test
@@ -57,7 +79,7 @@ pnpm -r build
 # Run unit tests across all packages
 pnpm run test:unit
 
-# Run full golden template smoke tests (runs real npm/pip builds & dev servers)
+# Run full golden template smoke tests (runs real npm/pip/dotnet/flutter builds)
 pnpm run test:smoke
 
 # Run full test suite
@@ -81,15 +103,25 @@ pnpm --filter @project-scaffolder/cli exec scaffold new
 ### Non-Interactive Flags
 
 ```bash
-# Standalone Node+Express API with Postgres & Prisma
+# Standalone Node+Fastify API with Postgres & Prisma + JWT Auth + Docker
 pnpm --filter @project-scaffolder/cli exec scaffold new \
-  --name my-api \
+  --name my-fastify-api \
   --stack node \
-  --framework express \
+  --framework fastify \
   --shape standalone \
   --db postgres \
   --orm prisma \
-  --git
+  --extras auth,docker,ci,git
+
+# Standalone Python+FastAPI with MongoDB & Motor + JWT Auth
+pnpm --filter @project-scaffolder/cli exec scaffold new \
+  --name my-mongo-api \
+  --stack python \
+  --framework fastapi \
+  --shape standalone \
+  --db mongodb \
+  --orm motor \
+  --extras auth,docker,ci,git
 
 # Full-Stack React + FastAPI Monorepo
 pnpm --filter @project-scaffolder/cli exec scaffold new \
@@ -101,7 +133,7 @@ pnpm --filter @project-scaffolder/cli exec scaffold new \
   --backend-framework fastapi \
   --db postgres \
   --orm sqlalchemy \
-  --git
+  --extras auth,docker,ci,git
 ```
 
 ### Configuration File Mode
@@ -115,3 +147,4 @@ pnpm --filter @project-scaffolder/cli exec scaffold new --config scaffold.config
 ## License
 
 MIT © Universal Project Scaffolder Team
+

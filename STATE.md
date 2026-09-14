@@ -8,15 +8,16 @@ Update this file **in the same commit** as the chunk work it describes — never
 
 ## Current Status
 
-- **Phase:** 2 — Breadth (In Progress)
-- **Last completed chunk:** C2.11
-- **Next chunk to work on:** C2.12 — Publish v0.2.0
+- **Phase:** 2 — Breadth (100% Complete)
+- **Last completed chunk:** C2.12
+- **Next chunk to work on:** Phase 3 — Microservices Mode
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Finalized v0.2.0 release packaging with comprehensive README documentation, CHANGELOG.md release notes, package version bumps to 0.2.0, and v0.2.0 git tag — completes Phase 2 (Breadth) with 100% verified test coverage across all 5 ecosystems and fragments — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Added composable JWT Authentication boilerplate fragments for Node.js (auth-jwt-node) and Python (auth-jwt-python) with token creation/verification, password hashing, Express/FastAPI routes (/register, /login, /me), and README documentation — delivers standard token-based authentication in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-14 — Added Dockerfile, root docker-compose.yml, .dockerignore, and GitHub Actions CI workflow generator extras with stack-tailored multi-stage builds and automated testing pipelines — delivers complete developer operational boilerplate in Phase 2 — ARCHITECTURE.md "packages/core/" & "Composition, not combinatorics"
 - 2026-09-14 — Added MongoDB database fragments for Node.js (mongo-mongoose) and Python (mongo-motor) with connection lifecycle management, data models, Docker Compose mongo service with healthchecks, and live smoke tests — expands database support to NoSQL document store in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
@@ -37,7 +38,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 - 2026-09-12 — Composed React+Vite and FastAPI into full-stack golden combination via core composition mechanism — proves zero-bespoke-template full-stack monorepo generation — ARCHITECTURE.md "Composition, not combinatorics"
 - 2026-09-12 — Implemented generalized fragment merge engine and full-stack template composition in core — enables combining frontend + backend golden templates into monorepo layout with wired CORS and API base URL without bespoke combinatorics — ARCHITECTURE.md "Composition, not combinatorics"
 - 2026-09-12 — Added React+Vite standalone golden template with TypeScript, CSS modules/classes, and Vite build pipeline — establishes third P0 ecosystem reference template with JSX delimiter compatibility — ARCHITECTURE.md "packages/templates/"
-- 2026-09-12 — Added Python+FastAPI standalone golden template with Pydantic v2, CORS middleware, and modular routes — establishes second P0 ecosystem reference template — ARCHITECTURE.md "packages/templates/"
+- 2026-09-12 — Added Python+FastAPI standalone golden template with Pydantic v2, CORS middleware, modular routes — establishes second P0 ecosystem reference template — ARCHITECTURE.md "packages/templates/"
 - 2026-09-12 — Configured GitHub Actions multi-OS / multi-Node CI matrix running lint, format, build, unit tests, and live golden template smoke tests on every push/PR — prevents template rot and ensures cross-platform reliability — ARCHITECTURE.md "Testing strategy"
 - 2026-09-12 — Added `--config` JSON input and non-interactive flag fallback resolution with verified byte-identical generator output — guarantees non-interactive equivalence for future headless adapters and automated workflows — ARCHITECTURE.md "CLI shell (packages/cli)"
 - 2026-09-12 — Built `scaffold new` command in `@project-scaffolder/cli` using `oclif` and `@clack/prompts` with dynamic selection tree — wires interactive and flag inputs directly into `core.generate()` and `DiskFileWriter` — ARCHITECTURE.md "CLI shell (packages/cli)"
@@ -52,6 +53,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C2.12 | Publish v0.2.0 | 976a102 | 2026-09-14 | package.json, packages/*/package.json, CHANGELOG.md, README.md |
 | C2.11 | JWT Authentication boilerplate fragment | 7daadf3 | 2026-09-14 | packages/templates/fragments/auth-jwt-node/*, packages/templates/fragments/auth-jwt-python/*, packages/templates/src/jwt-auth.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, packages/core/src/readme.test.ts, .github/workflows/ci.yml |
 | C2.10 | Docker & CI workflow generator extras | 677316e | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/core/src/ci.ts, packages/core/src/ci.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts, packages/core/src/merge.ts, packages/core/src/merge.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts, .github/workflows/ci.yml |
 | C2.9 | MongoDB database fragments | 9e943c6 | 2026-09-14 | packages/templates/fragments/mongo-mongoose/*, packages/templates/fragments/mongo-motor/*, packages/templates/src/mongodb-fragments.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
@@ -184,7 +186,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.12 (Publish v0.2.0).
+Full backlog lives in `CHUNKS.md`. Phase 2 (Breadth) is 100% complete! Next is Phase 3 (Microservices Mode).
 
 ## Known Issues / Open Questions
 
