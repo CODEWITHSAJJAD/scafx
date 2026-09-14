@@ -35,18 +35,18 @@ importers:
       '@clack/prompts':
         specifier: ^0.10.0
         version: 0.10.1
+      '@codewithsajjad01/core':
+        specifier: workspace:*
+        version: link:../core
+      '@codewithsajjad01/preflight':
+        specifier: workspace:*
+        version: link:../preflight
+      '@codewithsajjad01/templates':
+        specifier: workspace:*
+        version: link:../templates
       '@oclif/core':
         specifier: ^4.2.8
         version: 4.14.0
-      '@scafx/core':
-        specifier: workspace:*
-        version: link:../core
-      '@scafx/preflight':
-        specifier: workspace:*
-        version: link:../preflight
-      '@scafx/templates':
-        specifier: workspace:*
-        version: link:../templates
       execa:
         specifier: ^8.0.1
         version: 8.0.1
@@ -85,7 +85,7 @@ importers:
 
   packages/templates:
     dependencies:
-      '@scafx/core':
+      '@codewithsajjad01/core':
         specifier: workspace:*
         version: link:../core
       fs-extra:

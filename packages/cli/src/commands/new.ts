@@ -15,9 +15,9 @@ import {
   type Orm,
   type ServiceDefinition,
   type Stack,
-} from '@scafx/core';
-import { resolveRequiredCheckers, runPreflightChecks, type Checker } from '@scafx/preflight';
-import { FsTemplateSource } from '@scafx/templates';
+} from '@codewithsajjad01/core';
+import { resolveRequiredCheckers, runPreflightChecks, type Checker } from '@codewithsajjad01/preflight';
+import { FsTemplateSource } from '@codewithsajjad01/templates';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import pc from 'picocolors';

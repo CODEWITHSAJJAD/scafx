@@ -1,5 +1,5 @@
 {
-  "name": "@scafx/templates",
+  "name": "@codewithsajjad01/templates",
   "version": "0.3.0",
   "author": "CODEWITHSAJJAD",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@scafx/core": "workspace:*",
+    "@codewithsajjad01/core": "workspace:*",
     "fs-extra": "^11.4.0"
   },
   "devDependencies": {

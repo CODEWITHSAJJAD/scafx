@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@scafx/core';
+import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import http from 'node:http';

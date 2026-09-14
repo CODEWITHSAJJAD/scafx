@@ -31,9 +31,9 @@
   "dependencies": {
     "@clack/prompts": "^0.10.0",
     "@oclif/core": "^4.2.8",
-    "@scafx/core": "workspace:*",
-    "@scafx/preflight": "workspace:*",
-    "@scafx/templates": "workspace:*",
+    "@codewithsajjad01/core": "workspace:*",
+    "@codewithsajjad01/preflight": "workspace:*",
+    "@codewithsajjad01/templates": "workspace:*",
     "execa": "^8.0.1",
     "picocolors": "^1.1.1"
   },

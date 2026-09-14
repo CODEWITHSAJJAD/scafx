@@ -9,7 +9,7 @@ import {
   type Framework,
   type Orm,
   type Stack,
-} from '@scafx/core';
+} from '@codewithsajjad01/core';
 
 export async function promptInteractive(defaults?: Partial<Answer>): Promise<Answer> {
   p.intro('scafx v0.3.0');
