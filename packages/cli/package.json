@@ -34,7 +34,7 @@
     "@scafx/core": "workspace:*",
     "@scafx/preflight": "workspace:*",
     "@scafx/templates": "workspace:*",
-    "execa": "^10.0.1",
+    "execa": "^8.0.1",
     "picocolors": "^1.1.1"
   },
   "publishConfig": {
