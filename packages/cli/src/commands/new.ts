@@ -16,15 +16,7 @@ import {
   type ServiceDefinition,
   type Stack,
 } from '@scafx/core';
-import {
-  DotnetChecker,
-  FlutterChecker,
-  NodeChecker,
-  PythonChecker,
-  resolveRequiredCheckers,
-  runPreflightChecks,
-  type Checker,
-} from '@scafx/preflight';
+import { resolveRequiredCheckers, runPreflightChecks, type Checker } from '@scafx/preflight';
 import { FsTemplateSource } from '@scafx/templates';
 import fs from 'node:fs/promises';
 import path from 'node:path';

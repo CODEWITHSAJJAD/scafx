@@ -25,11 +25,13 @@ scafx new
 ## CLI Usage
 
 ### Interactive Wizard
+
 ```bash
 scafx new
 ```
 
 ### Non-Interactive Flags
+
 ```bash
 # Node + Fastify API with PostgreSQL & Prisma
 scafx new --name my-api --stack node --framework fastify --db postgres --orm prisma --extras auth,docker,ci,git
@@ -45,6 +47,7 @@ scafx new --name pos-mesh --shape microservices --gateway-port 8000 --services "
 ```
 
 ### Config File
+
 ```bash
 scafx new --config scaffold.config.json
 ```

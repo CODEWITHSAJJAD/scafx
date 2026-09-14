@@ -5,8 +5,8 @@
 ```
   ____   ____    _     _____  __  __
  / ___| / ___|  / \   |  ___|\ \/ /
- \___ \| |     / _ \  | |_    \  / 
-  ___) | |___ / ___ \ |  _|   /  \ 
+ \___ \| |     / _ \  | |_    \  /
+  ___) | |___ / ___ \ |  _|   /  \
  |____/ \____/_/   \_\|_|    /_/\_\
 ```
 
@@ -45,6 +45,7 @@ scafx new
 **`scafx`** is a high-performance, architecture- and database-aware CLI tool engineered to scaffold production-ready enterprise applications across **Node.js, Python, .NET, React, and Flutter**.
 
 Unlike generic scaffolding tools that generate simple hello-world starters, `scafx` delivers battle-tested, idiomatic software architectures with:
+
 - **Clean Hexagonal / Ports-and-Adapters Architecture**
 - **First-class Full-Stack Monorepo Composition** (e.g. React 18 / Next.js 15 + FastAPI / Express)
 - **Distributed Microservices Mesh Orchestration** with Express API Gateway, reverse proxy routing, correlation ID tracing (`x-request-id`), aggregated health checks, and Docker Compose networks
@@ -55,13 +56,13 @@ Unlike generic scaffolding tools that generate simple hello-world starters, `sca
 
 ## 🏗️ Supported Ecosystems & Frameworks
 
-| Ecosystem | Frameworks | Database Options | ORMs / ODMs | Included Extras |
-| :--- | :--- | :--- | :--- | :--- |
-| **Node.js** | Express, Fastify, NestJS | PostgreSQL, MySQL, SQLite, MongoDB | Prisma, Mongoose | Docker, CI, JWT Auth, Git, Env |
-| **Python** | FastAPI, Flask, Django | PostgreSQL, MongoDB, SQLite | SQLAlchemy 2.0 / Alembic, Motor | Docker, CI, JWT Auth, Git, Env |
-| **.NET** | ASP.NET Core Web API (Minimal API) | PostgreSQL, SQLite | Entity Framework Core | Docker, CI, Git, Env |
-| **React** | Vite (SPA), Next.js 15 (App Router) | Full-Stack Composable | Composable with Backend | Docker, CI, Git, Env |
-| **Flutter** | Flutter Standard (Material 3) | SQLite / Local | Drift / Local | CI, Git, Env |
+| Ecosystem   | Frameworks                          | Database Options                   | ORMs / ODMs                     | Included Extras                |
+| :---------- | :---------------------------------- | :--------------------------------- | :------------------------------ | :----------------------------- |
+| **Node.js** | Express, Fastify, NestJS            | PostgreSQL, MySQL, SQLite, MongoDB | Prisma, Mongoose                | Docker, CI, JWT Auth, Git, Env |
+| **Python**  | FastAPI, Flask, Django              | PostgreSQL, MongoDB, SQLite        | SQLAlchemy 2.0 / Alembic, Motor | Docker, CI, JWT Auth, Git, Env |
+| **.NET**    | ASP.NET Core Web API (Minimal API)  | PostgreSQL, SQLite                 | Entity Framework Core           | Docker, CI, Git, Env           |
+| **React**   | Vite (SPA), Next.js 15 (App Router) | Full-Stack Composable              | Composable with Backend         | Docker, CI, Git, Env           |
+| **Flutter** | Flutter Standard (Material 3)       | SQLite / Local                     | Drift / Local                   | CI, Git, Env                   |
 
 ---
 
@@ -148,6 +149,7 @@ scafx new --config scaffold.config.json
 ```
 
 Example `scaffold.config.json`:
+
 ```json
 {
   "projectName": "pos-microservices",
