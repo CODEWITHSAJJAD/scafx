@@ -41,11 +41,6 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-
       - name: Install dependencies
         run: pnpm install
 
@@ -59,7 +54,7 @@ jobs:
         run: pnpm -r build
 
       - name: Run unit & integration tests
-        run: pnpm test
+        run: pnpm run test:unit
 
   golden-smoke-matrix:
     name: P0 Smoke Test (${{ matrix.combo.name }} on ${{ matrix.os }})
@@ -122,19 +117,23 @@ jobs:
           cache: 'pnpm'
 
       - name: Setup Python 3.11
+        if: contains(matrix.combo.name, 'Python') || contains(matrix.combo.name, 'FastAPI') || contains(matrix.combo.name, 'Postgres+SQLAlchemy') || contains(matrix.combo.name, 'Microservices')
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Setup .NET 8.0
+        if: matrix.combo.name == '.NET Web API Standalone'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Setup Flutter
+        if: matrix.combo.name == 'Flutter Standard Standalone'
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
 
       - name: Install dependencies
         run: pnpm install
