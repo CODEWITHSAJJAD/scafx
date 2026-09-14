@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "scaffold": "node packages/cli/bin/run.js",
     "format": "prettier --check \"**/*.{ts,js,json,md,yaml,yml}\"",
-    "format:fix": "prettier --write \"**/*.{ts,js,json,md,yaml,yml}\""
+    "format:fix": "prettier --write \"**/*.{ts,js,json,md,yaml,yml}\"",
+    "release": "pnpm -r build && pnpm -r publish --access public"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
