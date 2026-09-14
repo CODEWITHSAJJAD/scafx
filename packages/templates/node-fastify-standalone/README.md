@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Fastify REST API project generated with Universal Project Scaffolder.
+Fastify REST API project generated with scafx.
 
 ## Features
 

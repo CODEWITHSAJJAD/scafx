@@ -19,7 +19,7 @@ export function App() {
           Count is {count}
         </button>
         <p className="description">
-          Scaffolded with <strong>Universal Project Scaffolder</strong>.
+          Scaffolded with <strong>scafx</strong>.
         </p>
       </main>
     </div>

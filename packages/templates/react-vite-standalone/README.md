@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Scaffolded with **Universal Project Scaffolder** (Stack: `{{stack}}`, Framework: `{{framework}}`, Shape: `{{appShape}}`).
+Scaffolded with **scafx** (Stack: `{{stack}}`, Framework: `{{framework}}`, Shape: `{{appShape}}`).
 
 ## Getting Started
 

@@ -1,6 +1,6 @@
 # {{projectName}}
 
-NestJS REST API project generated with Universal Project Scaffolder.
+NestJS REST API project generated with scafx.
 
 ## Features
 

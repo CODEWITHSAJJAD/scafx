@@ -1,5 +1,5 @@
 name: '{{projectName}}'
-description: 'A new Flutter project scaffolded with Universal Project Scaffolder.'
+description: 'A new Flutter project scaffolded with scafx.'
 publish_to: 'none'
 version: 1.0.0+1
 

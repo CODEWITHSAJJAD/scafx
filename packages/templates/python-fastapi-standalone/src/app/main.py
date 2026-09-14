@@ -9,7 +9,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title="{{projectName}}",
         version="0.1.0",
-        description="FastAPI service scaffolded by Universal Project Scaffolder",
+        description="FastAPI service scaffolded by scafx",
     )
 
     app.add_middleware(

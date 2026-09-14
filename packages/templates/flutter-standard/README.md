@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Cross-platform Flutter application scaffolded with [Universal Project Scaffolder](https://github.com/project-scaffolder).
+Cross-platform Flutter application scaffolded with [scafx](https://github.com/CODEWITHSAJJAD/scafx).
 
 ## Feature-First Architecture
 

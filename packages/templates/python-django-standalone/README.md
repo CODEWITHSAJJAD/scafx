@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Django REST API service scaffolded by Universal Project Scaffolder.
+Django REST API service scaffolded by scafx.
 
 ## Features
 

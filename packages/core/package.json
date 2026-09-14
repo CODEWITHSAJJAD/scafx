@@ -1,6 +1,8 @@
 {
   "name": "@scafx/core",
   "version": "0.3.0",
+  "author": "CODEWITHSAJJAD",
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

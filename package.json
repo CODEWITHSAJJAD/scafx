@@ -2,7 +2,8 @@
   "name": "scafx-monorepo",
   "version": "0.3.0",
   "private": true,
-  "description": "Universal project scaffolder CLI",
+  "description": "scafx — Next-Generation Multi-Ecosystem Project Scaffolder",
+  "author": "CODEWITHSAJJAD",
   "scripts": {
     "build": "pnpm -r build",
     "test": "vitest run",

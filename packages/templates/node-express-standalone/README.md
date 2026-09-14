@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Scaffolded with **Universal Project Scaffolder**.
+Scaffolded with **scafx**.
 
 - **Stack:** {{stack}}
 - **Framework:** {{framework}}

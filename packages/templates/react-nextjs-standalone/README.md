@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Next.js web application scaffolded by Universal Project Scaffolder.
+Next.js web application scaffolded by scafx.
 
 ## Features
 

@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Production-ready ASP.NET Core 8 Web API scaffolded with [Universal Project Scaffolder](https://github.com/project-scaffolder).
+Production-ready ASP.NET Core 8 Web API scaffolded with [scafx](https://github.com/CODEWITHSAJJAD/scafx).
 
 ## Getting Started
 

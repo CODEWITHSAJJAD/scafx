@@ -3,6 +3,13 @@
   "version": "0.3.0",
   "type": "module",
   "description": "Deterministic project scaffolder across Node, Python, .NET, React, and Flutter",
+  "author": "CODEWITHSAJJAD",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CODEWITHSAJJAD/scafx.git"
+  },
+  "homepage": "https://github.com/CODEWITHSAJJAD/scafx#readme",
   "bin": {
     "scafx": "./bin/run.js"
   },

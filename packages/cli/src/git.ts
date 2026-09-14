@@ -10,9 +10,9 @@ export async function initGitRepository(
   targetDir: string,
   options: GitInitOptions = {},
 ): Promise<{ success: boolean; error?: string }> {
-  const message = options.commitMessage ?? 'Initial commit from Universal Project Scaffolder';
-  const authorName = options.authorName ?? 'Universal Project Scaffolder';
-  const authorEmail = options.authorEmail ?? 'scaffolder@local';
+  const message = options.commitMessage ?? 'Initial commit from scafx';
+  const authorName = options.authorName ?? 'scafx';
+  const authorEmail = options.authorEmail ?? 'support@scafx.dev';
 
   try {
     // 1. git init

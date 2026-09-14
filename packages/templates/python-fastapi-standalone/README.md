@@ -1,6 +1,6 @@
 # {{projectName}}
 
-FastAPI application scaffolded with **Universal Project Scaffolder**.
+FastAPI application scaffolded with **scafx**.
 
 - **Stack:** {{stack}}
 - **Framework:** {{framework}}

@@ -1,6 +1,6 @@
 # {{projectName}}
 
-Flask REST API service scaffolded by Universal Project Scaffolder.
+Flask REST API service scaffolded by scafx.
 
 ## Features
 

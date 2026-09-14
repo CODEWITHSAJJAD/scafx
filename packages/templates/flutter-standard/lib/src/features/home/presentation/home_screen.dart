@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: [
                       const Text(
-                        'Universal Project Scaffolder',
+                        'scafx',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
