@@ -5,6 +5,25 @@ All notable changes to the **Universal Project Scaffolder** will be documented i
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-09-14
+
+### Added
+
+- **Microservices Architecture Mode (`@project-scaffolder/core`)**:
+  - `AnswerSchema` contracts extended with `GatewayDefinitionSchema` and `ServiceDefinitionSchema` supporting arbitrary microservice topologies (`gateway/`, `services/*`).
+  - Generalized multi-service generator pipeline with dedicated port allocations, automated port rewriting in service environment files, and inter-service authentication URL cross-wiring (`AUTH_SERVICE_URL`, `GATEWAY_URL`).
+  - Dynamic reverse proxy API Gateway template (`gateway-express`) powered by `http-proxy-middleware`, request correlation tracking (`x-request-id`), aggregated `/health` healthchecks, and CORS.
+- **Microservices Docker Compose & Orchestration (`@project-scaffolder/core`)**:
+  - Unified root `docker-compose.yml` generation declaring API gateway, all downstream service containers, bridge network (`microservices-net`), service discovery hostnames, and database containers (Postgres, MongoDB, MySQL) with persistent volumes and healthcheck dependencies.
+  - Multi-stage Dockerfiles and `.dockerignore` generated for gateway and every downstream microservice.
+- **CLI Flags & Interactive Flow (`@project-scaffolder/cli`)**:
+  - Added `--shape microservices`, `--gateway-port`, `--gateway-stack`, `--gateway-framework`, and compact `--services` specification flag parsing.
+  - Full non-interactive JSON `--config` support for nested gateway and services definitions.
+  - Interactive selection prompts tailored for microservice network and service topologies.
+- **Live Smoke Tests & CI Matrix (`@project-scaffolder/templates`)**:
+  - Added `packages/templates/src/microservices.smoke.test.ts` executing end-to-end multi-service scaffolding and live build verification (Express API Gateway + Node Express Auth Service with Prisma + Python FastAPI Catalog Service with MongoDB).
+  - Extended GitHub Actions CI matrix with `Express API Gateway Golden Template` and `Microservices Monorepo Orchestration` smoke test jobs.
+
 ## [0.2.0] - 2026-09-14
 
 ### Added

@@ -8,15 +8,16 @@ Update this file **in the same commit** as the chunk work it describes — never
 
 ## Current Status
 
-- **Phase:** 3 — Microservices Mode (In Progress)
-- **Last completed chunk:** C3.6
-- **Next chunk to work on:** C3.7 — Publish v0.3.0
+- **Phase:** 3 — Microservices Mode (Completed) / Phase 4 — Community & Optional Web UI
+- **Last completed chunk:** C3.7
+- **Next chunk to work on:** Phase 4 — Community & Optional Web UI
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Finalized v0.3.0 release packaging with comprehensive Microservices Mode documentation, architecture diagrams, CHANGELOG.md release notes, package version bumps to 0.3.0 across all packages, and v0.3.0 git tag — completes Phase 3 (Microservices Mode) with 100% verified test coverage across multi-service orchestration — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Verified end-to-end microservices live build smoke test (Express API Gateway + Node Express Auth Service + Python FastAPI Catalog Service + Docker Compose) with clean TypeScript compilation, Prisma client generation, and py_compile syntax verification — completes Phase 3 implementation and live orchestration testing — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Implemented microservices CLI interactive prompt tree and non-interactive flags/config support with --shape microservices, --gateway-port, --services spec parsing, and JSON config validation — provides first-class CLI ergonomics for multi-service scaffolding in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Implemented unified microservices Docker Compose generator with bridge network (microservices-net), container-to-container service discovery, dedicated database containers with healthchecks, and per-service Dockerfile generation — enables complete one-command local orchestration (docker compose up) for multi-service architectures in Phase 3 — ARCHITECTURE.md & CHUNKS.md
@@ -59,7 +60,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C3.6 | Microservices Integration & Live Smoke Test | ea3420e | 2026-09-14 | packages/templates/src/microservices.smoke.test.ts, .github/workflows/ci.yml |
+| C3.7 | Publish v0.3.0 | 44775f9 | 2026-09-14 | package.json, packages/*/package.json, CHANGELOG.md, README.md |
+| C3.6 | Microservices Integration & Live Smoke Test | 00126be | 2026-09-14 | packages/templates/src/microservices.smoke.test.ts, .github/workflows/ci.yml |
 | C3.5 | Microservices CLI Prompt Flow & Flags | 308db72 | 2026-09-14 | packages/cli/src/commands/new.ts, packages/cli/src/prompts/interactive.ts, packages/cli/src/commands/new.test.ts, packages/cli/src/commands/non-interactive.test.ts |
 | C3.4 | Microservices Docker Compose & Network Orchestration | 3a31aba | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts |
 | C3.3 | Microservice Service Template Composition & Auth Inter-service Wiring | 84131e4 | 2026-09-14 | packages/core/src/generate.ts, packages/templates/src/microservices-composition.test.ts |

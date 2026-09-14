@@ -7,7 +7,8 @@
 ## Features
 
 - **Hexagonal / Ports-and-Adapters Architecture**: Core domain logic is completely decoupled from disk I/O, prompts, and CLI runtime.
-- **Composition over Combinatorics**: Composes frontend + backend templates into unified full-stack monorepos with automatic CORS and API base URL cross-wiring without bespoke combinatorics.
+- **Composition over Combinatorics**: Composes frontend + backend templates into unified full-stack monorepos, and multi-service templates into distributed microservice topologies without bespoke combinatorics.
+- **Microservices Orchestration**: Scaffolds full microservice meshes featuring an Express API Gateway with dynamic reverse proxy routing (`http-proxy-middleware`), correlation IDs (`x-request-id`), aggregated healthchecks, inter-service authentication discovery (`AUTH_SERVICE_URL`), dedicated database instances, and bridge network orchestration (`microservices-net`).
 - **Rich Database & ORM Fragments**: Integrates database services (PostgreSQL, MongoDB, MySQL, SQLite via Docker Compose) and ORMs (Prisma, SQLAlchemy 2.0/Alembic, Mongoose, Motor).
 - **Environment Preflight (Guided-Manual Tier)**: Detects installed runtime environments (Node.js, Python, .NET SDK, Flutter SDK), compares semver requirements, and provides actionable OS-specific install instructions with interactive bypass or `--force`/`--skip-preflight` flags.
 - **Production-Ready Extras**: Multi-stage Dockerfiles, root `docker-compose.yml`, GitHub Actions CI workflows, and JWT authentication boilerplate (`/register`, `/login`, `/me`).
@@ -42,6 +43,8 @@
 9. **.NET 8 Web API Standalone**: C# 12 minimal API, OpenAPI/Swagger documentation, and health check endpoints.
 10. **Flutter Standard Standalone**: Feature-first domain architecture with Material 3 design and widget test suites.
 11. **React + FastAPI Full-Stack Monorepo**: React+Vite frontend and FastAPI backend composed into a single repository with shared root configuration and environment cross-wiring.
+12. **Express API Gateway**: Reverse proxy router with `x-request-id` tracing, path routing (`/api/<service>/*`), and aggregated healthchecks.
+13. **Microservices Monorepo**: Gateway + multi-service topology (Auth Service, Catalog Service, Domain Services) with unified Docker Compose bridge network and dedicated databases.
 
 ---
 
@@ -134,6 +137,40 @@ pnpm --filter @project-scaffolder/cli exec scaffold new \
   --db postgres \
   --orm sqlalchemy \
   --extras auth,docker,ci,git
+
+# Microservices Mode (Express Gateway + Node Auth Service + Python FastAPI Catalog)
+pnpm --filter @project-scaffolder/cli exec scaffold new \
+  --name enterprise-pos \
+  --shape microservices \
+  --gateway-port 8000 \
+  --services "auth-service:node:express:8001:postgres:prisma:auth,catalog-service:python:fastapi:8002:mongodb:motor" \
+  --extras docker,ci,env,git
+```
+
+### Microservices Architecture Overview
+
+```
+                      ┌──────────────────────────────────────┐
+                      │  API Gateway (Express on Port 8000)  │
+                      │   - Reverse Proxy Routing            │
+                      │   - Request Correlation (x-req-id)   │
+                      │   - Aggregated Health (/health)      │
+                      └──────────────────┬───────────────────┘
+                                         │
+                 ┌───────────────────────┴───────────────────────┐
+                 │ Bridge Network: microservices-net             │
+                 ▼                                               ▼
+  ┌───────────────────────────────┐               ┌───────────────────────────────┐
+  │  auth-service (Port 8001)     │               │  catalog-service (Port 8002)  │
+  │   - Node.js + Express         │               │   - Python + FastAPI          │
+  │   - Prisma ORM + PostgreSQL   │               │   - Motor ODM + MongoDB       │
+  │   - JWT Auth & Token Issuance │               │   - Inter-service Auth Client │
+  └──────────────┬────────────────┘               └──────────────┬────────────────┘
+                 │                                               │
+                 ▼                                               ▼
+  ┌───────────────────────────────┐               ┌───────────────────────────────┐
+  │  PostgreSQL Container (5432)  │               │  MongoDB Container (27017)    │
+  └───────────────────────────────┘               └───────────────────────────────┘
 ```
 
 ### Configuration File Mode
