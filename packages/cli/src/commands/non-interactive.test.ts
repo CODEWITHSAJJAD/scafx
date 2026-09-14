@@ -1,5 +1,5 @@
-import { DiskFileWriter, generate, type Answer } from '@project-scaffolder/core';
-import { FsTemplateSource } from '@project-scaffolder/templates';
+import { DiskFileWriter, generate, type Answer } from '@scafx/core';
+import { FsTemplateSource } from '@scafx/templates';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import os from 'node:os';

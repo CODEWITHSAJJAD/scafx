@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@project-scaffolder/core';
+import { DiskFileWriter, generate, type Answer } from '@scafx/core';
 import fs from 'fs-extra';
 import os from 'node:os';
 import path from 'node:path';

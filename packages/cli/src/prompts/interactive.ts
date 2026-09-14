@@ -9,10 +9,10 @@ import {
   type Framework,
   type Orm,
   type Stack,
-} from '@project-scaffolder/core';
+} from '@scafx/core';
 
 export async function promptInteractive(defaults?: Partial<Answer>): Promise<Answer> {
-  p.intro('Universal Project Scaffolder');
+  p.intro('scafx v0.3.0');
 
   const projectName =
     defaults?.projectName ??

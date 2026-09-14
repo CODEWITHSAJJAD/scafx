@@ -37,3 +37,6 @@ coverage/
 # Temp
 temp/
 tmp/
+
+# Standalone launch website (deployed to separate repository: scafx-web)
+website/

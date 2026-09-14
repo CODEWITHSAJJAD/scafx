@@ -1,5 +1,5 @@
 {
-  "name": "@project-scaffolder/preflight",
+  "name": "@scafx/preflight",
   "version": "0.3.0",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,4 +1,4 @@
-import { generate, type Answer } from '@project-scaffolder/core';
+import { generate, type Answer } from '@scafx/core';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';

@@ -164,7 +164,7 @@ export function generateProjectReadme(answer: Answer): string {
   // Header
   sections.push(`# ${answer.projectName}`);
   sections.push(
-    `> Scaffolded with [**Universal Project Scaffolder**](https://github.com/project-scaffolder).`,
+    `> Scaffolded with [**scafx**](https://github.com/scafx/scafx).`,
   );
 
   // Architecture & Stack Summary

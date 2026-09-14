@@ -1,14 +1,15 @@
 {
-  "name": "@project-scaffolder/templates",
+  "name": "@scafx/templates",
   "version": "0.3.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc -b",
+    "test": "vitest run"
   },
   "dependencies": {
-    "@project-scaffolder/core": "workspace:*",
+    "@scafx/core": "workspace:*",
     "fs-extra": "^11.4.0"
   },
   "devDependencies": {

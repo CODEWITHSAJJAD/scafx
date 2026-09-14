@@ -1,9 +1,10 @@
 {
-  "name": "@project-scaffolder/cli",
+  "name": "scafx",
   "version": "0.3.0",
   "type": "module",
+  "description": "Deterministic project scaffolder across Node, Python, .NET, React, and Flutter",
   "bin": {
-    "scaffold": "./bin/run.js"
+    "scafx": "./bin/run.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,18 +16,21 @@
     "build": "tsc"
   },
   "oclif": {
-    "bin": "scaffold",
-    "dirname": "scaffold",
+    "bin": "scafx",
+    "dirname": "scafx",
     "commands": "./dist/commands",
     "topicSeparator": " "
   },
   "dependencies": {
     "@clack/prompts": "^0.10.0",
     "@oclif/core": "^4.2.8",
-    "@project-scaffolder/core": "workspace:*",
-    "@project-scaffolder/preflight": "workspace:*",
-    "@project-scaffolder/templates": "workspace:*",
+    "@scafx/core": "workspace:*",
+    "@scafx/preflight": "workspace:*",
+    "@scafx/templates": "workspace:*",
     "execa": "^10.0.1",
     "picocolors": "^1.1.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

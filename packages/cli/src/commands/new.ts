@@ -15,13 +15,17 @@ import {
   type Orm,
   type ServiceDefinition,
   type Stack,
-} from '@project-scaffolder/core';
+} from '@scafx/core';
 import {
+  DotnetChecker,
+  FlutterChecker,
+  NodeChecker,
+  PythonChecker,
   resolveRequiredCheckers,
   runPreflightChecks,
   type Checker,
-} from '@project-scaffolder/preflight';
-import { FsTemplateSource } from '@project-scaffolder/templates';
+} from '@scafx/preflight';
+import { FsTemplateSource } from '@scafx/templates';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import pc from 'picocolors';

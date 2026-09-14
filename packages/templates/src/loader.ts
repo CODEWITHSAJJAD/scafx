@@ -4,7 +4,7 @@ import {
   type Template,
   type TemplateFile,
   type TemplateSource,
-} from '@project-scaffolder/core';
+} from '@scafx/core';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
