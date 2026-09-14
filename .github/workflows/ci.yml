@@ -101,6 +101,10 @@ jobs:
             test-file: 'packages/templates/src/docker-ci-extras.smoke.test.ts'
           - name: 'JWT Authentication Boilerplate'
             test-file: 'packages/templates/src/jwt-auth.smoke.test.ts'
+          - name: 'Express API Gateway Golden Template'
+            test-file: 'packages/templates/src/gateway-express.smoke.test.ts'
+          - name: 'Microservices Monorepo Orchestration'
+            test-file: 'packages/templates/src/microservices.smoke.test.ts'
 
     steps:
       - name: Checkout repository

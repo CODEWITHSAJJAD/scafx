@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 3 — Microservices Mode (In Progress)
-- **Last completed chunk:** C3.5
-- **Next chunk to work on:** C3.6 — Microservices Integration & Live Smoke Test
+- **Last completed chunk:** C3.6
+- **Next chunk to work on:** C3.7 — Publish v0.3.0
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Verified end-to-end microservices live build smoke test (Express API Gateway + Node Express Auth Service + Python FastAPI Catalog Service + Docker Compose) with clean TypeScript compilation, Prisma client generation, and py_compile syntax verification — completes Phase 3 implementation and live orchestration testing — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Implemented microservices CLI interactive prompt tree and non-interactive flags/config support with --shape microservices, --gateway-port, --services spec parsing, and JSON config validation — provides first-class CLI ergonomics for multi-service scaffolding in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Implemented unified microservices Docker Compose generator with bridge network (microservices-net), container-to-container service discovery, dedicated database containers with healthchecks, and per-service Dockerfile generation — enables complete one-command local orchestration (docker compose up) for multi-service architectures in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Generalized microservice template composition in core with automated per-service port rewriting, inter-service auth discovery wiring (AUTH_SERVICE_URL, GATEWAY_URL), isolated database configurations, and multi-service composition tests — enables scaffolding heterogeneous multi-stack microservices under services/ in Phase 3 — ARCHITECTURE.md & CHUNKS.md
@@ -58,7 +59,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C3.5 | Microservices CLI Prompt Flow & Flags | dc7ff94 | 2026-09-14 | packages/cli/src/commands/new.ts, packages/cli/src/prompts/interactive.ts, packages/cli/src/commands/new.test.ts, packages/cli/src/commands/non-interactive.test.ts |
+| C3.6 | Microservices Integration & Live Smoke Test | ea3420e | 2026-09-14 | packages/templates/src/microservices.smoke.test.ts, .github/workflows/ci.yml |
+| C3.5 | Microservices CLI Prompt Flow & Flags | 308db72 | 2026-09-14 | packages/cli/src/commands/new.ts, packages/cli/src/prompts/interactive.ts, packages/cli/src/commands/new.test.ts, packages/cli/src/commands/non-interactive.test.ts |
 | C3.4 | Microservices Docker Compose & Network Orchestration | 3a31aba | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts |
 | C3.3 | Microservice Service Template Composition & Auth Inter-service Wiring | 84131e4 | 2026-09-14 | packages/core/src/generate.ts, packages/templates/src/microservices-composition.test.ts |
 | C3.2 | API Gateway Golden Template & Reverse Proxy | bff03e3 | 2026-09-14 | packages/templates/gateway-express/*, packages/templates/src/gateway-express.smoke.test.ts, packages/core/src/generate.ts |
@@ -101,6 +103,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/src/microservices.smoke.test.ts` | Integration and live npm build smoke test for complete multi-service project (Gateway + Auth + Catalog) | C3.6 |
 | `packages/templates/src/microservices-composition.test.ts` | Integration tests verifying multi-stack microservices generation, isolated ports, and auth inter-service wiring | C3.3 |
 | `packages/templates/gateway-express/` | Express API Gateway golden template with reverse proxy routing, correlation ID tracing, and health checks | C3.2 |
 | `packages/templates/src/gateway-express.smoke.test.ts` | Integration and live npm build smoke test for Express API Gateway golden template | C3.2 |
