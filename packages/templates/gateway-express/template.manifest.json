@@ -1,0 +1,12 @@
+{
+  "id": "gateway-express",
+  "name": "API Gateway (Express)",
+  "description": "High-performance Express API Gateway with reverse proxy routing, correlation ID tracing, aggregated health checks, and unified CORS",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["microservices", "standalone"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": ["docker", "ci"]
+}

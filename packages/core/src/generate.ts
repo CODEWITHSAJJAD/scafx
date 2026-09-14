@@ -438,6 +438,7 @@ async function generateMicroservices(
     try {
       const candidate = await templateSource.getTemplate({
         ...gatewayAnswer,
+        appShape: 'microservices',
         projectName: 'gateway',
       });
       if (candidate && candidate.manifest && candidate.manifest.id.includes('gateway')) {
