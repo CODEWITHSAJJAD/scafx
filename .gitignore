@@ -40,3 +40,12 @@ tmp/
 
 # Standalone launch website (deployed to separate repository: scafx-web)
 website/
+
+# Agent skills and development planning docs
+.agents/
+AGENTS.md
+ARCHITECTURE.md
+CHANGELOG.md
+CHUNKS.md
+PRD.md
+STATE.md
