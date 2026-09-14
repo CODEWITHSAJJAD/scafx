@@ -26,7 +26,7 @@ rl.question(
     for (const pkg of packages) {
       console.log(`📦 Publishing ${pkg.name}...`);
       const targetDir = path.resolve(pkg.dir);
-      const cmd = `npm publish --access public ${otpFlag}`.trim();
+      const cmd = `pnpm publish --access public --no-git-checks ${otpFlag}`.trim();
 
       try {
         execSync(cmd, {
