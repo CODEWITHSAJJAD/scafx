@@ -99,6 +99,8 @@ jobs:
             test-file: 'packages/templates/src/mongodb-fragments.smoke.test.ts'
           - name: 'Docker & CI Workflow Extras'
             test-file: 'packages/templates/src/docker-ci-extras.smoke.test.ts'
+          - name: 'JWT Authentication Boilerplate'
+            test-file: 'packages/templates/src/jwt-auth.smoke.test.ts'
 
     steps:
       - name: Checkout repository

@@ -1,0 +1,12 @@
+{
+  "id": "auth-jwt-node",
+  "name": "Node.js JWT Authentication Fragment",
+  "description": "JWT authentication middleware, password hashing, and login/register endpoints for Node.js backends",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["postgres", "mysql", "mongodb", "sqlite", "none"],
+  "minRuntimeVersion": ">=20.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

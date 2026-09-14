@@ -113,6 +113,38 @@ async function resolveAndMergeDatabaseFragments(
   return currentOps;
 }
 
+async function resolveAndMergeAuthFragments(
+  currentOps: FileOp[],
+  answer: Answer,
+  templateSource: TemplateSource,
+  context: Record<string, unknown>,
+  pathPrefix = '',
+): Promise<FileOp[]> {
+  if (!templateSource.getFragment || !answer.extras.includes('auth')) {
+    return currentOps;
+  }
+
+  const candidateFragmentIds = [
+    `${answer.stack}-${answer.framework}-auth`,
+    `auth-jwt-${answer.stack}`,
+    `${answer.stack}-auth-jwt`,
+    `${answer.stack}-auth`,
+    `auth-jwt`,
+    `auth`,
+  ];
+
+  for (const fragId of candidateFragmentIds) {
+    const fragment = await templateSource.getFragment(fragId);
+    if (fragment && fragment.files.length > 0) {
+      const fragmentOps = renderTemplateFiles(fragment.files, context, pathPrefix);
+      currentOps = mergeFileOps(currentOps, fragmentOps);
+      break;
+    }
+  }
+
+  return currentOps;
+}
+
 async function generateFullstack(
   answer: Answer,
   templateSource: TemplateSource,
@@ -237,6 +269,15 @@ async function generateFullstack(
     'backend',
   );
 
+  // Apply JWT Auth fragment to backend if selected
+  fileOps = await resolveAndMergeAuthFragments(
+    fileOps,
+    backendAnswer,
+    templateSource,
+    backendContext,
+    'backend',
+  );
+
   // Merge any extras fragments requested in answer (e.g. docker, ci, auth)
   if (answer.extras.includes('docker')) {
     const dockerOps = generateProjectDocker(answer);
@@ -308,6 +349,9 @@ async function generateStandalone(
 
   // Apply Database / ORM fragment if selected
   fileOps = await resolveAndMergeDatabaseFragments(fileOps, answer, templateSource, context);
+
+  // Apply JWT Auth fragment if selected
+  fileOps = await resolveAndMergeAuthFragments(fileOps, answer, templateSource, context);
 
   // Apply tailored README.md
   const readmeOp: FileOp = {

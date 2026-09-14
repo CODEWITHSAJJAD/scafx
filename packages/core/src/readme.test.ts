@@ -91,4 +91,25 @@ describe('Per-project README generation', () => {
     expect(nextCommands.some((step) => step.label.includes('Backend'))).toBe(true);
     expect(nextCommands.some((step) => step.label.includes('Frontend'))).toBe(true);
   });
+
+  it('generates tailored README with Authentication section when auth extra is selected', () => {
+    const answer: Answer = {
+      projectName: 'my-auth-api',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'standalone',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: ['auth', 'env'],
+    };
+
+    const readme = generateProjectReadme(answer);
+    expect(readme).toContain('# my-auth-api');
+    expect(readme).toContain('## Authentication');
+    expect(readme).toContain('POST /api/auth/register');
+    expect(readme).toContain('POST /api/auth/login');
+    expect(readme).toContain('GET /api/auth/me');
+  });
 });
+

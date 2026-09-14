@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 2 — Breadth (In Progress)
-- **Last completed chunk:** C2.10
-- **Next chunk to work on:** C2.11 — JWT Authentication boilerplate fragment
+- **Last completed chunk:** C2.11
+- **Next chunk to work on:** C2.12 — Publish v0.2.0
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Added composable JWT Authentication boilerplate fragments for Node.js (auth-jwt-node) and Python (auth-jwt-python) with token creation/verification, password hashing, Express/FastAPI routes (/register, /login, /me), and README documentation — delivers standard token-based authentication in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-14 — Added Dockerfile, root docker-compose.yml, .dockerignore, and GitHub Actions CI workflow generator extras with stack-tailored multi-stage builds and automated testing pipelines — delivers complete developer operational boilerplate in Phase 2 — ARCHITECTURE.md "packages/core/" & "Composition, not combinatorics"
 - 2026-09-14 — Added MongoDB database fragments for Node.js (mongo-mongoose) and Python (mongo-motor) with connection lifecycle management, data models, Docker Compose mongo service with healthchecks, and live smoke tests — expands database support to NoSQL document store in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
 - 2026-09-14 — Added Prisma ORM fragment for Node.js (Postgres, MySQL, SQLite) with dynamic datasource provider, User model, Prisma client singleton, package.json scripts, docker-compose db services, and live prisma generate smoke test — expands database/ORM ecosystem to Node backends in Phase 2 — ARCHITECTURE.md "packages/templates/" & "Composition, not combinatorics"
@@ -51,6 +52,7 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
+| C2.11 | JWT Authentication boilerplate fragment | 7daadf3 | 2026-09-14 | packages/templates/fragments/auth-jwt-node/*, packages/templates/fragments/auth-jwt-python/*, packages/templates/src/jwt-auth.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, packages/core/src/readme.test.ts, .github/workflows/ci.yml |
 | C2.10 | Docker & CI workflow generator extras | 677316e | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/core/src/ci.ts, packages/core/src/ci.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/index.ts, packages/core/src/merge.ts, packages/core/src/merge.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts, .github/workflows/ci.yml |
 | C2.9 | MongoDB database fragments | 9e943c6 | 2026-09-14 | packages/templates/fragments/mongo-mongoose/*, packages/templates/fragments/mongo-motor/*, packages/templates/src/mongodb-fragments.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
 | C2.8 | Prisma ORM fragment for Node.js | c1dbca8 | 2026-09-14 | packages/templates/fragments/node-prisma/*, packages/templates/src/node-prisma.smoke.test.ts, packages/core/src/generate.ts, packages/core/src/merge.ts, packages/core/src/readme.ts, .github/workflows/ci.yml |
@@ -87,6 +89,9 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 | Path | Feature / Responsibility | Added in chunk |
 |---|---|---|
+| `packages/templates/fragments/auth-jwt-node/` | Reusable JWT authentication fragment for Node.js with bcrypt password hashing, Express routes, and auth middleware | C2.11 |
+| `packages/templates/fragments/auth-jwt-python/` | Reusable JWT authentication fragment for Python with Passlib password hashing, FastAPI routes, and auth dependencies | C2.11 |
+| `packages/templates/src/jwt-auth.smoke.test.ts` | Integration and live npm build / python py_compile smoke test for JWT authentication fragments | C2.11 |
 | `packages/core/src/docker.ts` | Multi-stage Dockerfile and Docker Compose generator supporting all standalone and fullstack stacks | C2.10 |
 | `packages/core/src/docker.test.ts` | Unit tests for stack-aware Dockerfile and Compose generator logic | C2.10 |
 | `packages/core/src/ci.ts` | GitHub Actions CI workflow generator supporting Node, Python, .NET, React, and Flutter test suites | C2.10 |
@@ -179,7 +184,7 @@ _One row per meaningful file or folder, added as it's created. This is what lets
 
 ## Remaining Work
 
-Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.11 (JWT Authentication boilerplate fragment).
+Full backlog lives in `CHUNKS.md`. On Phase 2 (Breadth) — next is C2.12 (Publish v0.2.0).
 
 ## Known Issues / Open Questions
 

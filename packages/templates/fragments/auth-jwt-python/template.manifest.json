@@ -1,0 +1,12 @@
+{
+  "id": "auth-jwt-python",
+  "name": "Python JWT Authentication Fragment",
+  "description": "JWT authentication middleware, password hashing, and login/register endpoints for Python backends",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "frontend-backend"],
+  "compatibleDatabases": ["postgres", "mysql", "mongodb", "sqlite", "none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

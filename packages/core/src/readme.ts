@@ -236,6 +236,19 @@ export function generateProjectReadme(answer: Answer): string {
     }
   }
 
+  // Authentication Section
+  if (answer.extras.includes('auth')) {
+    sections.push('\n## Authentication');
+    sections.push(
+      'This project includes **JWT (JSON Web Token)** authentication with password hashing and protected endpoints:',
+    );
+    sections.push('- `POST /api/auth/register` — Create a new user account');
+    sections.push('- `POST /api/auth/login` — Authenticate and receive a JWT Bearer token');
+    sections.push(
+      '- `GET /api/auth/me` — Retrieve current user profile (requires `Authorization: Bearer <token>`)',
+    );
+  }
+
   // Environment Configuration
   sections.push('\n## Environment Configuration');
   sections.push('Copy the template environment configuration file and adjust variables as needed:');
@@ -251,3 +264,4 @@ export function generateProjectReadme(answer: Answer): string {
 
   return sections.join('\n') + '\n';
 }
+
