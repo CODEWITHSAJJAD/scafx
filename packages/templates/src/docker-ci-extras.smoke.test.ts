@@ -118,4 +118,72 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
     expect(ci).toContain('test-backend:');
     expect(ci).toContain('test-frontend:');
   });
+
+  it('scaffolds microservices project with Docker & CI workflow extras', async () => {
+    const templatesDir = path.resolve(__dirname, '..');
+    const templateSource = new FsTemplateSource(templatesDir);
+    const targetDir = path.join(tempDir, 'microservices-docker-ci-app');
+    await fs.ensureDir(targetDir);
+
+    const answer: Answer = {
+      projectName: 'microservices-docker-ci-app',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'microservices',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: ['docker', 'ci', 'env', 'git'],
+      gateway: {
+        stack: 'node',
+        framework: 'express',
+        port: 8000,
+      },
+      services: [
+        {
+          name: 'auth-service',
+          stack: 'node',
+          framework: 'express',
+          port: 8001,
+          database: 'postgres',
+          orm: 'prisma',
+          extras: ['auth'],
+        },
+        {
+          name: 'catalog-service',
+          stack: 'python',
+          framework: 'fastapi',
+          port: 8002,
+          database: 'mongodb',
+          orm: 'motor',
+          extras: [],
+        },
+      ],
+    };
+
+    const fileOps = await generate(answer, templateSource);
+    expect(fileOps.length).toBeGreaterThan(0);
+
+    const writer = new DiskFileWriter();
+    await writer.write(targetDir, fileOps);
+
+    // 1. Verify Dockerfiles
+    expect(await fs.pathExists(path.join(targetDir, 'gateway/Dockerfile'))).toBe(true);
+    expect(await fs.pathExists(path.join(targetDir, 'services/auth-service/Dockerfile'))).toBe(
+      true,
+    );
+    expect(await fs.pathExists(path.join(targetDir, 'services/catalog-service/Dockerfile'))).toBe(
+      true,
+    );
+
+    // 2. Verify docker-compose.yml
+    expect(await fs.pathExists(path.join(targetDir, 'docker-compose.yml'))).toBe(true);
+    const compose = await fs.readFile(path.join(targetDir, 'docker-compose.yml'), 'utf-8');
+    expect(compose).toContain('gateway:');
+    expect(compose).toContain('auth-service:');
+    expect(compose).toContain('catalog-service:');
+    expect(compose).toContain('postgres:');
+    expect(compose).toContain('mongodb:');
+    expect(compose).toContain('microservices-net:');
+  });
 });

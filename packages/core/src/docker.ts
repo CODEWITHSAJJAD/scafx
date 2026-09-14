@@ -172,6 +172,185 @@ services:
 `;
 }
 
+export function getMicroservicesDockerCompose(answer: Answer): string {
+  const gateway = answer.gateway ?? {
+    stack: 'node',
+    framework: 'express',
+    port: 8000,
+  };
+  const services = answer.services ?? [];
+
+  const authService = services.find(
+    (s) => s.name.includes('auth') || (s.extras && s.extras.includes('auth')),
+  );
+
+  const hasPostgres =
+    services.some((s) => s.database === 'postgres') || answer.database === 'postgres';
+  const hasMongo = services.some((s) => s.database === 'mongodb') || answer.database === 'mongodb';
+  const hasMysql = services.some((s) => s.database === 'mysql') || answer.database === 'mysql';
+
+  let compose = `version: '3.8'\n\nservices:\n`;
+
+  // 1. Database containers
+  if (hasPostgres) {
+    compose += `  postgres:
+    image: postgres:16-alpine
+    container_name: '${answer.projectName}-postgres'
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: main_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservices-net\n\n`;
+  }
+
+  if (hasMongo) {
+    compose += `  mongodb:
+    image: mongo:7-jammy
+    container_name: '${answer.projectName}-mongodb'
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservices-net\n\n`;
+  }
+
+  if (hasMysql) {
+    compose += `  mysql:
+    image: mysql:8.0
+    container_name: '${answer.projectName}-mysql'
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: main_db
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - microservices-net\n\n`;
+  }
+
+  // 2. Downstream Services
+  for (const s of services) {
+    const dbName = `${s.name.replace(/[^a-zA-Z0-9]/g, '_')}_db`;
+    const deps: string[] = [];
+    if (s.database === 'postgres') deps.push('postgres');
+    if (s.database === 'mongodb') deps.push('mongodb');
+    if (s.database === 'mysql') deps.push('mysql');
+
+    compose += `  ${s.name}:
+    build:
+      context: ./services/${s.name}
+      dockerfile: Dockerfile
+    container_name: '${answer.projectName}-${s.name}'
+    restart: unless-stopped
+    ports:
+      - '${s.port}:${s.port}'
+    env_file:
+      - services/${s.name}/.env
+    environment:
+      - PORT=${s.port}
+      - SERVICE_NAME=${s.name}
+      - GATEWAY_URL=http://gateway:${gateway.port}\n`;
+
+    if (authService && authService.name !== s.name) {
+      compose += `      - AUTH_SERVICE_URL=http://${authService.name}:${authService.port}\n`;
+    }
+
+    if (s.database === 'postgres') {
+      compose += `      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/${dbName}\n`;
+    } else if (s.database === 'mongodb') {
+      compose += `      - MONGODB_URI=mongodb://mongodb:27017/${dbName}\n`;
+    } else if (s.database === 'mysql') {
+      compose += `      - DATABASE_URL=mysql://root:rootpassword@mysql:3306/${dbName}\n`;
+    }
+
+    if (deps.length > 0) {
+      compose += `    depends_on:\n`;
+      for (const dep of deps) {
+        compose += `      ${dep}:\n        condition: service_healthy\n`;
+      }
+    }
+
+    compose += `    networks:
+      - microservices-net\n\n`;
+  }
+
+  // 3. Gateway
+  compose += `  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: '${answer.projectName}-gateway'
+    restart: unless-stopped
+    ports:
+      - '${gateway.port}:${gateway.port}'
+    env_file:
+      - gateway/.env
+    environment:
+      - PORT=${gateway.port}\n`;
+
+  for (const s of services) {
+    const envKey = `${s.name.toUpperCase().replace(/-/g, '_')}_URL`;
+    compose += `      - ${envKey}=http://${s.name}:${s.port}\n`;
+  }
+
+  if (services.length > 0) {
+    compose += `    depends_on:\n`;
+    for (const s of services) {
+      compose += `      - ${s.name}\n`;
+    }
+  }
+
+  compose += `    networks:
+      - microservices-net\n`;
+
+  // 4. Networks & Volumes
+  compose += `\nnetworks:
+  microservices-net:
+    driver: bridge\n`;
+
+  const volumes: string[] = [];
+  if (hasPostgres) volumes.push('postgres-data');
+  if (hasMongo) volumes.push('mongo-data');
+  if (hasMysql) volumes.push('mysql-data');
+
+  if (volumes.length > 0) {
+    compose += `\nvolumes:\n`;
+    for (const v of volumes) {
+      compose += `  ${v}:\n`;
+    }
+  }
+
+  return compose;
+}
+
 export const DOCKERIGNORE_CONTENT = `node_modules
 dist
 build
@@ -193,7 +372,50 @@ coverage/
 export function generateProjectDocker(answer: Answer): FileOp[] {
   const ops: FileOp[] = [];
 
-  if (answer.appShape === 'fullstack') {
+  if (answer.appShape === 'microservices') {
+    const gateway = answer.gateway ?? {
+      stack: 'node',
+      framework: 'express',
+      port: 8000,
+    };
+    ops.push({
+      path: 'gateway/Dockerfile',
+      content: getStandaloneDockerfile(
+        gateway.stack,
+        gateway.framework,
+        `${answer.projectName}-gateway`,
+      ),
+    });
+    ops.push({
+      path: 'gateway/.dockerignore',
+      content: DOCKERIGNORE_CONTENT,
+    });
+
+    const services = answer.services ?? [];
+    for (const service of services) {
+      ops.push({
+        path: `services/${service.name}/Dockerfile`,
+        content: getStandaloneDockerfile(
+          service.stack,
+          service.framework,
+          `${answer.projectName}-${service.name}`,
+        ),
+      });
+      ops.push({
+        path: `services/${service.name}/.dockerignore`,
+        content: DOCKERIGNORE_CONTENT,
+      });
+    }
+
+    ops.push({
+      path: 'docker-compose.yml',
+      content: getMicroservicesDockerCompose(answer),
+    });
+    ops.push({
+      path: '.dockerignore',
+      content: DOCKERIGNORE_CONTENT,
+    });
+  } else if (answer.appShape === 'fullstack') {
     const frontendStack = answer.frontend?.stack ?? (answer.stack === 'react' ? 'react' : 'react');
     const frontendFramework =
       answer.frontend?.framework ?? (answer.stack === 'react' ? answer.framework : 'vite');

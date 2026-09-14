@@ -53,4 +53,109 @@ describe('Docker extra generator in core', () => {
     expect(compose).toContain('frontend:');
     expect(compose).toContain('depends_on:');
   });
+
+  it('generates microservices Docker configuration with gateway, downstream services, databases, and bridge network', () => {
+    const answer: Answer = {
+      projectName: 'ledger-pos',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'microservices',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: ['docker', 'ci'],
+      gateway: {
+        stack: 'node',
+        framework: 'express',
+        port: 8000,
+      },
+      services: [
+        {
+          name: 'auth-service',
+          stack: 'node',
+          framework: 'express',
+          port: 8001,
+          database: 'postgres',
+          orm: 'prisma',
+          extras: ['auth'],
+        },
+        {
+          name: 'catalog-service',
+          stack: 'python',
+          framework: 'fastapi',
+          port: 8002,
+          database: 'mongodb',
+          orm: 'motor',
+          extras: [],
+        },
+        {
+          name: 'inventory-service',
+          stack: 'dotnet',
+          framework: 'webapi',
+          port: 8003,
+          database: 'none',
+          orm: 'none',
+          extras: [],
+        },
+      ],
+    };
+
+    const ops = generateProjectDocker(answer);
+
+    // Dockerfiles per service & gateway
+    expect(ops.some((op) => op.path === 'gateway/Dockerfile')).toBe(true);
+    expect(ops.some((op) => op.path === 'gateway/.dockerignore')).toBe(true);
+    expect(ops.some((op) => op.path === 'services/auth-service/Dockerfile')).toBe(true);
+    expect(ops.some((op) => op.path === 'services/auth-service/.dockerignore')).toBe(true);
+    expect(ops.some((op) => op.path === 'services/catalog-service/Dockerfile')).toBe(true);
+    expect(ops.some((op) => op.path === 'services/catalog-service/.dockerignore')).toBe(true);
+    expect(ops.some((op) => op.path === 'services/inventory-service/Dockerfile')).toBe(true);
+    expect(ops.some((op) => op.path === 'services/inventory-service/.dockerignore')).toBe(true);
+    expect(ops.some((op) => op.path === 'docker-compose.yml')).toBe(true);
+    expect(ops.some((op) => op.path === '.dockerignore')).toBe(true);
+
+    const compose = ops.find((op) => op.path === 'docker-compose.yml')!.content;
+
+    // Database services with healthchecks
+    expect(compose).toContain('postgres:');
+    expect(compose).toContain('image: postgres:16-alpine');
+    expect(compose).toContain('pg_isready -U postgres');
+    expect(compose).toContain('mongodb:');
+    expect(compose).toContain('image: mongo:7-jammy');
+    expect(compose).toContain("db.adminCommand('ping')");
+
+    // Downstream services with network, ports, dependencies & env
+    expect(compose).toContain('auth-service:');
+    expect(compose).toContain('context: ./services/auth-service');
+    expect(compose).toContain("'8001:8001'");
+    expect(compose).toContain('postgres:\n        condition: service_healthy');
+    expect(compose).toContain(
+      'DATABASE_URL=postgresql://postgres:postgres@postgres:5432/auth_service_db',
+    );
+
+    expect(compose).toContain('catalog-service:');
+    expect(compose).toContain('context: ./services/catalog-service');
+    expect(compose).toContain("'8002:8002'");
+    expect(compose).toContain('AUTH_SERVICE_URL=http://auth-service:8001');
+    expect(compose).toContain('mongodb:\n        condition: service_healthy');
+    expect(compose).toContain('MONGODB_URI=mongodb://mongodb:27017/catalog_service_db');
+
+    expect(compose).toContain('inventory-service:');
+    expect(compose).toContain('context: ./services/inventory-service');
+    expect(compose).toContain("'8003:8003'");
+    expect(compose).toContain('AUTH_SERVICE_URL=http://auth-service:8001');
+
+    // Gateway service
+    expect(compose).toContain('gateway:');
+    expect(compose).toContain('context: ./gateway');
+    expect(compose).toContain("'8000:8000'");
+    expect(compose).toContain('AUTH_SERVICE_URL=http://auth-service:8001');
+    expect(compose).toContain('CATALOG_SERVICE_URL=http://catalog-service:8002');
+    expect(compose).toContain('INVENTORY_SERVICE_URL=http://inventory-service:8003');
+
+    // Bridge network & volumes
+    expect(compose).toContain('microservices-net:');
+    expect(compose).toContain('driver: bridge');
+    expect(compose).toContain('volumes:\n  postgres-data:\n  mongo-data:');
+  });
 });

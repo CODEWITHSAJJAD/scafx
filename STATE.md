@@ -9,14 +9,15 @@ Update this file **in the same commit** as the chunk work it describes — never
 ## Current Status
 
 - **Phase:** 3 — Microservices Mode (In Progress)
-- **Last completed chunk:** C3.3
-- **Next chunk to work on:** C3.4 — Microservices Docker Compose & Network Orchestration
+- **Last completed chunk:** C3.4
+- **Next chunk to work on:** C3.5 — Microservices CLI Prompt Flow & Flags
 - **Last updated:** 2026-09-14 by Antigravity
 
 ## Decisions Log
 
 _Append-only, newest entry at top. One line each: date — decision — why — where it's binding (doc + section)._
 
+- 2026-09-14 — Implemented unified microservices Docker Compose generator with bridge network (microservices-net), container-to-container service discovery, dedicated database containers with healthchecks, and per-service Dockerfile generation — enables complete one-command local orchestration (docker compose up) for multi-service architectures in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Generalized microservice template composition in core with automated per-service port rewriting, inter-service auth discovery wiring (AUTH_SERVICE_URL, GATEWAY_URL), isolated database configurations, and multi-service composition tests — enables scaffolding heterogeneous multi-stack microservices under services/ in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Added Express API Gateway golden template (gateway-express) with dynamic reverse proxy routing (http-proxy-middleware), request correlation tracking (x-request-id), aggregated /health healthcheck, and verified live build smoke tests — delivers dedicated API Gateway template for Microservices Mode in Phase 3 — ARCHITECTURE.md & CHUNKS.md
 - 2026-09-14 — Implemented Microservices Answer schema contracts (ServiceDefinition, GatewayDefinition) and multi-service generator pipeline in core with reverse proxy routing, per-service isolation (gateway/, services/*), and tailored README/env generation — establishes foundational microservices composition engine in Phase 3 — ARCHITECTURE.md & CHUNKS.md
@@ -56,7 +57,8 @@ _Append-only, newest entry at top. One line each: date — decision — why — 
 
 | Chunk ID | Title | Commit | Date | Files created/touched |
 |---|---|---|---|---|
-| C3.3 | Microservice Service Template Composition & Auth Inter-service Wiring | f1046d2 | 2026-09-14 | packages/core/src/generate.ts, packages/templates/src/microservices-composition.test.ts |
+| C3.4 | Microservices Docker Compose & Network Orchestration | bf43bf9 | 2026-09-14 | packages/core/src/docker.ts, packages/core/src/docker.test.ts, packages/templates/src/docker-ci-extras.smoke.test.ts |
+| C3.3 | Microservice Service Template Composition & Auth Inter-service Wiring | 84131e4 | 2026-09-14 | packages/core/src/generate.ts, packages/templates/src/microservices-composition.test.ts |
 | C3.2 | API Gateway Golden Template & Reverse Proxy | bff03e3 | 2026-09-14 | packages/templates/gateway-express/*, packages/templates/src/gateway-express.smoke.test.ts, packages/core/src/generate.ts |
 | C3.1 | Microservices Answer Schema & Core Generator Pipeline | 1168c7f | 2026-09-14 | packages/core/src/schema/answer.ts, packages/core/src/schema/answer.test.ts, packages/core/src/generate.ts, packages/core/src/generate.test.ts, packages/core/src/readme.ts, packages/core/src/merge.ts, CHUNKS.md, STATE.md |
 | C2.12 | Publish v0.2.0 | 976a102 | 2026-09-14 | package.json, packages/*/package.json, CHANGELOG.md, README.md |
