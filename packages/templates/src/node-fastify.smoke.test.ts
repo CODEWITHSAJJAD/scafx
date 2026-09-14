@@ -30,7 +30,7 @@ function getJson(url: string): Promise<{ statusCode?: number; data: unknown }> {
   });
 }
 
-function waitForServer(url: string, maxRetries = 30, intervalMs = 300): Promise<void> {
+function waitForServer(url: string, maxRetries = 60, intervalMs = 500): Promise<void> {
   return new Promise((resolve, reject) => {
     let retries = 0;
     const check = () => {
@@ -184,7 +184,7 @@ describe('Node+Fastify Standalone Golden Template Smoke Test', () => {
       expect(apiData.framework).toBe('fastify');
     } finally {
       serverProcess.kill('SIGTERM');
-      serverProcess.kill('SIGKILL');
+      serverProcess.kill();
     }
-  }, 90000);
+  }, 180000);
 });

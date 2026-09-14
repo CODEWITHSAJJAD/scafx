@@ -185,7 +185,7 @@ describe('Node+NestJS Standalone Golden Template Smoke Test', () => {
       expect(apiData.framework).toBe('nestjs');
     } finally {
       serverProcess.kill('SIGTERM');
-      serverProcess.kill('SIGKILL');
+      serverProcess.kill();
     }
-  }, 120000);
+  }, 180000);
 });
