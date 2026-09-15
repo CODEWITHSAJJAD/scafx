@@ -1,15 +1,44 @@
 {
   "name": "@codewithsajjad01/scafx",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "type": "module",
-  "description": "Deterministic project scaffolder across Node, Python, .NET, React, and Flutter",
+  "description": "Deterministic project scaffolding compiler across Node.js, Python FastAPI, .NET 8, React, and Flutter with microservices reverse proxy mesh synthesis and non-destructive preflight diagnostics.",
   "author": "CODEWITHSAJJAD",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CODEWITHSAJJAD/scafx.git"
   },
-  "homepage": "https://github.com/CODEWITHSAJJAD/scafx#readme",
+  "homepage": "https://scafx-web.pages.dev",
+  "bugs": {
+    "url": "https://github.com/CODEWITHSAJJAD/scafx/issues"
+  },
+  "keywords": [
+    "scafx",
+    "scaffolder",
+    "project-scaffolder",
+    "microservices",
+    "docker-compose",
+    "nodejs",
+    "express",
+    "fastify",
+    "nestjs",
+    "python",
+    "fastapi",
+    "dotnet",
+    "dotnet8",
+    "webapi",
+    "react",
+    "vite",
+    "flutter",
+    "monorepo",
+    "preflight",
+    "ports-and-adapters",
+    "hexagonal-architecture",
+    "boilerplate",
+    "generator",
+    "cli"
+  ],
   "bin": {
     "scafx": "bin/run.js"
   },
