@@ -109,7 +109,11 @@ describe('Prisma ORM Fragment Smoke Test', () => {
     const npmCmd = isWin ? 'npm.cmd' : 'npm';
     const npxCmd = isWin ? 'npx.cmd' : 'npx';
 
-    const installRes = await runProcess(npmCmd, ['install', '--no-audit', '--no-fund', '--prefer-offline'], targetDir);
+    const installRes = await runProcess(
+      npmCmd,
+      ['install', '--no-audit', '--no-fund', '--prefer-offline'],
+      targetDir,
+    );
     expect(installRes.code).toBe(0);
 
     const genRes = await runProcess(npxCmd, ['--yes', 'prisma', 'generate'], targetDir);
