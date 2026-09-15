@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -57,7 +57,7 @@ describe('JWT Authentication Fragment Smoke Test', () => {
     const targetDir = path.join(tempDir, 'express-jwt-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'express-jwt-app',
       stack: 'node',
       framework: 'express',
@@ -66,7 +66,7 @@ describe('JWT Authentication Fragment Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: ['auth', 'env', 'git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);
@@ -117,7 +117,7 @@ describe('JWT Authentication Fragment Smoke Test', () => {
     const targetDir = path.join(tempDir, 'fastapi-jwt-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fastapi-jwt-app',
       stack: 'python',
       framework: 'fastapi',
@@ -126,7 +126,7 @@ describe('JWT Authentication Fragment Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: ['auth', 'env', 'git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);
@@ -188,7 +188,7 @@ describe('JWT Authentication Fragment Smoke Test', () => {
     const targetDir = path.join(tempDir, 'fullstack-jwt-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fullstack-jwt-app',
       stack: 'react',
       framework: 'vite',
@@ -205,7 +205,7 @@ describe('JWT Authentication Fragment Smoke Test', () => {
         framework: 'fastapi',
       },
       extras: ['auth', 'docker'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);

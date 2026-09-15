@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-mvc",
+  "name": ".NET MVC Architecture Fragment",
+  "description": "Model-View-Controller architecture boilerplate for .NET with Razor views and controller routing",
+  "stack": "dotnet",
+  "framework": "mvc",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["postgres", "mysql", "mssql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import fs from 'fs-extra';
 import os from 'node:os';
 import path from 'node:path';
@@ -26,7 +26,7 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
     const targetDir = path.join(tempDir, 'fastify-docker-ci-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fastify-docker-ci-app',
       stack: 'node',
       framework: 'fastify',
@@ -35,7 +35,7 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
       database: 'postgres',
       orm: 'prisma',
       extras: ['docker', 'ci', 'env', 'git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);
@@ -76,7 +76,7 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
     const targetDir = path.join(tempDir, 'fullstack-docker-ci-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fullstack-docker-ci-app',
       stack: 'react',
       framework: 'vite',
@@ -87,7 +87,7 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
       extras: ['docker', 'ci', 'env', 'git'],
       frontend: { stack: 'react', framework: 'vite' },
       backend: { stack: 'python', framework: 'fastapi' },
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);
@@ -125,7 +125,7 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
     const targetDir = path.join(tempDir, 'microservices-docker-ci-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'microservices-docker-ci-app',
       stack: 'node',
       framework: 'express',
@@ -159,7 +159,7 @@ describe('Docker & CI Workflow Generator Extras Smoke Test', () => {
           extras: [],
         },
       ],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);

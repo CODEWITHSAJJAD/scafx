@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -25,7 +25,7 @@ describe('React+Vite + FastAPI Full-Stack Golden Combination Smoke Test', () => 
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fullstack-react-fastapi',
       stack: 'react',
       framework: 'vite',
@@ -42,7 +42,7 @@ describe('React+Vite + FastAPI Full-Stack Golden Combination Smoke Test', () => 
         framework: 'fastapi',
       },
       extras: ['git'],
-    };
+    });
 
     // 1. Generate fullstack FileOp[]
     const fileOps = await generate(answer, templateSource);

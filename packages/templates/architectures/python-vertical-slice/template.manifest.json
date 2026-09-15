@@ -1,0 +1,12 @@
+{
+  "id": "python-vertical-slice",
+  "name": "Python Vertical Slices Architecture",
+  "description": "Feature-first vertical slice architecture for Python FastAPI / Flask",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

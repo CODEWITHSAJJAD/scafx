@@ -1,0 +1,12 @@
+{
+  "id": "flutter-layered",
+  "name": "Flutter Layered Architecture",
+  "description": "Layered clean architecture separating Presentation, Domain, and Data layers for Flutter",
+  "stack": "flutter",
+  "framework": "flutter",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["sqlite", "none"],
+  "minRuntimeVersion": ">=3.19.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

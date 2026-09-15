@@ -1,0 +1,12 @@
+{
+  "id": "rabbitmq-python",
+  "name": "Python RabbitMQ AMQP Adapter",
+  "description": "Pika RabbitMQ event publisher and consumer worker for Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

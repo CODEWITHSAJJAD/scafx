@@ -1,0 +1,12 @@
+{
+  "id": "node-layered",
+  "name": "Node Layered Architecture",
+  "description": "Layered architecture pattern with Controllers, Services, Repositories, and Routes for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

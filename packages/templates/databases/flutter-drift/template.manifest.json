@@ -1,0 +1,12 @@
+{
+  "id": "flutter-drift",
+  "name": "Flutter Drift SQLite ORM Fragment",
+  "description": "Reactive Drift SQLite database client and schema for Flutter & Dart",
+  "stack": "flutter",
+  "framework": "flutter",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["sqlite"],
+  "minRuntimeVersion": ">=3.19.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -57,7 +57,7 @@ describe('MongoDB Fragments Smoke Test (Mongoose & Motor)', () => {
     const targetDir = path.join(tempDir, 'express-mongo-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'express-mongo-app',
       stack: 'node',
       framework: 'express',
@@ -66,7 +66,7 @@ describe('MongoDB Fragments Smoke Test (Mongoose & Motor)', () => {
       database: 'mongodb',
       orm: 'mongoose',
       extras: ['docker', 'env', 'git', 'testing'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);
@@ -118,7 +118,7 @@ describe('MongoDB Fragments Smoke Test (Mongoose & Motor)', () => {
     const targetDir = path.join(tempDir, 'fastapi-mongo-app');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fastapi-mongo-app',
       stack: 'python',
       framework: 'fastapi',
@@ -127,7 +127,7 @@ describe('MongoDB Fragments Smoke Test (Mongoose & Motor)', () => {
       database: 'mongodb',
       orm: 'motor',
       extras: ['docker', 'env', 'git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);

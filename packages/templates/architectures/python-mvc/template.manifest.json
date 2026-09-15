@@ -1,0 +1,12 @@
+{
+  "id": "python-mvc",
+  "name": "Python MVC (Model-View-Controller) Architecture",
+  "description": "Model-View-Controller pattern with models, views, and controllers for Python Flask & Django",
+  "stack": "python",
+  "framework": "flask",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

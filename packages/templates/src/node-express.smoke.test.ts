@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import http from 'node:http';
@@ -80,7 +80,7 @@ describe('Node+Express Standalone Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke-test-api',
       stack: 'node',
       framework: 'express',
@@ -89,7 +89,7 @@ describe('Node+Express Standalone Golden Template Smoke Test', () => {
       database: 'postgres',
       orm: 'prisma',
       extras: ['git'],
-    };
+    });
 
     // 1. Generate planned FileOp[]
     const fileOps = await generate(answer, templateSource);

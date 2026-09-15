@@ -1,4 +1,4 @@
-import { generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, generate, type Answer } from '@codewithsajjad01/core';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -12,7 +12,7 @@ describe('Microservice Service Template Composition & Auth Inter-service Wiring'
   const templateSource = new FsTemplateSource(templatesDir);
 
   it('composes a multi-stack microservices architecture with isolated services and inter-service auth wiring', async () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'enterprise-pos',
       stack: 'node',
       framework: 'express',
@@ -64,7 +64,7 @@ describe('Microservice Service Template Composition & Auth Inter-service Wiring'
           extras: [],
         },
       ],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);

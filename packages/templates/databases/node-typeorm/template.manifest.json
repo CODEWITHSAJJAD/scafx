@@ -1,0 +1,12 @@
+{
+  "id": "node-typeorm",
+  "name": "Node TypeORM Fragment",
+  "description": "TypeORM entity and datasource configuration for PostgreSQL / MySQL / MSSQL / SQLite in TypeScript",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "mssql", "sqlite"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

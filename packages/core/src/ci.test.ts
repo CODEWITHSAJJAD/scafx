@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { generateProjectCi, getProjectCiWorkflow } from './ci.js';
-import type { Answer } from './schema/answer.js';
+import { AnswerSchema } from './schema/answer.js';
 
 describe('CI workflow generator in core', () => {
   it('generates GitHub Actions workflow for Node.js project', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-node-app',
       stack: 'node',
       framework: 'express',
@@ -13,7 +13,7 @@ describe('CI workflow generator in core', () => {
       database: 'none',
       orm: 'none',
       extras: ['ci'],
-    };
+    });
 
     const workflow = getProjectCiWorkflow(answer);
     expect(workflow).toContain('name: CI');
@@ -23,7 +23,7 @@ describe('CI workflow generator in core', () => {
   });
 
   it('generates GitHub Actions workflow for Python project', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-fastapi-app',
       stack: 'python',
       framework: 'fastapi',
@@ -32,7 +32,7 @@ describe('CI workflow generator in core', () => {
       database: 'none',
       orm: 'none',
       extras: ['ci'],
-    };
+    });
 
     const workflow = getProjectCiWorkflow(answer);
     expect(workflow).toContain('Setup Python 3.11');
@@ -40,7 +40,7 @@ describe('CI workflow generator in core', () => {
   });
 
   it('generates GitHub Actions workflow for .NET project', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-dotnet-app',
       stack: 'dotnet',
       framework: 'webapi',
@@ -49,7 +49,7 @@ describe('CI workflow generator in core', () => {
       database: 'none',
       orm: 'none',
       extras: ['ci'],
-    };
+    });
 
     const workflow = getProjectCiWorkflow(answer);
     expect(workflow).toContain('Setup .NET SDK');
@@ -58,7 +58,7 @@ describe('CI workflow generator in core', () => {
   });
 
   it('generates GitHub Actions workflow for Flutter project', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my_flutter_app',
       stack: 'flutter',
       framework: 'none',
@@ -67,7 +67,7 @@ describe('CI workflow generator in core', () => {
       database: 'none',
       orm: 'none',
       extras: ['ci'],
-    };
+    });
 
     const workflow = getProjectCiWorkflow(answer);
     expect(workflow).toContain('subosito/flutter-action');
@@ -75,7 +75,7 @@ describe('CI workflow generator in core', () => {
   });
 
   it('generates multi-job workflow for fullstack project', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-fullstack-app',
       stack: 'react',
       framework: 'vite',
@@ -86,7 +86,7 @@ describe('CI workflow generator in core', () => {
       extras: ['ci'],
       frontend: { stack: 'react', framework: 'vite' },
       backend: { stack: 'python', framework: 'fastapi' },
-    };
+    });
 
     const ops = generateProjectCi(answer);
     expect(ops).toHaveLength(1);

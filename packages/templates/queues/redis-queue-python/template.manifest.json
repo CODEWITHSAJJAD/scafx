@@ -1,0 +1,12 @@
+{
+  "id": "redis-queue-python",
+  "name": "Python Redis Queue (Celery) Adapter",
+  "description": "Celery distributed background task worker with Redis broker for Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

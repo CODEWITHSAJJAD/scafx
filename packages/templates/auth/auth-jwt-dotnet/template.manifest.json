@@ -1,0 +1,12 @@
+{
+  "id": "auth-jwt-dotnet",
+  "name": ".NET JWT Authentication Fragment",
+  "description": "JSON Web Token authentication boilerplate for ASP.NET Core with JWT bearer token generation, validation, and auth endpoints",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "mssql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

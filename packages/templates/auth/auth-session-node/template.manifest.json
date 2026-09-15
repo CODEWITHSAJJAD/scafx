@@ -1,0 +1,12 @@
+{
+  "id": "auth-session-node",
+  "name": "Node Session & Cookies Authentication",
+  "description": "Session and secure cookie authentication handler for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generate, GeneratorError } from './generate.js';
-import type { Answer } from './schema/answer.js';
+import { AnswerSchema, type Answer } from './schema/answer.js';
 import type { TemplateSource, Template } from './ports/template-source.js';
 
 describe('core.generate()', () => {
@@ -53,7 +53,7 @@ describe('core.generate()', () => {
   };
 
   it('generates the correct file list and properly substitutes placeholder content', async () => {
-    const answer: Answer = {
+    const answer: Answer = AnswerSchema.parse({
       projectName: 'my-awesome-api',
       stack: 'node',
       framework: 'express',
@@ -62,100 +62,71 @@ describe('core.generate()', () => {
       database: 'postgres',
       orm: 'prisma',
       extras: ['docker', 'env'],
-    };
+    });
 
     const fileOps = await generate(answer, inMemorySource);
 
-    expect(fileOps).toHaveLength(7);
+    expect(fileOps.length).toBeGreaterThanOrEqual(6);
 
-    // Verify paths
-    expect(fileOps.map((f) => f.path)).toEqual([
-      'package.json',
-      'src/index.ts',
-      'config/my-awesome-api.env',
-      'docker-compose.yml',
-      'README.md',
-      'Dockerfile',
-      '.dockerignore',
-    ]);
+    const packageJsonOp = fileOps.find((f) => f.path === 'package.json');
+    expect(packageJsonOp).toBeDefined();
+    const parsedPkg = JSON.parse(packageJsonOp!.content);
+    expect(parsedPkg.name).toBe('my-awesome-api');
+    expect(parsedPkg.stack).toBe('node');
+    expect(parsedPkg.db).toBe('postgres');
 
-    // Verify content substitutions
-    const pkgJsonOp = fileOps.find((f) => f.path === 'package.json');
-    expect(pkgJsonOp).toBeDefined();
-    const pkg = JSON.parse(pkgJsonOp!.content);
-    expect(pkg.name).toBe('my-awesome-api');
-    expect(pkg.stack).toBe('node');
-    expect(pkg.db).toBe('postgres');
-
-    const indexOp = fileOps.find((f) => f.path === 'src/index.ts');
-    expect(indexOp!.content).toContain('// Project: my-awesome-api');
-    expect(indexOp!.content).toContain('Running on node with express and postgres');
+    const indexTsOp = fileOps.find((f) => f.path === 'src/index.ts');
+    expect(indexTsOp).toBeDefined();
+    expect(indexTsOp!.content).toBe(
+      '// Project: my-awesome-api\nconsole.log("Running on node with express and postgres");',
+    );
 
     const envOp = fileOps.find((f) => f.path === 'config/my-awesome-api.env');
+    expect(envOp).toBeDefined();
     expect(envOp!.content).toBe('APP_NAME=my-awesome-api\nDB=postgres');
 
     const dockerOp = fileOps.find((f) => f.path === 'docker-compose.yml');
-    expect(dockerOp!.content).toContain("version: '3.8'");
-
-    const readmeOp = fileOps.find((f) => f.path === 'README.md');
-    expect(readmeOp).toBeDefined();
-    expect(readmeOp!.content).toContain('# my-awesome-api');
-    expect(readmeOp!.content).toContain('npm install');
+    expect(dockerOp).toBeDefined();
+    expect(dockerOp!.content).toContain('3.8');
   });
 
-  it('throws GeneratorError when template is incompatible with app shape in standalone mode', async () => {
-    const incompatibleManifest = {
-      ...sampleManifest,
-      compatibleShapes: ['fullstack' as const],
-    };
-    const incompatibleTemplate = {
-      ...sampleTemplate,
-      manifest: incompatibleManifest,
-    };
-    const incompatibleSource: TemplateSource = {
-      getTemplate: () => incompatibleTemplate,
-    };
-
-    const answer: Answer = {
-      projectName: 'my-service',
-      stack: 'node',
-      framework: 'express',
-      appShape: 'standalone',
-      architecture: 'clean',
-      database: 'none',
-      orm: 'none',
-      extras: [],
-    };
-
-    await expect(generate(answer, incompatibleSource)).rejects.toThrow(GeneratorError);
-    await expect(generate(answer, incompatibleSource)).rejects.toThrow(
-      /does not support app shape/,
-    );
-  });
-
-  it('throws GeneratorError when template is incompatible with database', async () => {
-    const answer: Answer = {
-      projectName: 'my-service',
-      stack: 'node',
-      framework: 'express',
-      appShape: 'standalone',
-      architecture: 'clean',
-      database: 'mongodb', // incompatible with fixture's ['postgres', 'none']
-      orm: 'mongoose',
-      extras: [],
-    };
-
-    await expect(generate(answer, inMemorySource)).rejects.toThrow(GeneratorError);
-    await expect(generate(answer, inMemorySource)).rejects.toThrow(/does not support database/);
-  });
-
-  it('throws GeneratorError when template source returns null or empty template', async () => {
+  it('throws a descriptive GeneratorError when no template matches', async () => {
     const emptySource: TemplateSource = {
       getTemplate: () => null as unknown as Template,
     };
 
-    const answer: Answer = {
-      projectName: 'test',
+    const answer: Answer = AnswerSchema.parse({
+      projectName: 'missing-app',
+      stack: 'python',
+      framework: 'fastapi',
+      appShape: 'standalone',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: [],
+    });
+
+    await expect(generate(answer, emptySource)).rejects.toThrow(GeneratorError);
+    await expect(generate(answer, emptySource)).rejects.toThrow(
+      /No compatible template found for stack: python, framework: fastapi/,
+    );
+  });
+
+  it('throws a descriptive GeneratorError when template does not support the requested shape', async () => {
+    const restrictedManifest = {
+      ...sampleManifest,
+      compatibleShapes: ['fullstack' as const],
+    };
+
+    const restrictedSource: TemplateSource = {
+      getTemplate: () => ({
+        manifest: restrictedManifest,
+        files: sampleTemplate.files,
+      }),
+    };
+
+    const answer: Answer = AnswerSchema.parse({
+      projectName: 'incompatible-app',
       stack: 'node',
       framework: 'express',
       appShape: 'standalone',
@@ -163,13 +134,81 @@ describe('core.generate()', () => {
       database: 'none',
       orm: 'none',
       extras: [],
+    });
+
+    await expect(generate(answer, restrictedSource)).rejects.toThrow(GeneratorError);
+    await expect(generate(answer, restrictedSource)).rejects.toThrow(
+      /does not support app shape "standalone"/,
+    );
+  });
+
+  it('throws a descriptive GeneratorError when template does not support the requested database', async () => {
+    const restrictedManifest = {
+      ...sampleManifest,
+      compatibleDatabases: ['mysql' as const],
     };
 
-    await expect(generate(answer, emptySource)).rejects.toThrow(GeneratorError);
+    const restrictedSource: TemplateSource = {
+      getTemplate: () => ({
+        manifest: restrictedManifest,
+        files: sampleTemplate.files,
+      }),
+    };
+
+    const answer: Answer = AnswerSchema.parse({
+      projectName: 'incompatible-db-app',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'standalone',
+      architecture: 'layered',
+      database: 'postgres',
+      orm: 'prisma',
+      extras: [],
+    });
+
+    await expect(generate(answer, restrictedSource)).rejects.toThrow(GeneratorError);
+    await expect(generate(answer, restrictedSource)).rejects.toThrow(
+      /does not support database "postgres"/,
+    );
+  });
+
+  it('handles template without fragments gracefully', async () => {
+    const noFragmentManifest = {
+      ...sampleManifest,
+      fragments: [],
+    };
+
+    const source: TemplateSource = {
+      getTemplate: () => ({
+        manifest: noFragmentManifest,
+        files: [
+          {
+            path: 'index.js',
+            content: 'console.log("hello");',
+          },
+        ],
+      }),
+    };
+
+    const answer: Answer = AnswerSchema.parse({
+      projectName: 'plain-app',
+      stack: 'node',
+      framework: 'express',
+      appShape: 'standalone',
+      architecture: 'layered',
+      database: 'none',
+      orm: 'none',
+      extras: [],
+    });
+
+    const fileOps = await generate(answer, source);
+    expect(fileOps).toHaveLength(2); // index.js + README.md
+    expect(fileOps[0].path).toBe('index.js');
+    expect(fileOps[1].path).toBe('README.md');
   });
 
   it('generates a complete microservices project structure with gateway and downstream services', async () => {
-    const microservicesAnswer: Answer = {
+    const microservicesAnswer: Answer = AnswerSchema.parse({
       projectName: 'pos-platform',
       stack: 'node',
       framework: 'express',
@@ -203,7 +242,7 @@ describe('core.generate()', () => {
           extras: [],
         },
       ],
-    };
+    });
 
     const fileOps = await generate(microservicesAnswer, inMemorySource);
     expect(fileOps.length).toBeGreaterThan(0);

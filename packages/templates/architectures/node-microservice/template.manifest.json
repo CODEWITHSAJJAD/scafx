@@ -1,0 +1,12 @@
+{
+  "id": "node-microservice",
+  "name": "Node Microservice Node Architecture",
+  "description": "Microservice service node with health telemetry and event listener for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

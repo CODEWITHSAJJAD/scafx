@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-maui-standalone",
+  "name": ".NET 8 MAUI Multi-platform App Standalone",
+  "description": "Cross-platform native mobile and desktop application for Android, iOS, macOS, and Windows",
+  "stack": "dotnet",
+  "framework": "maui",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": ["ci"]
+}

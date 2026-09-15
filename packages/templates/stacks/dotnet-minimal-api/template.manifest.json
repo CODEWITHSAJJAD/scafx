@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-minimal-api-standalone",
+  "name": ".NET 8 Minimal API Standalone",
+  "description": "High-performance ASP.NET Core 8 Minimal API template with endpoint route grouping and Swagger",
+  "stack": "dotnet",
+  "framework": "minimal-api",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["mssql", "postgres", "mysql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": ["docker", "ci"]
+}

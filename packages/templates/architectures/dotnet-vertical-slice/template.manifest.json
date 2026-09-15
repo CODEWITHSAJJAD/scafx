@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-vertical-slice",
+  "name": ".NET Vertical Slices Architecture",
+  "description": "Feature-first vertical slices pattern for .NET 8 Web API and Minimal API",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["mssql", "postgres", "mysql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

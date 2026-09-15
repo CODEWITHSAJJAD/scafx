@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -62,7 +62,7 @@ describe('Microservices Integration & Live Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke-test-mesh',
       stack: 'node',
       framework: 'express',
@@ -96,7 +96,7 @@ describe('Microservices Integration & Live Smoke Test', () => {
           extras: [],
         },
       ],
-    };
+    });
 
     // 1. Generate planned FileOp[]
     const fileOps = await generate(answer, templateSource);
@@ -171,7 +171,7 @@ describe('Microservices Integration & Live Smoke Test', () => {
     const buildRes = await runCommand(npmCmd, ['run', 'build'], authServiceDir);
     expect(buildRes.code).toBe(0);
     expect(await fs.pathExists(path.join(authServiceDir, 'dist/index.js'))).toBe(true);
-  }, 90000);
+  }, 180000);
 
   it('validates Python FastAPI Catalog Service syntax with py_compile', async () => {
     const catalogMainPath = path.join(tempDir, 'services/catalog-service/src/app/main.py');

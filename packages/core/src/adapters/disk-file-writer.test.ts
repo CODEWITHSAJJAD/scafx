@@ -4,7 +4,7 @@ import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { generate } from '../generate.js';
 import type { TemplateSource, Template } from '../ports/template-source.js';
-import type { Answer } from '../schema/answer.js';
+import { AnswerSchema, type Answer } from '../schema/answer.js';
 import type { FileOp } from '../types/file-op.js';
 import { DiskFileWriter } from './disk-file-writer.js';
 import { MemoryFileWriter } from './memory-file-writer.js';
@@ -71,7 +71,7 @@ describe('DiskFileWriter integration', () => {
       getTemplate: () => fixtureTemplate,
     };
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-e2e-project',
       stack: 'node',
       framework: 'express',
@@ -80,7 +80,7 @@ describe('DiskFileWriter integration', () => {
       database: 'postgres',
       orm: 'prisma',
       extras: ['git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     const writer = new DiskFileWriter();

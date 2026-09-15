@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generateProjectDocker, getStandaloneDockerfile } from './docker.js';
-import type { Answer } from './schema/answer.js';
+import { AnswerSchema } from './schema/answer.js';
 
 describe('Docker extra generator in core', () => {
   it('generates Node.js Dockerfile with builder and runner stages', () => {
@@ -30,7 +30,7 @@ describe('Docker extra generator in core', () => {
   });
 
   it('generates fullstack Docker configuration with frontend and backend services', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-fullstack-app',
       stack: 'react',
       framework: 'vite',
@@ -41,7 +41,7 @@ describe('Docker extra generator in core', () => {
       extras: ['docker', 'ci'],
       frontend: { stack: 'react', framework: 'vite' },
       backend: { stack: 'python', framework: 'fastapi' },
-    };
+    });
 
     const ops = generateProjectDocker(answer);
     expect(ops.some((op) => op.path === 'frontend/Dockerfile')).toBe(true);
@@ -55,7 +55,7 @@ describe('Docker extra generator in core', () => {
   });
 
   it('generates microservices Docker configuration with gateway, downstream services, databases, and bridge network', () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'ledger-pos',
       stack: 'node',
       framework: 'express',
@@ -98,7 +98,7 @@ describe('Docker extra generator in core', () => {
           extras: [],
         },
       ],
-    };
+    });
 
     const ops = generateProjectDocker(answer);
 

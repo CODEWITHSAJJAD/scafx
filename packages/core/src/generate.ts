@@ -6,6 +6,7 @@ import { mergeFileOps } from './merge.js';
 import { generateProjectReadme } from './readme.js';
 import { generateProjectDocker } from './docker.js';
 import { generateProjectCi } from './ci.js';
+import { generateDatabaseEnv } from './env-generator.js';
 
 export class GeneratorError extends Error {
   constructor(message: string) {
@@ -19,10 +20,28 @@ export class GeneratorError extends Error {
  * and full Eta expression tags like `{{= it.projectName }}` or `{{ if (...) { }}` work seamlessly.
  */
 export function normalizePlaceholders(templateStr: string): string {
-  return templateStr.replace(
-    /\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\}\}/g,
-    '{{= it.$1 }}',
+  // 1. Convert explicit Eta evaluation {{= ... }} to <%= ... %>
+  let result = templateStr.replace(/\{\{=\s*([\s\S]*?)\s*\}\}/g, '<%= $1 %>');
+
+  // 2. Convert control flow statements {{ if (...) { }}, {{ } }}, {{ else { }}, etc.
+  result = result.replace(
+    /\{\{\s*(if\s*\(|for\s*\(|while\s*\(|\}|else\b|try\b|catch\b|switch\b|case\b|const\b|let\b|var\b)([\s\S]*?)\}\}/g,
+    '<% $1$2 %>',
   );
+
+  // 3. Convert explicit it.* references {{ it.foo }} to <%= it.foo %>
+  result = result.replace(
+    /\{\{\s*(it\.[a-zA-Z0-9_$.()\[\]'"]+)\s*\}\}/g,
+    '<%= $1 %>',
+  );
+
+  // 4. Convert simple variable interpolation {{ varName }} to <%= it.varName %>
+  result = result.replace(
+    /\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*)\s*\}\}/g,
+    '<%= it.$1 %>',
+  );
+
+  return result;
 }
 
 /**
@@ -34,7 +53,7 @@ export function renderTemplateFiles(
   pathPrefix = '',
 ): FileOp[] {
   const eta = new Eta({
-    tags: ['{{', '}}'],
+    tags: ['<%', '%>'],
     autoEscape: false,
     autoTrim: false,
     rmWhitespace: false,
@@ -82,6 +101,36 @@ export async function generate(answer: Answer, templateSource: TemplateSource): 
   return generateStandalone(validatedAnswer, templateSource);
 }
 
+async function resolveAndMergeArchitectureFragments(
+  currentOps: FileOp[],
+  answer: Answer,
+  templateSource: TemplateSource,
+  context: Record<string, unknown>,
+  pathPrefix = '',
+): Promise<FileOp[]> {
+  if (!templateSource.getFragment || !answer.architecture || answer.architecture === 'none' || answer.architecture === 'layered') {
+    return currentOps;
+  }
+
+  const candidateFragmentIds = [
+    `${answer.stack}-${answer.architecture}`,
+    `${answer.stack}-${answer.framework}-${answer.architecture}`,
+    `arch-${answer.architecture}`,
+    `${answer.architecture}`,
+  ];
+
+  for (const fragId of candidateFragmentIds) {
+    const fragment = await templateSource.getFragment(fragId);
+    if (fragment && fragment.files.length > 0) {
+      const fragmentOps = renderTemplateFiles(fragment.files, context, pathPrefix);
+      currentOps = mergeFileOps(currentOps, fragmentOps);
+      break;
+    }
+  }
+
+  return currentOps;
+}
+
 async function resolveAndMergeDatabaseFragments(
   currentOps: FileOp[],
   answer: Answer,
@@ -117,6 +166,37 @@ async function resolveAndMergeDatabaseFragments(
   return currentOps;
 }
 
+async function resolveAndMergeQueueFragments(
+  currentOps: FileOp[],
+  answer: Answer,
+  templateSource: TemplateSource,
+  context: Record<string, unknown>,
+  pathPrefix = '',
+): Promise<FileOp[]> {
+  if (!templateSource.getFragment || !answer.messageQueue || answer.messageQueue === 'none') {
+    return currentOps;
+  }
+
+  const queueName = answer.messageQueue;
+  const candidateFragmentIds = [
+    `${queueName}-${answer.stack}`,
+    `${answer.stack}-${queueName}`,
+    `queue-${queueName}`,
+    `${queueName}`,
+  ];
+
+  for (const fragId of candidateFragmentIds) {
+    const fragment = await templateSource.getFragment(fragId);
+    if (fragment && fragment.files.length > 0) {
+      const fragmentOps = renderTemplateFiles(fragment.files, context, pathPrefix);
+      currentOps = mergeFileOps(currentOps, fragmentOps);
+      break;
+    }
+  }
+
+  return currentOps;
+}
+
 async function resolveAndMergeAuthFragments(
   currentOps: FileOp[],
   answer: Answer,
@@ -124,11 +204,16 @@ async function resolveAndMergeAuthFragments(
   context: Record<string, unknown>,
   pathPrefix = '',
 ): Promise<FileOp[]> {
-  if (!templateSource.getFragment || !answer.extras.includes('auth')) {
+  const hasAuth = answer.authScheme && answer.authScheme !== 'none' || answer.extras.includes('auth');
+  if (!templateSource.getFragment || !hasAuth) {
     return currentOps;
   }
 
+  const authScheme = answer.authScheme && answer.authScheme !== 'none' ? answer.authScheme : 'jwt';
   const candidateFragmentIds = [
+    `auth-${authScheme}-${answer.stack}`,
+    `auth-${authScheme}`,
+    `${authScheme}-${answer.stack}`,
     `${answer.stack}-${answer.framework}-auth`,
     `auth-jwt-${answer.stack}`,
     `${answer.stack}-auth-jwt`,
@@ -351,8 +436,38 @@ async function generateStandalone(
 
   let fileOps = renderTemplateFiles(files, context);
 
+  // Apply Architecture skeleton fragment if selected
+  fileOps = await resolveAndMergeArchitectureFragments(fileOps, answer, templateSource, context);
+
   // Apply Database / ORM fragment if selected
   fileOps = await resolveAndMergeDatabaseFragments(fileOps, answer, templateSource, context);
+
+  // Apply Message Queue fragment if selected
+  fileOps = await resolveAndMergeQueueFragments(fileOps, answer, templateSource, context);
+
+  // Parameterized Database Env and Connection String
+  if (answer.database !== 'none') {
+    const dbEnv = generateDatabaseEnv(
+      answer.database,
+      answer.databaseConfig,
+      answer.orm,
+      answer.projectName,
+    );
+    const dbEnvOps: FileOp[] = [
+      { path: '.env.example', content: dbEnv.envExampleContent },
+      { path: '.env', content: dbEnv.envContent },
+    ];
+    if (answer.migrationTool === 'flyway' && dbEnv.flywayConfig) {
+      dbEnvOps.push(
+        { path: 'flyway.conf', content: dbEnv.flywayConfig },
+        {
+          path: 'migrations/V1__initial_schema.sql',
+          content: `-- Initial Database Migration for ${answer.projectName}\nCREATE TABLE IF NOT EXISTS app_metadata (\n  id SERIAL PRIMARY KEY,\n  key VARCHAR(255) NOT NULL UNIQUE,\n  value TEXT,\n  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP\n);\n`,
+        },
+      );
+    }
+    fileOps = mergeFileOps(fileOps, dbEnvOps);
+  }
 
   // Apply JWT Auth fragment if selected
   fileOps = await resolveAndMergeAuthFragments(fileOps, answer, templateSource, context);
@@ -403,18 +518,26 @@ async function generateMicroservices(
             name: 'auth-service',
             stack: 'node',
             framework: 'express',
+            architecture: 'layered',
             port: 8001,
             database: 'postgres',
             orm: 'prisma',
+            migrationTool: 'native',
+            messageQueue: 'none',
+            authScheme: 'jwt',
             extras: ['auth'],
           },
           {
             name: 'catalog-service',
             stack: 'python',
             framework: 'fastapi',
+            architecture: 'layered',
             port: 8002,
             database: 'mongodb',
             orm: 'motor',
+            migrationTool: 'native',
+            messageQueue: 'none',
+            authScheme: 'none',
             extras: [],
           },
         ];
@@ -424,12 +547,16 @@ async function generateMicroservices(
   // 1. Generate Gateway
   const gatewayAnswer: Answer = {
     projectName: `${answer.projectName}-gateway`,
-    stack: gateway.stack,
-    framework: gateway.framework,
+    stack: gateway.stack ?? 'node',
+    framework: gateway.framework ?? 'express',
     appShape: 'standalone',
+    repositoryStructure: 'monorepo-isolated',
     architecture: 'layered',
     database: 'none',
     orm: 'none',
+    migrationTool: 'none',
+    messageQueue: 'none',
+    authScheme: 'none',
     extras: [],
   };
 

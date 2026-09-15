@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-mvvm",
+  "name": ".NET MVVM Architecture Fragment",
+  "description": "Model-View-ViewModel architecture boilerplate for .NET Blazor and MAUI applications with reactive data binding",
+  "stack": "dotnet",
+  "framework": "blazor",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

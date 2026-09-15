@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "typeorm": "typeorm-ts-node-esm",
+    "migration:generate": "typeorm-ts-node-esm migration:generate -d src/data-source.ts",
+    "migration:run": "typeorm-ts-node-esm migration:run -d src/data-source.ts"
+  },
+  "dependencies": {
+    "typeorm": "^0.3.20",
+    "reflect-metadata": "^0.2.2",
+    "pg": "^8.12.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.11.8"
+  }
+}

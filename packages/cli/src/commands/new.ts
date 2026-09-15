@@ -8,10 +8,14 @@ import {
   type Answer,
   type AppShape,
   type Architecture,
+  type AuthScheme,
   type Database,
+  type DatabaseHosting,
   type Extra,
   type Framework,
   type GatewayDefinition,
+  type MessageQueue,
+  type MigrationTool,
   type Orm,
   type ServiceDefinition,
   type Stack,
@@ -47,9 +51,13 @@ export function parseServicesSpec(
         name: name || `service-${idx + 1}`,
         stack: (stack as Stack) || 'node',
         framework: (framework as Framework) || 'express',
+        architecture: 'layered',
         port: portStr ? parseInt(portStr, 10) : 8001 + idx,
         database: (database as Database) || 'none',
         orm: (orm as Orm) || 'none',
+        migrationTool: 'native',
+        messageQueue: 'none',
+        authScheme: 'jwt',
         extras: extrasStr ? (extrasStr.split('+') as Extra[]) : [],
       };
     });
@@ -61,18 +69,26 @@ export function parseServicesSpec(
       name: 'auth-service',
       stack: 'node',
       framework: 'express',
+      architecture: 'layered',
       port: 8001,
       database: 'postgres',
       orm: 'prisma',
+      migrationTool: 'native',
+      messageQueue: 'none',
+      authScheme: 'jwt',
       extras: ['auth'],
     },
     {
       name: 'catalog-service',
       stack: 'python',
       framework: 'fastapi',
+      architecture: 'layered',
       port: 8002,
       database: 'mongodb',
       orm: 'motor',
+      migrationTool: 'none',
+      messageQueue: 'rabbitmq',
+      authScheme: 'jwt',
       extras: [],
     },
   ];
@@ -83,9 +99,21 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
   stack?: string;
   framework?: string;
   shape?: string;
+  'repo-structure'?: string;
   arch?: string;
   db?: string;
+  'db-hosting'?: string;
+  'db-host'?: string;
+  'db-port'?: number;
+  'db-name'?: string;
+  'db-user'?: string;
+  'db-pass'?: string;
+  'db-cloud-provider'?: string;
+  'db-conn-str'?: string;
   orm?: string;
+  migration?: string;
+  queue?: string;
+  auth?: string;
   extras?: string;
   git?: boolean;
   'frontend-stack'?: string;
@@ -126,10 +154,51 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
     stack: ((flags.stack ?? fileConfig.stack) as Stack) || 'node',
     framework: ((flags.framework ?? fileConfig.framework) as Framework) || 'express',
     appShape,
+    repositoryStructure: (() => {
+      const val = flags['repo-structure'] ?? fileConfig.repositoryStructure;
+      if (val === 'monorepo' || val === 'monorepo-isolated') return 'monorepo-isolated';
+      if (val === 'colocated' || val === 'standalone' || val === 'colocated-standalone')
+        return 'colocated-standalone';
+      return appShape === 'fullstack' || appShape === 'microservices'
+        ? 'monorepo-isolated'
+        : 'colocated-standalone';
+    })(),
     architecture:
       ((flags.arch ?? fileConfig.architecture ?? fileConfig.arch) as Architecture) || 'layered',
     database: ((flags.db ?? fileConfig.database ?? fileConfig.db) as Database) || 'none',
+    databaseHosting: (() => {
+      const val = flags['db-hosting'] ?? fileConfig.databaseHosting;
+      if (val === 'docker' || val === 'local-docker') return 'local-docker';
+      if (val === 'cloud') return 'cloud-supabase';
+      if (val === 'native' || val === 'local-native') return 'local-native';
+      return (val as DatabaseHosting) || 'local-native';
+    })(),
+    databaseConfig:
+      flags['db-host'] || flags['db-conn-str'] || fileConfig.databaseConfig
+        ? {
+            hosting: (() => {
+              const val = flags['db-hosting'] ?? fileConfig.databaseHosting;
+              if (val === 'docker' || val === 'local-docker') return 'local-docker';
+              if (val === 'cloud') return 'cloud-supabase';
+              return (val as DatabaseHosting) || 'local-native';
+            })(),
+            host: flags['db-host'] ?? (fileConfig.databaseConfig as any)?.host ?? 'localhost',
+            port: flags['db-port'] ?? (fileConfig.databaseConfig as any)?.port ?? 5432,
+            databaseName: flags['db-name'] ?? (fileConfig.databaseConfig as any)?.databaseName ?? 'app_db',
+            user: flags['db-user'] ?? (fileConfig.databaseConfig as any)?.user ?? 'postgres',
+            password: flags['db-pass'] ?? (fileConfig.databaseConfig as any)?.password ?? 'password',
+            connectionString:
+              flags['db-conn-str'] ?? (fileConfig.databaseConfig as any)?.connectionString,
+          }
+        : undefined,
     orm: ((flags.orm ?? fileConfig.orm) as Orm) || 'none',
+    migrationTool: (flags.migration ?? fileConfig.migrationTool ?? 'native') as MigrationTool,
+    messageQueue: (flags.queue ?? fileConfig.messageQueue ?? 'none') as MessageQueue,
+    authScheme: (() => {
+      const val = flags.auth ?? fileConfig.authScheme;
+      if (val === 'oauth2' || val === 'oauth') return 'oauth';
+      return (val as AuthScheme) || 'jwt';
+    })(),
     extras,
     runtimeVersion:
       typeof fileConfig.runtimeVersion === 'string' ? fileConfig.runtimeVersion : undefined,
@@ -185,18 +254,45 @@ export default class New extends Command {
     }),
     framework: Flags.string({
       char: 'f',
-      description: 'Framework (express, fastify, nestjs, fastapi, etc.)',
+      description: 'Framework (express, fastify, nestjs, fastapi, flask, django, webapi, etc.)',
     }),
     shape: Flags.string({
-      description: 'App shape (standalone, frontend-backend, fullstack, microservices)',
+      description: 'App shape (standalone, fullstack, microservices)',
     }),
-    arch: Flags.string({ description: 'Architecture style (layered, clean, feature-first, etc.)' }),
+    'repo-structure': Flags.string({
+      description: 'Repository workspace structure (monorepo, colocated, standalone)',
+    }),
+    arch: Flags.string({
+      description:
+        'Architecture style (layered, clean, vertical-slice, modular-monolith, mvc, mvvm, microservice)',
+    }),
     db: Flags.string({
       char: 'd',
-      description: 'Database (postgres, mysql, sqlite, mongodb, none)',
+      description: 'Database (postgres, mysql, sqlite, mongodb, mssql, none)',
     }),
+    'db-hosting': Flags.string({
+      description: 'Database hosting (local-native, docker, cloud)',
+    }),
+    'db-host': Flags.string({ description: 'Database host (e.g. localhost)' }),
+    'db-port': Flags.integer({ description: 'Database port (e.g. 5432)' }),
+    'db-name': Flags.string({ description: 'Database name' }),
+    'db-user': Flags.string({ description: 'Database username' }),
+    'db-pass': Flags.string({ description: 'Database password' }),
+    'db-cloud-provider': Flags.string({
+      description: 'Cloud provider (supabase, neon, mongodb-atlas, firebase, cloudflare)',
+    }),
+    'db-conn-str': Flags.string({ description: 'Cloud DB Connection string / URI' }),
     orm: Flags.string({
-      description: 'ORM / migration tool (prisma, sqlalchemy, efcore, none, etc.)',
+      description: 'ORM / query builder (prisma, drizzle, sqlalchemy, efcore, dapper, mongoose, motor, etc.)',
+    }),
+    migration: Flags.string({
+      description: 'Database migration tool (native, flyway, atlas, none)',
+    }),
+    queue: Flags.string({
+      description: 'Message queue / streaming (rabbitmq, kafka, redis-queue, masstransit, none)',
+    }),
+    auth: Flags.string({
+      description: 'Authentication scheme (jwt, oauth2, session, none)',
     }),
     extras: Flags.string({
       description: 'Comma-separated extras (docker,ci,lint,testing,env,git)',
@@ -223,7 +319,7 @@ export default class New extends Command {
       description: 'Backend stack for full-stack project (python, node, dotnet)',
     }),
     'backend-framework': Flags.string({
-      description: 'Backend framework for full-stack project (fastapi, express, webapi)',
+      description: 'Backend framework for full-stack project (fastapi, express, webapi, etc.)',
     }),
     'gateway-stack': Flags.string({
       description: 'API Gateway stack for microservices (node)',

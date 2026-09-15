@@ -10,28 +10,35 @@
  |____/ \____/_/   \_\|_|    /_/\_\
 ```
 
-**Next-Generation Multi-Ecosystem Architecture & Project Scaffolder**
+**Next-Generation Multi-Ecosystem Architecture & Polyglot Project Scaffolder**
 
 [![npm version](https://img.shields.io/npm/v/@codewithsajjad01/scafx.svg?style=flat-square&color=000000)](https://www.npmjs.com/package/@codewithsajjad01/scafx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Vitest](https://img.shields.io/badge/tested%20with-vitest-yellow?style=flat-square&logo=vitest)](https://vitest.dev/)
 
-[**Launch Website**](https://github.com/CODEWITHSAJJAD/scafx-web) • [**Report Bug**](https://github.com/CODEWITHSAJJAD/scafx/issues) • [**Request Feature**](https://github.com/CODEWITHSAJJAD/scafx/issues)
+[**Launch Website**](https://github.com/CODEWITHSAJJAD/scafx) • [**Report Bug**](https://github.com/CODEWITHSAJJAD/scafx/issues) • [**Request Feature**](https://github.com/CODEWITHSAJJAD/scafx/issues)
 
 </div>
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start & Installation
 
-Run instantly with zero installation via `npx`:
+### Option 1: Instant Execution (Zero Install via `npx` / `pnpm dlx` / `bunx`)
 
 ```bash
+# Using npm / npx
 npx @codewithsajjad01/scafx new
+
+# Using pnpm dlx
+pnpm dlx @codewithsajjad01/scafx new
+
+# Using bunx
+bunx @codewithsajjad01/scafx new
 ```
 
-Or install globally:
+### Option 2: Global Installation
 
 ```bash
 npm install -g @codewithsajjad01/scafx
@@ -42,86 +49,100 @@ scafx new
 
 ## 🎯 What is scafx?
 
-**`scafx`** is a high-performance, architecture- and database-aware CLI tool engineered to scaffold production-ready enterprise applications across **Node.js, Python, .NET, React, and Flutter**.
+**`scafx`** is an architecture- and database-aware CLI tool engineered to scaffold production-ready enterprise applications across **Node.js / TypeScript, Python, .NET 8 (C# 12), React / Next.js, and Flutter**.
 
-Unlike generic scaffolding tools that generate simple hello-world starters, `scafx` delivers battle-tested, idiomatic software architectures with:
+Unlike generic scaffolding tools that generate simple starter templates, `scafx` delivers battle-tested, idiomatic software architectures with:
 
-- **Clean Hexagonal / Ports-and-Adapters Architecture**
-- **First-class Full-Stack Monorepo Composition** (e.g. React 18 / Next.js 15 + FastAPI / Express)
-- **Distributed Microservices Mesh Orchestration** with Express API Gateway, reverse proxy routing, correlation ID tracing (`x-request-id`), aggregated health checks, and Docker Compose networks
-- **Automated Guided Preflight Diagnostics** for local runtimes (Node, Python, .NET SDK, Flutter SDK)
-- **Production Boilerplates**: Multi-stage Dockerfiles, Docker Compose, GitHub Actions CI, Prisma / SQLAlchemy 2.0 / EF Core / Motor ORMs, and JWT Authentication flows.
-
----
-
-## 🏗️ Supported Ecosystems & Frameworks
-
-| Ecosystem   | Frameworks                          | Database Options                   | ORMs / ODMs                     | Included Extras                |
-| :---------- | :---------------------------------- | :--------------------------------- | :------------------------------ | :----------------------------- |
-| **Node.js** | Express, Fastify, NestJS            | PostgreSQL, MySQL, SQLite, MongoDB | Prisma, Mongoose                | Docker, CI, JWT Auth, Git, Env |
-| **Python**  | FastAPI, Flask, Django              | PostgreSQL, MongoDB, SQLite        | SQLAlchemy 2.0 / Alembic, Motor | Docker, CI, JWT Auth, Git, Env |
-| **.NET**    | ASP.NET Core Web API (Minimal API)  | PostgreSQL, SQLite                 | Entity Framework Core           | Docker, CI, Git, Env           |
-| **React**   | Vite (SPA), Next.js 15 (App Router) | Full-Stack Composable              | Composable with Backend         | Docker, CI, Git, Env           |
-| **Flutter** | Flutter Standard (Material 3)       | SQLite / Local                     | Drift / Local                   | CI, Git, Env                   |
+- **15 Architectural Styles**: Clean Hexagonal / Ports-and-Adapters, Feature-First / Modular, Layered (3-Tier), MVC, Vertical Slice, BLoC, Riverpod.
+- **Multi-Hosting Database Architecture**: Self-hosted containerized databases (PostgreSQL, MySQL, MariaDB, MongoDB, SQLite, Redis) and Cloud-managed services (Supabase, Neon Serverless Postgres, CockroachDB Cloud, MongoDB Atlas, Azure CosmosDB, Google Cloud SQL, Firestore).
+- **Migration Tooling Integration**: Native ORM migration engines (Prisma Migrate, Drizzle Kit, EF Core, Alembic, Aerich) alongside Universal Database Migration Tooling (**Flyway** & **Liquibase**).
+- **Enterprise Message Queuing & Streaming**: RabbitMQ, Apache Kafka, Redis Streams, BullMQ, Celery, Azure Service Bus, AWS SQS.
+- **First-class Full-Stack Monorepo Composition**: Frontend SPA (React / Vite / Next.js) + Backend API (FastAPI / Express / Fastify / .NET) cross-wired automatically.
+- **Distributed Microservices Mesh Orchestration**: Express Reverse Proxy API Gateway with `x-request-id` tracing, route proxying, aggregated health checks, and multi-container Docker bridge networks.
+- **Automated Guided Preflight Diagnostics**: Runtime semver validation across Node.js, Python, .NET SDK, and Flutter SDK before code generation.
+- **Production Developer Extras**: Multi-stage Dockerfiles, Docker Compose, GitHub Actions CI matrices, Linters & Formatters (ESLint, Prettier, Ruff, Black, dotnet format, dart analyze), Dynamic `.env` generation, and Git initialization.
 
 ---
 
-## 🚀 Golden Templates
+## 🏗️ Master Polyglot Architecture & Tooling Matrix
 
-1. **Node.js + Express Standalone**: TypeScript, layered architecture (routes, controllers, services), healthcheck endpoints, and Vitest test suite.
-2. **Node.js + Fastify Standalone**: High-performance TypeScript API with `@fastify/cors`, modular plugins, and health routes.
-3. **Node.js + NestJS Standalone**: Enterprise-tier modular architecture with TypeScript decorators, controllers, and services.
-4. **Python + FastAPI Standalone**: Modern FastAPI with Pydantic v2, CORS middleware, modular API routers, and pytest test suite.
-5. **Python + Flask Standalone**: Application factory pattern (`create_app`), modular Blueprints, and CORS support.
-6. **Python + Django Standalone**: Batteries-included web framework with modular settings, ASGI/WSGI entrypoints, and JSON API routes.
-7. **React + Vite Standalone**: React 18+ with TypeScript, CSS modules, and production Vite build configuration.
-8. **React + Next.js 15 Standalone**: Next.js App Router with TypeScript, API route handlers, and Tailwind CSS.
-9. **.NET 8 Web API Standalone**: C# 12 minimal API, OpenAPI/Swagger documentation, and health check endpoints.
-10. **Flutter Standard Standalone**: Feature-first domain architecture with Material 3 design and widget test suites.
-11. **React + FastAPI Full-Stack Monorepo**: React+Vite frontend and FastAPI backend composed into a single repository with shared root configuration and environment cross-wiring.
-12. **Express API Gateway**: Reverse proxy router with `x-request-id` tracing, dynamic path routing (`/api/<service>/*`), and aggregated healthchecks.
-13. **Microservices Monorepo**: Gateway + multi-service topology (Auth Service, Catalog Service, Domain Services) with unified Docker Compose bridge network and dedicated databases.
+| Ecosystem | Supported Frameworks | Architectural Styles | Native ORMs & Query Builders | Migration Engines | Message Queues & Tasks |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Node.js & TypeScript** | Express 4/5, Fastify 4/5, NestJS | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-First / Modular<br>• MVC<br>• Microservices Node RPC | • Prisma<br>• Drizzle ORM<br>• TypeORM<br>• Mongoose (MongoDB) | • Prisma Migrate<br>• Drizzle Kit<br>• TypeORM Migrations<br>• **Flyway** / **Liquibase** | • RabbitMQ (`amqplib`)<br>• Apache Kafka (`kafkajs`)<br>• Redis Streams / BullMQ |
+| **Python** | FastAPI, Flask, Django | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-First / Modular<br>• MVC<br>• Microservices Worker | • SQLAlchemy 2.0<br>• Tortoise ORM<br>• Motor (MongoDB Async)<br>• Django ORM | • Alembic<br>• Aerich<br>• Django Migrations<br>• **Flyway** / **Liquibase** | • Celery (`redis`/`amqp`)<br>• RabbitMQ (`pika`)<br>• Apache Kafka (`confluent-kafka`) |
+| **.NET 8 (C# 12)** | ASP.NET Core Web API, Minimal API, MVC, Blazor Server/Wasm | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-Sliced (Vertical)<br>• MVC / Razor<br>• Microservices Worker | • Entity Framework Core 8<br>• Dapper (Micro-ORM) | • EF Core Migrations<br>• DbUp<br>• **Flyway** / **Liquibase** | • RabbitMQ (`RabbitMQ.Client`)<br>• Apache Kafka (`Confluent.Kafka`)<br>• Azure Service Bus / AWS SQS |
+| **React / Web** | Vite (SPA), Next.js 15 (App Router) | • Feature-First<br>• Component-Driven Atomic<br>• Next.js App Router Layered | • Composable via Backend APIs<br>• LocalStorage / IndexedDB | • Handled by Backend ORM | • WebSockets / Server-Sent Events |
+| **Flutter / Mobile** | Flutter 3.24+ (Dart 3) | • Feature-First Clean<br>• BLoC Pattern<br>• Riverpod Architecture | • Drift (SQLite)<br>• Hive (NoSQL)<br>• Isar Database | • Drift Schema Migrations | • Firebase Cloud Messaging (FCM)<br>• MQTT / WebSocket background client |
 
 ---
 
-## 💻 CLI Usage
+## 💻 CLI Usage Guide
 
-### 1. Interactive Wizard
+### 1. Interactive Guided Wizard
 
-Launch the interactive prompt UI powered by `@clack/prompts`:
+Launch the interactive prompt CLI powered by `@clack/prompts`:
 
 ```bash
 scafx new
 ```
 
-### 2. Non-Interactive CLI Flags
+The interactive wizard dynamically adapts prompts based on your selections (target shape, language ecosystem, framework, architectural style, database engine, hosting mode, migration tool, message queues, and developer tooling extras).
 
-Scaffold projects instantly in automated CI/CD pipelines or scripts:
+---
 
+### 2. Non-Interactive CLI Automation Flags
+
+Scaffold projects instantly in automated CI/CD pipelines, Docker scripts, or shell automations:
+
+#### Standalone Node + Fastify API with PostgreSQL & Prisma + Flyway + Docker:
 ```bash
-# Standalone Node + Fastify API with PostgreSQL & Prisma + JWT Auth + Docker
 scafx new \
-  --name my-fastify-api \
+  --name my-fastify-service \
+  --shape standalone \
   --stack node \
   --framework fastify \
-  --shape standalone \
+  --architecture layered \
   --db postgres \
+  --db-hosting self-hosted \
   --orm prisma \
-  --extras auth,docker,ci,git
+  --migration flyway \
+  --queue rabbitmq \
+  --extras auth,docker,ci,lint,env,git
+```
 
-# Standalone Python + FastAPI with MongoDB & Motor + JWT Auth
+#### Standalone Python + FastAPI with MongoDB & Motor + Kafka + JWT Auth:
+```bash
 scafx new \
-  --name my-mongo-api \
+  --name catalog-service \
+  --shape standalone \
   --stack python \
   --framework fastapi \
-  --shape standalone \
+  --architecture clean \
   --db mongodb \
+  --db-hosting cloud-atlas \
   --orm motor \
-  --extras auth,docker,ci,git
+  --queue kafka \
+  --extras auth,docker,ci,lint,env,git
+```
 
-# Full-Stack React + FastAPI Monorepo
+#### Standalone .NET 8 Web API with PostgreSQL & EF Core + RabbitMQ:
+```bash
 scafx new \
-  --name my-fullstack-app \
+  --name payment-service \
+  --shape standalone \
+  --stack dotnet \
+  --framework webapi \
+  --architecture clean \
+  --db postgres \
+  --orm efcore \
+  --queue rabbitmq \
+  --extras docker,ci,lint,env,git
+```
+
+#### Full-Stack React + FastAPI Monorepo:
+```bash
+scafx new \
+  --name enterprise-portal \
   --shape fullstack \
   --frontend-stack react \
   --frontend-framework vite \
@@ -129,20 +150,24 @@ scafx new \
   --backend-framework fastapi \
   --db postgres \
   --orm sqlalchemy \
-  --extras auth,docker,ci,git
+  --extras auth,docker,ci,lint,env,git
+```
 
-# Microservices Topology (Express Gateway + Node Auth Service + Python FastAPI Catalog)
+#### Distributed Microservices Topology:
+```bash
 scafx new \
-  --name enterprise-system \
+  --name enterprise-mesh \
   --shape microservices \
   --gateway-port 8000 \
   --services "auth-service:node:express:8001:postgres:prisma:auth,catalog-service:python:fastapi:8002:mongodb:motor" \
   --extras docker,ci,env,git
 ```
 
-### 3. Declarative Configuration File (`scaffold.config.json`)
+---
 
-Pass a version-controlled configuration file to guarantee byte-identical scaffolding:
+### 3. Declarative Manifest Configuration (`scaffold.config.json`)
+
+Pass a version-controlled JSON configuration file to guarantee byte-identical scaffolding:
 
 ```bash
 scafx new --config scaffold.config.json
@@ -160,18 +185,25 @@ Example `scaffold.config.json`:
       "name": "auth-service",
       "stack": "node",
       "framework": "express",
+      "architecture": "layered",
       "port": 8001,
       "database": "postgres",
+      "dbHosting": "self-hosted",
       "orm": "prisma",
-      "extras": ["auth"]
+      "migrationTool": "flyway",
+      "messageQueue": "rabbitmq",
+      "extras": ["auth", "lint"]
     },
     {
       "name": "catalog-service",
       "stack": "python",
       "framework": "fastapi",
+      "architecture": "clean",
       "port": 8002,
       "database": "mongodb",
-      "orm": "motor"
+      "dbHosting": "cloud-atlas",
+      "orm": "motor",
+      "messageQueue": "kafka"
     }
   ],
   "extras": ["docker", "ci", "env", "git"]
@@ -180,7 +212,7 @@ Example `scaffold.config.json`:
 
 ---
 
-## 🌐 Microservices Architecture Topology
+## 🌐 Distributed Microservices Architecture Mesh
 
 ```
                       ┌──────────────────────────────────────┐
@@ -196,61 +228,62 @@ Example `scaffold.config.json`:
   ┌───────────────────────────────┐               ┌───────────────────────────────┐
   │  auth-service (Port 8001)     │               │  catalog-service (Port 8002)  │
   │   - Node.js + Express         │               │   - Python + FastAPI          │
-  │   - Prisma ORM + PostgreSQL   │               │   - Motor ODM + MongoDB       │
-  │   - JWT Auth & Token Issuance │               │   - Inter-service Auth Client │
+  │   - Prisma ORM + PostgreSQL   │               │   - Motor ODM + MongoDB Atlas │
+  │   - RabbitMQ Message Broker   │               │   - Apache Kafka Event Client │
+  │   - Flyway Schema Migrations  │               │   - Inter-service Auth Client │
   └──────────────┬────────────────┘               └──────────────┬────────────────┘
                  │                                               │
                  ▼                                               ▼
   ┌───────────────────────────────┐               ┌───────────────────────────────┐
-  │  PostgreSQL Container (5432)  │               │  MongoDB Container (27017)    │
+  │  PostgreSQL Container (5432)  │               │  MongoDB Atlas Cloud Service  │
   └───────────────────────────────┘               └───────────────────────────────┘
 ```
 
 ---
 
-## 📦 Monorepo Architecture
+## 📦 Monorepo Structure
 
 ```
-packages/
-  ├── core/          # Domain contracts, schema validation, template synthesis, AST transforms
-  ├── cli/           # CLI shell adapter (oclif command layer + @clack/prompts interactive UI)
-  ├── preflight/     # Runtime environment detection (Node, Python, .NET, Flutter)
-  └── templates/     # Golden templates, reusable fragments, and template loader
+scafx/
+├── packages/
+│   ├── core/          # Domain engine, schema validation, synthesis compiler, AST transforms
+│   ├── cli/           # CLI shell adapter (oclif command layer + @clack/prompts interactive UI)
+│   ├── preflight/     # Guided runtime environment detectors (Node, Python, .NET, Flutter)
+│   └── templates/     # Atomic templates, architectures, databases, queues, gateways, fragments
+├── website/           # Developer launch website & interactive documentation (React 18 + Vite)
+└── .github/
+    └── workflows/     # GitHub Actions CI matrix and automated Release workflows
 ```
 
 ---
 
-## 🛠️ Development & Contributing
-
-### Setup
+## 🛠️ Development & Testing
 
 ```bash
 # Clone the repository
 git clone https://github.com/CODEWITHSAJJAD/scafx.git
 cd scafx
 
-# Install workspace dependencies
+# Install monorepo dependencies
 pnpm install
 
-# Build all packages in topological order
+# Build all packages in topological dependency order
 pnpm -r build
-```
 
-### Running Tests
-
-```bash
-# Run unit tests across all packages
+# Run all unit tests across packages
 pnpm run test:unit
 
-# Run full golden template smoke tests (executes real compiler & test suites)
+# Run full smoke matrix test suites
 pnpm run test:smoke
 
-# Run full test suite
-pnpm test
+# Start the interactive documentation website
+pnpm --dir website dev
 ```
 
 ---
 
-## 📄 License
+## 📄 License & Attribution
 
-All rights reserved to **CODEWITHSAJJAD**. Licensed under the [MIT License](LICENSE).
+Author: **CODEWITHSAJJAD**  
+Repository: [https://github.com/CODEWITHSAJJAD/scafx](https://github.com/CODEWITHSAJJAD/scafx)  
+Licensed under the [MIT License](LICENSE).

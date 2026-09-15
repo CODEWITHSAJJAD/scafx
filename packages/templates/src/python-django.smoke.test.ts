@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -29,7 +29,7 @@ describe('Python+Django Standalone Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-django-service',
       stack: 'python',
       framework: 'django',
@@ -38,7 +38,7 @@ describe('Python+Django Standalone Golden Template Smoke Test', () => {
       database: 'postgres',
       orm: 'none',
       extras: ['docker', 'env', 'git'],
-    };
+    });
 
     // 1. Generate planned FileOp[]
     const fileOps = await generate(answer, templateSource);

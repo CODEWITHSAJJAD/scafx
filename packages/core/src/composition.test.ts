@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { generate } from './generate.js';
 import type { TemplateSource, Template } from './ports/template-source.js';
-import type { Answer } from './schema/answer.js';
+import { AnswerSchema, type Answer } from './schema/answer.js';
 
 describe('App-shape composition logic in core', () => {
   const mockFrontendTemplate: Template = {
@@ -83,7 +83,7 @@ describe('App-shape composition logic in core', () => {
   };
 
   it('composes frontend and backend templates into full-stack directory structure with CORS & API URL wiring', async () => {
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-fullstack-app',
       stack: 'react',
       framework: 'vite',
@@ -100,7 +100,7 @@ describe('App-shape composition logic in core', () => {
         framework: 'fastapi',
       },
       extras: ['git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
 

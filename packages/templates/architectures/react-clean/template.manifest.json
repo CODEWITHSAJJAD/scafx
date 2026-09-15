@@ -1,0 +1,12 @@
+{
+  "id": "react-clean",
+  "name": "React Clean Architecture Fragment",
+  "description": "Clean Architecture for React with separated Domain, Application Use Cases, Infrastructure API Clients, and UI Presentation",
+  "stack": "react",
+  "framework": "vite",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

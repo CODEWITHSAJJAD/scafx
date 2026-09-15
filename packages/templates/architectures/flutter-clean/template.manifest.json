@@ -1,0 +1,12 @@
+{
+  "id": "flutter-clean",
+  "name": "Flutter Clean Architecture Fragment",
+  "description": "Clean Architecture for Flutter with separated Domain, Data (repositories & data sources), and Presentation layers",
+  "stack": "flutter",
+  "framework": "flutter",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["sqlite", "none"],
+  "minRuntimeVersion": ">=3.19.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

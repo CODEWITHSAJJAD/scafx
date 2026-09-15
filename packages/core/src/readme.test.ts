@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { generateProjectReadme, getNextCommands } from './readme.js';
-import type { Answer } from './schema/answer.js';
+import { AnswerSchema, type Answer } from './schema/answer.js';
 
 describe('Per-project README generation', () => {
   it('generates tailored README for Node+Express standalone project', () => {
-    const answer: Answer = {
+    const answer: Answer = AnswerSchema.parse({
       projectName: 'my-node-api',
       stack: 'node',
       framework: 'express',
@@ -13,7 +13,7 @@ describe('Per-project README generation', () => {
       database: 'postgres',
       orm: 'prisma',
       extras: ['docker', 'env', 'git'],
-    };
+    });
 
     const readme = generateProjectReadme(answer);
     expect(readme).toContain('# my-node-api');
@@ -32,7 +32,7 @@ describe('Per-project README generation', () => {
   });
 
   it('generates tailored README for Python+FastAPI standalone with SQLAlchemy/Alembic', () => {
-    const answer: Answer = {
+    const answer: Answer = AnswerSchema.parse({
       projectName: 'my-python-api',
       stack: 'python',
       framework: 'fastapi',
@@ -41,7 +41,7 @@ describe('Per-project README generation', () => {
       database: 'postgres',
       orm: 'sqlalchemy',
       extras: ['docker', 'env'],
-    };
+    });
 
     const readme = generateProjectReadme(answer);
     expect(readme).toContain('# my-python-api');
@@ -58,7 +58,7 @@ describe('Per-project README generation', () => {
   });
 
   it('generates tailored README for Fullstack React+Vite + FastAPI project', () => {
-    const answer: Answer = {
+    const answer: Answer = AnswerSchema.parse({
       projectName: 'my-fullstack-app',
       stack: 'react',
       framework: 'vite',
@@ -75,7 +75,7 @@ describe('Per-project README generation', () => {
         framework: 'fastapi',
       },
       extras: ['docker', 'git'],
-    };
+    });
 
     const readme = generateProjectReadme(answer);
     expect(readme).toContain('# my-fullstack-app');
@@ -93,7 +93,7 @@ describe('Per-project README generation', () => {
   });
 
   it('generates tailored README with Authentication section when auth extra is selected', () => {
-    const answer: Answer = {
+    const answer: Answer = AnswerSchema.parse({
       projectName: 'my-auth-api',
       stack: 'node',
       framework: 'express',
@@ -102,7 +102,7 @@ describe('Per-project README generation', () => {
       database: 'none',
       orm: 'none',
       extras: ['auth', 'env'],
-    };
+    });
 
     const readme = generateProjectReadme(answer);
     expect(readme).toContain('# my-auth-api');

@@ -1,0 +1,12 @@
+{
+  "id": "auth-oauth-node",
+  "name": "Node OAuth2 / OpenID Connect Authentication",
+  "description": "OAuth2 / Social authentication middleware and route handlers for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

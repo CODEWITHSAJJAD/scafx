@@ -1,0 +1,12 @@
+{
+  "id": "python-clean",
+  "name": "Python Clean / Hexagonal Architecture",
+  "description": "Clean Architecture domain, use cases, repositories, and presentation for Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

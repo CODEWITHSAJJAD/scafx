@@ -1,0 +1,12 @@
+{
+  "id": "kafka-dotnet",
+  "name": ".NET Apache Kafka Messaging Fragment",
+  "description": "Confluent.Kafka producer and background consumer service for .NET Core applications",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "mssql", "mongodb", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "node-drizzle",
+  "name": "Node Drizzle ORM Fragment",
+  "description": "Drizzle ORM database client and schema for PostgreSQL / MySQL / SQLite in Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

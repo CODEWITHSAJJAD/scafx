@@ -1,0 +1,12 @@
+{
+  "id": "python-tortoise",
+  "name": "Python Tortoise ORM Fragment",
+  "description": "Tortoise ORM async database models and Aerich migrations for FastAPI / Flask in Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

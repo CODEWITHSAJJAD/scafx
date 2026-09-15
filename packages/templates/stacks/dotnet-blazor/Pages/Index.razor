@@ -1,0 +1,20 @@
+@page "/"
+
+<PageTitle>{{projectName}} - Home</PageTitle>
+
+<h1>Welcome to {{projectName}}</h1>
+
+<p>Modern interactive C# web app built with .NET 8 Blazor.</p>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

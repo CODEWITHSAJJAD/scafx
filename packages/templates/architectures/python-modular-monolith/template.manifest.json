@@ -1,0 +1,12 @@
+{
+  "id": "python-modular-monolith",
+  "name": "Python Modular Monolith Architecture Fragment",
+  "description": "Modular monolith architecture for Python web frameworks with decoupled domain modules",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["postgres", "mysql", "mongodb", "sqlite", "none"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

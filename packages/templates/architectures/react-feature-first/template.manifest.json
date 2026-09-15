@@ -1,0 +1,12 @@
+{
+  "id": "react-feature-first",
+  "name": "React Feature-First Architecture",
+  "description": "Domain feature-isolated modular architecture for React Vite & Next.js",
+  "stack": "react",
+  "framework": "vite",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

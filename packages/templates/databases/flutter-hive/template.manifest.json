@@ -1,0 +1,12 @@
+{
+  "id": "flutter-hive",
+  "name": "Flutter Hive Local Storage Fragment",
+  "description": "Fast, lightweight NoSQL key-value database for Flutter and Dart",
+  "stack": "flutter",
+  "framework": "flutter",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=3.19.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

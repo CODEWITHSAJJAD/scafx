@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -25,7 +25,7 @@ describe('Postgres + SQLAlchemy/Alembic Fragment Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my-db-service',
       stack: 'python',
       framework: 'fastapi',
@@ -34,7 +34,7 @@ describe('Postgres + SQLAlchemy/Alembic Fragment Smoke Test', () => {
       database: 'postgres',
       orm: 'sqlalchemy',
       extras: ['docker', 'env', 'git'],
-    };
+    });
 
     // 1. Generate planned FileOp[] with fragment merged
     const fileOps = await generate(answer, templateSource);

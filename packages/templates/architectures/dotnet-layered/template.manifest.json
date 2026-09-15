@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-layered",
+  "name": ".NET Layered Architecture",
+  "description": "Layered architecture pattern with Controllers, Services, and Repositories for .NET 8",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["mssql", "postgres", "mysql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

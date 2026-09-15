@@ -1,5 +1,6 @@
 export * from './schema/answer.js';
 export * from './schema/manifest.js';
+export * from './schema/matrix.js';
 export * from './types/file-op.js';
 export * from './ports/template-source.js';
 export * from './ports/file-writer.js';
@@ -9,5 +10,6 @@ export * from './merge.js';
 export * from './readme.js';
 export * from './docker.js';
 export * from './ci.js';
+export * from './env-generator.js';
 export * from './generate.js';
-export const CORE_VERSION = '0.1.0';
+export const CORE_VERSION = '0.3.2';

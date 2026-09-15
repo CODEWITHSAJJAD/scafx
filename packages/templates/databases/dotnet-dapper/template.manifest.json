@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-dapper",
+  "name": ".NET Dapper Micro-ORM Fragment",
+  "description": "High-performance Dapper repository and database connection factory for .NET 8",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["mssql", "postgres", "mysql", "sqlite"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

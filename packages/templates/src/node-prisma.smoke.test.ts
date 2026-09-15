@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -57,7 +57,7 @@ describe('Prisma ORM Fragment Smoke Test', () => {
     const targetDir = path.join(tempDir, 'express-prisma-sqlite');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'express-prisma-sqlite',
       stack: 'node',
       framework: 'express',
@@ -66,7 +66,7 @@ describe('Prisma ORM Fragment Smoke Test', () => {
       database: 'sqlite',
       orm: 'prisma',
       extras: ['env', 'git', 'testing'],
-    };
+    });
 
     // 1. Generate planned FileOp[] with fragment merged
     const fileOps = await generate(answer, templateSource);
@@ -121,7 +121,7 @@ describe('Prisma ORM Fragment Smoke Test', () => {
     const targetDir = path.join(tempDir, 'fastify-prisma-postgres');
     await fs.ensureDir(targetDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'fastify-prisma-postgres',
       stack: 'node',
       framework: 'fastify',
@@ -130,7 +130,7 @@ describe('Prisma ORM Fragment Smoke Test', () => {
       database: 'postgres',
       orm: 'prisma',
       extras: ['docker', 'env', 'git'],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     expect(fileOps.length).toBeGreaterThan(0);

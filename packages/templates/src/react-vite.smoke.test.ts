@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -25,7 +25,7 @@ describe('React+Vite Standalone Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke-test-react',
       stack: 'react',
       framework: 'vite',
@@ -34,7 +34,7 @@ describe('React+Vite Standalone Golden Template Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: ['git'],
-    };
+    });
 
     // 1. Generate planned FileOp[]
     const fileOps = await generate(answer, templateSource);

@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-clean",
+  "name": ".NET Clean Architecture",
+  "description": "Clean Architecture Domain, Application, and Infrastructure layers for .NET 8",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["mssql", "postgres", "mysql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

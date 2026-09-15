@@ -1,0 +1,12 @@
+{
+  "id": "kafka-node",
+  "name": "Node Apache Kafka Event Streaming Adapter",
+  "description": "KafkaJS event publisher and consumer adapter for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

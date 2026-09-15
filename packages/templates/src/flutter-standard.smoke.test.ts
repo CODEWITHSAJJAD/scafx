@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { execSync, spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -38,7 +38,7 @@ describe('Flutter Standard Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke_test_flutter',
       stack: 'flutter',
       framework: 'flutter',
@@ -47,7 +47,7 @@ describe('Flutter Standard Golden Template Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: ['git'],
-    };
+    });
 
     // 1. Generate planned FileOp[]
     const fileOps = await generate(answer, templateSource);
@@ -98,7 +98,7 @@ describe('Flutter Standard Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'my_custom_flutter_app',
       stack: 'flutter',
       framework: 'none',
@@ -107,7 +107,7 @@ describe('Flutter Standard Golden Template Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: [],
-    };
+    });
 
     const fileOps = await generate(answer, templateSource);
     const pubspecOp = fileOps.find((f) => f.path === 'pubspec.yaml');
@@ -128,7 +128,7 @@ describe('Flutter Standard Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke_test_flutter_live',
       stack: 'flutter',
       framework: 'flutter',
@@ -137,7 +137,7 @@ describe('Flutter Standard Golden Template Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: [],
-    };
+    });
 
     const testDir = await fs.mkdtemp(path.join(os.tmpdir(), 'flutter-test-'));
 

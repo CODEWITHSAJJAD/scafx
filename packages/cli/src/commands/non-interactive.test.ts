@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { FsTemplateSource } from '@codewithsajjad01/templates';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
@@ -112,16 +112,18 @@ describe('Non-interactive mode equivalence', () => {
     ]);
 
     // 2. Direct core execution with identical answer
-    const directAnswer: Answer = {
+    const directAnswer = AnswerSchema.parse({
       projectName: 'demo',
       stack: 'node',
       framework: 'express',
       appShape: 'standalone',
+      repositoryStructure: 'colocated-standalone',
       architecture: 'layered',
       database: 'none',
       orm: 'none',
+      authScheme: 'jwt',
       extras: [],
-    };
+    });
 
     expect(answerFromCli).toEqual(directAnswer);
 

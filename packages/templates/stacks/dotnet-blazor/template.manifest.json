@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-blazor-standalone",
+  "name": ".NET 8 Blazor Web App Standalone",
+  "description": "Full-stack C# interactive web app using .NET 8 Blazor with server and WebAssembly components",
+  "stack": "dotnet",
+  "framework": "blazor",
+  "compatibleShapes": ["standalone"],
+  "compatibleDatabases": ["mssql", "postgres", "mysql", "sqlite", "none"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": ["docker", "ci"]
+}

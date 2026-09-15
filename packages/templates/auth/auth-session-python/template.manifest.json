@@ -1,0 +1,12 @@
+{
+  "id": "auth-session-python",
+  "name": "Python Session Authentication Fragment",
+  "description": "Redis / Cookie session middleware and authentication helper for FastAPI and Flask",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["postgres", "mysql", "mongodb", "sqlite", "none"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

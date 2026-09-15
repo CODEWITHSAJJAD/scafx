@@ -1,0 +1,12 @@
+{
+  "id": "dotnet-mongo",
+  "name": ".NET MongoDB Driver Fragment",
+  "description": "MongoDB.Driver client and context configuration for ASP.NET Core",
+  "stack": "dotnet",
+  "framework": "webapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["mongodb"],
+  "minRuntimeVersion": ">=8.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

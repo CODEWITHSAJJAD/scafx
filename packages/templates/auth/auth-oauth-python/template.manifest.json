@@ -1,0 +1,12 @@
+{
+  "id": "auth-oauth-python",
+  "name": "Python OAuth 2.0 / OpenID Connect Fragment",
+  "description": "Authlib / OAuth2 social authentication integration for FastAPI / Flask in Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "mongodb", "sqlite", "none"],
+  "minRuntimeVersion": ">=3.10.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "rabbitmq-node",
+  "name": "Node RabbitMQ Message Queue Adapter",
+  "description": "AMQP RabbitMQ publisher and consumer client for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

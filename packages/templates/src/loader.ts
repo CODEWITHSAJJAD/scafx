@@ -28,7 +28,10 @@ export class FsTemplateSource implements TemplateSource {
       ];
 
       const found = candidates.find((c) =>
-        fs.existsSync(path.join(c, 'node-express-standalone/template.manifest.json')),
+        fs.existsSync(path.join(c, 'stacks/node-express/template.manifest.json')) ||
+        fs.existsSync(path.join(c, 'node-express-standalone/template.manifest.json')) ||
+        fs.existsSync(path.join(c, 'fragments/node-clean/template.manifest.json')) ||
+        fs.existsSync(path.join(c, 'package.json')),
       );
 
       this.baseDir = found ?? path.resolve(__dirname, '..');
@@ -36,36 +39,69 @@ export class FsTemplateSource implements TemplateSource {
   }
 
   async getTemplate(answer: Answer): Promise<Template> {
-    const templateDirName = `${answer.stack}-${answer.framework}-${answer.appShape}`;
-    const directPath = path.join(this.baseDir, templateDirName);
+    const directCandidates: string[] = [];
+
+    if (answer.appShape === 'microservices') {
+      directCandidates.push(
+        path.join(this.baseDir, 'gateways', `gateway-${answer.framework}`),
+        path.join(this.baseDir, 'gateways', answer.framework),
+        path.join(this.baseDir, `gateway-${answer.framework}`),
+        path.join(this.baseDir, 'stacks', `gateway-${answer.framework}`),
+      );
+    }
+
+    directCandidates.push(
+      path.join(this.baseDir, 'stacks', `${answer.stack}-${answer.framework}`),
+      path.join(this.baseDir, 'stacks', `${answer.stack}-${answer.framework}-standalone`),
+      path.join(this.baseDir, 'stacks', `${answer.stack}-standard`),
+      path.join(this.baseDir, 'stacks', answer.stack, answer.framework),
+      path.join(this.baseDir, `${answer.stack}-${answer.framework}-${answer.appShape}`),
+      path.join(this.baseDir, `${answer.stack}-${answer.framework}-standalone`),
+      path.join(this.baseDir, `${answer.stack}-standard`),
+    );
 
     let templatePath: string | null = null;
 
-    if (await fs.pathExists(path.join(directPath, 'template.manifest.json'))) {
-      templatePath = directPath;
-    } else {
-      // Search subdirectories for matching manifest
-      const entries = await fs.readdir(this.baseDir, { withFileTypes: true });
-      for (const entry of entries) {
-        if (entry.isDirectory()) {
-          const candidate = path.join(this.baseDir, entry.name);
-          const manifestFile = path.join(candidate, 'template.manifest.json');
-          if (await fs.pathExists(manifestFile)) {
-            const rawManifest = await fs.readJson(manifestFile);
-            const parsed = TemplateManifestSchema.safeParse(rawManifest);
-            if (
-              parsed.success &&
-              parsed.data.stack === answer.stack &&
-              (parsed.data.framework === answer.framework ||
-                (answer.stack === 'flutter' &&
-                  (parsed.data.framework === 'flutter' || parsed.data.framework === 'none'))) &&
-              parsed.data.compatibleShapes.includes(answer.appShape)
-            ) {
-              templatePath = candidate;
-              break;
+    for (const candidate of directCandidates) {
+      if (await fs.pathExists(path.join(candidate, 'template.manifest.json'))) {
+        templatePath = candidate;
+        break;
+      }
+    }
+
+    if (!templatePath) {
+      // Search subdirectories recursively within stacks/, gateways/, and root for matching manifest
+      const searchRoots = [
+        path.join(this.baseDir, 'stacks'),
+        path.join(this.baseDir, 'gateways'),
+        this.baseDir,
+      ];
+
+      for (const root of searchRoots) {
+        if (!(await fs.pathExists(root))) continue;
+        const entries = await fs.readdir(root, { withFileTypes: true });
+        for (const entry of entries) {
+          if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== 'dist') {
+            const candidate = path.join(root, entry.name);
+            const manifestFile = path.join(candidate, 'template.manifest.json');
+            if (await fs.pathExists(manifestFile)) {
+              const rawManifest = await fs.readJson(manifestFile);
+              const parsed = TemplateManifestSchema.safeParse(rawManifest);
+              if (
+                parsed.success &&
+                parsed.data.stack === answer.stack &&
+                (parsed.data.framework === answer.framework ||
+                  (answer.stack === 'flutter' &&
+                    (parsed.data.framework === 'flutter' || parsed.data.framework === 'none'))) &&
+                parsed.data.compatibleShapes.includes(answer.appShape)
+              ) {
+                templatePath = candidate;
+                break;
+              }
             }
           }
         }
+        if (templatePath) break;
       }
     }
 
@@ -88,18 +124,28 @@ export class FsTemplateSource implements TemplateSource {
   }
 
   async getFragment(fragmentId: string): Promise<Template | null> {
-    const fragmentDir = path.join(this.baseDir, 'fragments', fragmentId);
-    const manifestFile = path.join(fragmentDir, 'template.manifest.json');
+    const candidateDirs = [
+      path.join(this.baseDir, 'fragments', fragmentId),
+      path.join(this.baseDir, 'architectures', fragmentId),
+      path.join(this.baseDir, 'databases', fragmentId),
+      path.join(this.baseDir, 'queues', fragmentId),
+      path.join(this.baseDir, 'auth', fragmentId),
+      path.join(this.baseDir, 'gateways', fragmentId),
+      path.join(this.baseDir, fragmentId),
+    ];
 
-    if (await fs.pathExists(manifestFile)) {
-      const rawManifest = await fs.readJson(manifestFile);
-      const manifest = TemplateManifestSchema.parse(rawManifest);
-      const files: TemplateFile[] = [];
-      await this.collectFiles(fragmentDir, fragmentDir, files);
-      return {
-        manifest,
-        files,
-      };
+    for (const fragmentDir of candidateDirs) {
+      const manifestFile = path.join(fragmentDir, 'template.manifest.json');
+      if (await fs.pathExists(manifestFile)) {
+        const rawManifest = await fs.readJson(manifestFile);
+        const manifest = TemplateManifestSchema.parse(rawManifest);
+        const files: TemplateFile[] = [];
+        await this.collectFiles(fragmentDir, fragmentDir, files);
+        return {
+          manifest,
+          files,
+        };
+      }
     }
 
     return null;

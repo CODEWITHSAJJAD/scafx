@@ -1,0 +1,12 @@
+{
+  "id": "node-mvc",
+  "name": "Node MVC (Model-View-Controller) Architecture",
+  "description": "Traditional Model-View-Controller architecture pattern for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

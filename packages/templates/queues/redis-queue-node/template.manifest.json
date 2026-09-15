@@ -1,0 +1,12 @@
+{
+  "id": "redis-queue-node",
+  "name": "Node Redis Queue (BullMQ) Adapter",
+  "description": "BullMQ Redis distributed job queue and background worker for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

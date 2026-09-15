@@ -1,0 +1,12 @@
+{
+  "id": "flutter-feature-first",
+  "name": "Flutter Feature-First Architecture",
+  "description": "Feature-first domain/data/presentation clean slice for Flutter applications",
+  "stack": "flutter",
+  "framework": "flutter",
+  "compatibleShapes": ["standalone", "fullstack"],
+  "compatibleDatabases": ["sqlite", "none"],
+  "minRuntimeVersion": ">=3.19.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

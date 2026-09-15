@@ -1,0 +1,12 @@
+{
+  "id": "node-clean",
+  "name": "Node Clean / Hexagonal Architecture",
+  "description": "Clean Architecture domain, application, infrastructure, and presentation layers for Node.js",
+  "stack": "node",
+  "framework": "express",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=18.0.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

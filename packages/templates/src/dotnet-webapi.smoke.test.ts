@@ -1,4 +1,4 @@
-import { DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
+import { AnswerSchema, DiskFileWriter, generate, type Answer } from '@codewithsajjad01/core';
 import { execSync, spawn } from 'node:child_process';
 import fs from 'fs-extra';
 import os from 'node:os';
@@ -38,7 +38,7 @@ describe('.NET Web API Standalone Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke-test-webapi',
       stack: 'dotnet',
       framework: 'webapi',
@@ -47,7 +47,7 @@ describe('.NET Web API Standalone Golden Template Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: ['git'],
-    };
+    });
 
     // 1. Generate planned FileOp[]
     const fileOps = await generate(answer, templateSource);
@@ -82,7 +82,7 @@ describe('.NET Web API Standalone Golden Template Smoke Test', () => {
     const templatesDir = path.resolve(__dirname, '..');
     const templateSource = new FsTemplateSource(templatesDir);
 
-    const answer: Answer = {
+    const answer = AnswerSchema.parse({
       projectName: 'smoke-test-compile-api',
       stack: 'dotnet',
       framework: 'webapi',
@@ -91,7 +91,7 @@ describe('.NET Web API Standalone Golden Template Smoke Test', () => {
       database: 'none',
       orm: 'none',
       extras: ['git'],
-    };
+    });
 
     const buildDir = await fs.mkdtemp(path.join(os.tmpdir(), 'dotnet-build-'));
 

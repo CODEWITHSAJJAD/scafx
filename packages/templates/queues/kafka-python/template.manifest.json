@@ -1,0 +1,12 @@
+{
+  "id": "kafka-python",
+  "name": "Python Apache Kafka Event Streaming Adapter",
+  "description": "Kafka-python event producer and consumer client for Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "fullstack", "microservices"],
+  "compatibleDatabases": ["none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}

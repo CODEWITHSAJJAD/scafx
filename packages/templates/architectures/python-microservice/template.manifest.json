@@ -1,0 +1,12 @@
+{
+  "id": "python-microservice",
+  "name": "Python Microservice Node Architecture",
+  "description": "Microservice node with telemetry and mesh registration for Python",
+  "stack": "python",
+  "framework": "fastapi",
+  "compatibleShapes": ["standalone", "microservices"],
+  "compatibleDatabases": ["postgres", "mysql", "sqlite", "mongodb", "none"],
+  "minRuntimeVersion": ">=3.11.0",
+  "placeholders": ["projectName"],
+  "fragments": []
+}
