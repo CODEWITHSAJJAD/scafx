@@ -73,7 +73,7 @@ const MESSAGE_QUEUE_LABELS: Record<MessageQueue, string> = {
 };
 
 export async function promptInteractive(defaults?: Partial<Answer>): Promise<Answer> {
-  p.intro(pc.bgCyan(pc.black(' scafx v0.3.2 - Polyglot Project Architect ')));
+  p.intro(pc.bgCyan(pc.black(' scafx v0.3.4 - Polyglot Project Architect ')));
 
   // 1. Project Name
   const projectName =

@@ -105,13 +105,17 @@ describe('Prisma ORM Fragment Smoke Test', () => {
     expect(envContent).toContain('DATABASE_URL="file:./dev.db"');
 
     // 8. Run npm install, prisma generate, and test build
-    const installRes = await runProcess('npm', ['install', '--no-audit', '--no-fund'], targetDir);
+    const isWin = process.platform === 'win32';
+    const npmCmd = isWin ? 'npm.cmd' : 'npm';
+    const npxCmd = isWin ? 'npx.cmd' : 'npx';
+
+    const installRes = await runProcess(npmCmd, ['install', '--no-audit', '--no-fund', '--prefer-offline'], targetDir);
     expect(installRes.code).toBe(0);
 
-    const genRes = await runProcess('npx', ['prisma', 'generate'], targetDir);
+    const genRes = await runProcess(npxCmd, ['--yes', 'prisma', 'generate'], targetDir);
     expect(genRes.code).toBe(0);
 
-    const buildRes = await runProcess('npm', ['run', 'build'], targetDir);
+    const buildRes = await runProcess(npmCmd, ['run', 'build'], targetDir);
     expect(buildRes.code).toBe(0);
   }, 180000);
 

@@ -1,6 +1,6 @@
 {
   "name": "@codewithsajjad01/scafx",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "type": "module",
   "description": "Deterministic project scaffolding compiler across Node.js, Python FastAPI, .NET 8, React, and Flutter with microservices reverse proxy mesh synthesis and non-destructive preflight diagnostics.",
   "author": "CODEWITHSAJJAD",

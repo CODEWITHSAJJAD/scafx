@@ -12,4 +12,4 @@ export * from './docker.js';
 export * from './ci.js';
 export * from './env-generator.js';
 export * from './generate.js';
-export const CORE_VERSION = '0.3.2';
+export const CORE_VERSION = '0.3.4';

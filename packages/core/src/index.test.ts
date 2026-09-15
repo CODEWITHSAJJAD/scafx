@@ -3,6 +3,6 @@ import { CORE_VERSION } from './index.js';
 
 describe('core stub', () => {
   it('exports CORE_VERSION', () => {
-    expect(CORE_VERSION).toBe('0.3.2');
+    expect(CORE_VERSION).toBe('0.3.4');
   });
 });

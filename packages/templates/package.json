@@ -1,17 +1,27 @@
 {
   "name": "@codewithsajjad01/templates",
-  "version": "0.3.2",
+  "version": "0.3.4",
   "author": "CODEWITHSAJJAD",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "stacks",
+    "architectures",
+    "databases",
+    "queues",
+    "auth",
+    "gateways",
+    "fragments"
+  ],
   "scripts": {
     "build": "tsc -b",
     "test": "vitest run"
   },
   "dependencies": {
-    "@codewithsajjad01/core": "workspace:^",
+    "@codewithsajjad01/core": "workspace:*",
     "fs-extra": "^11.4.0"
   },
   "devDependencies": {

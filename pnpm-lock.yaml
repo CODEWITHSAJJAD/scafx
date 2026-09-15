@@ -86,7 +86,7 @@ importers:
   packages/templates:
     dependencies:
       '@codewithsajjad01/core':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../core
       fs-extra:
         specifier: ^11.4.0

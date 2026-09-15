@@ -13,20 +13,23 @@ const __dirname = path.dirname(__filename);
 
 function getJson(url: string): Promise<{ statusCode?: number; data: unknown }> {
   return new Promise((resolve, reject) => {
-    http
-      .get(url, (res) => {
-        let raw = '';
-        res.on('data', (chunk) => (raw += chunk));
-        res.on('end', () => {
-          try {
-            const data = JSON.parse(raw);
-            resolve({ statusCode: res.statusCode, data });
-          } catch {
-            resolve({ statusCode: res.statusCode, data: raw });
-          }
-        });
-      })
-      .on('error', reject);
+    const req = http.get(url, (res) => {
+      let raw = '';
+      res.on('data', (chunk) => (raw += chunk));
+      res.on('end', () => {
+        try {
+          const data = JSON.parse(raw);
+          resolve({ statusCode: res.statusCode, data });
+        } catch {
+          resolve({ statusCode: res.statusCode, data: raw });
+        }
+      });
+    });
+    req.on('error', reject);
+    req.setTimeout(5000, () => {
+      req.destroy();
+      reject(new Error(`Request to ${url} timed out`));
+    });
   });
 }
 
@@ -34,17 +37,20 @@ function waitForServer(url: string, maxRetries = 60, intervalMs = 500): Promise<
   return new Promise((resolve, reject) => {
     let retries = 0;
     const check = () => {
-      http
-        .get(url, (res) => {
-          if (res.statusCode === 200) {
-            resolve();
-          } else {
-            retry();
-          }
-        })
-        .on('error', () => {
+      const req = http.get(url, (res) => {
+        if (res.statusCode === 200) {
+          resolve();
+        } else {
           retry();
-        });
+        }
+      });
+      req.on('error', () => {
+        retry();
+      });
+      req.setTimeout(2000, () => {
+        req.destroy();
+        retry();
+      });
     };
 
     const retry = () => {
@@ -149,8 +155,8 @@ describe('Node+Express Standalone Golden Template Smoke Test', () => {
     });
 
     try {
-      const healthUrl = `http://localhost:${testPort}/health`;
-      const apiUrl = `http://localhost:${testPort}/api`;
+      const healthUrl = `http://127.0.0.1:${testPort}/health`;
+      const apiUrl = `http://127.0.0.1:${testPort}/api`;
 
       // Wait for server to be up
       await waitForServer(healthUrl);
