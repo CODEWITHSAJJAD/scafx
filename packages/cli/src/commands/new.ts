@@ -184,9 +184,11 @@ export async function parseAnswerFromFlagsOrConfig(flags: {
             })(),
             host: flags['db-host'] ?? (fileConfig.databaseConfig as any)?.host ?? 'localhost',
             port: flags['db-port'] ?? (fileConfig.databaseConfig as any)?.port ?? 5432,
-            databaseName: flags['db-name'] ?? (fileConfig.databaseConfig as any)?.databaseName ?? 'app_db',
+            databaseName:
+              flags['db-name'] ?? (fileConfig.databaseConfig as any)?.databaseName ?? 'app_db',
             user: flags['db-user'] ?? (fileConfig.databaseConfig as any)?.user ?? 'postgres',
-            password: flags['db-pass'] ?? (fileConfig.databaseConfig as any)?.password ?? 'password',
+            password:
+              flags['db-pass'] ?? (fileConfig.databaseConfig as any)?.password ?? 'password',
             connectionString:
               flags['db-conn-str'] ?? (fileConfig.databaseConfig as any)?.connectionString,
           }
@@ -283,7 +285,8 @@ export default class New extends Command {
     }),
     'db-conn-str': Flags.string({ description: 'Cloud DB Connection string / URI' }),
     orm: Flags.string({
-      description: 'ORM / query builder (prisma, drizzle, sqlalchemy, efcore, dapper, mongoose, motor, etc.)',
+      description:
+        'ORM / query builder (prisma, drizzle, sqlalchemy, efcore, dapper, mongoose, motor, etc.)',
     }),
     migration: Flags.string({
       description: 'Database migration tool (native, flyway, atlas, none)',

@@ -22,9 +22,13 @@ describe('Environment and Database Configuration Generator', () => {
     expect(result.envContent).toContain('DB_NAME=production_db');
     expect(result.envContent).toContain('DB_USER=admin_user');
     expect(result.envContent).toContain('DB_PASSWORD=secure_password');
-    expect(result.envContent).toContain('postgresql://admin_user:secure_password@127.0.0.1:5433/production_db?schema=public');
+    expect(result.envContent).toContain(
+      'postgresql://admin_user:secure_password@127.0.0.1:5433/production_db?schema=public',
+    );
 
-    expect(result.flywayConfig).toContain('flyway.url=jdbc:postgresql://127.0.0.1:5433/production_db');
+    expect(result.flywayConfig).toContain(
+      'flyway.url=jdbc:postgresql://127.0.0.1:5433/production_db',
+    );
     expect(result.flywayConfig).toContain('flyway.user=admin_user');
     expect(result.flywayConfig).toContain('flyway.password=secure_password');
   });
@@ -64,7 +68,9 @@ describe('Environment and Database Configuration Generator', () => {
       'cloud-app',
     );
 
-    expect(result.envContent).toContain('DATABASE_URL="postgresql://postgres:secret@db.xyz.supabase.co:5432/postgres"');
+    expect(result.envContent).toContain(
+      'DATABASE_URL="postgresql://postgres:secret@db.xyz.supabase.co:5432/postgres"',
+    );
     expect(result.envExampleContent).toContain('DATABASE_URL');
   });
 });

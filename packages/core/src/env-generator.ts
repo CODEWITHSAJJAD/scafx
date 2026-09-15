@@ -1,4 +1,4 @@
-import { Answer, DatabaseConfig, Database, Orm } from './schema/answer.js';
+import { DatabaseConfig, Database, Orm } from './schema/answer.js';
 
 export interface EnvGenerationResult {
   envContent: string;
@@ -34,7 +34,10 @@ export function generateDatabaseEnv(
   const envExampleLines: string[] = [`PORT=8000`, `NODE_ENV=development`];
 
   if (hosting === 'cloud-supabase') {
-    connectionString = dbConfig?.connectionString || dbConfig?.cloudUrl || `postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`;
+    connectionString =
+      dbConfig?.connectionString ||
+      dbConfig?.cloudUrl ||
+      `postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres`;
     envLines.push(
       `DATABASE_URL="${connectionString}"`,
       `SUPABASE_URL="${dbConfig?.cloudUrl || 'https://xyzcompany.supabase.co'}"`,
@@ -46,13 +49,21 @@ export function generateDatabaseEnv(
       `SUPABASE_ANON_KEY="your-anon-key"`,
     );
   } else if (hosting === 'cloud-neon') {
-    connectionString = dbConfig?.cloudUrl || `postgresql://[USER]:[PASSWORD]@ep-cool-fog-123456.us-east-2.aws.neon.tech/neondb?sslmode=require`;
+    connectionString =
+      dbConfig?.cloudUrl ||
+      `postgresql://[USER]:[PASSWORD]@ep-cool-fog-123456.us-east-2.aws.neon.tech/neondb?sslmode=require`;
     envLines.push(`DATABASE_URL="${connectionString}"`);
-    envExampleLines.push(`DATABASE_URL="postgresql://[USER]:[PASSWORD]@[ENDPOINT].neon.tech/neondb?sslmode=require"`);
+    envExampleLines.push(
+      `DATABASE_URL="postgresql://[USER]:[PASSWORD]@[ENDPOINT].neon.tech/neondb?sslmode=require"`,
+    );
   } else if (hosting === 'cloud-atlas') {
-    connectionString = dbConfig?.cloudUrl || `mongodb+srv://${user}:${password}@cluster0.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+    connectionString =
+      dbConfig?.cloudUrl ||
+      `mongodb+srv://${user}:${password}@cluster0.mongodb.net/${dbName}?retryWrites=true&w=majority`;
     envLines.push(`MONGODB_URI="${connectionString}"`);
-    envExampleLines.push(`MONGODB_URI="mongodb+srv://[USER]:[PASSWORD]@cluster0.mongodb.net/[DB_NAME]?retryWrites=true&w=majority"`);
+    envExampleLines.push(
+      `MONGODB_URI="mongodb+srv://[USER]:[PASSWORD]@cluster0.mongodb.net/[DB_NAME]?retryWrites=true&w=majority"`,
+    );
   } else if (hosting === 'cloud-firebase') {
     envLines.push(
       `FIREBASE_PROJECT_ID="${dbName}"`,
@@ -133,10 +144,7 @@ export function generateDatabaseEnv(
       );
     } else if (database === 'mongodb') {
       connectionString = `mongodb://${user}:${password}@${host}:${port}/${dbName}?authSource=admin`;
-      envLines.push(
-        `MONGODB_URI="${connectionString}"`,
-        `DB_NAME="${dbName}"`,
-      );
+      envLines.push(`MONGODB_URI="${connectionString}"`, `DB_NAME="${dbName}"`);
       envExampleLines.push(
         `MONGODB_URI="mongodb://root:yourpassword@localhost:27017/${dbName}?authSource=admin"`,
         `DB_NAME="${dbName}"`,
@@ -164,31 +172,47 @@ export function generateDatabaseEnv(
 
 function getDefaultPort(db: Database): number {
   switch (db) {
-    case 'postgres': return 5432;
-    case 'mysql': return 3306;
-    case 'mssql': return 1433;
-    case 'mongodb': return 27017;
-    case 'sqlite': return 0;
-    default: return 5432;
+    case 'postgres':
+      return 5432;
+    case 'mysql':
+      return 3306;
+    case 'mssql':
+      return 1433;
+    case 'mongodb':
+      return 27017;
+    case 'sqlite':
+      return 0;
+    default:
+      return 5432;
   }
 }
 
 function getDefaultUser(db: Database): string {
   switch (db) {
-    case 'postgres': return 'postgres';
-    case 'mysql': return 'root';
-    case 'mssql': return 'sa';
-    case 'mongodb': return 'admin';
-    default: return 'root';
+    case 'postgres':
+      return 'postgres';
+    case 'mysql':
+      return 'root';
+    case 'mssql':
+      return 'sa';
+    case 'mongodb':
+      return 'admin';
+    default:
+      return 'root';
   }
 }
 
 function getDefaultPassword(db: Database): string {
   switch (db) {
-    case 'postgres': return 'postgres';
-    case 'mysql': return 'root';
-    case 'mssql': return 'YourStrong(!)Password123';
-    case 'mongodb': return 'admin';
-    default: return 'secret';
+    case 'postgres':
+      return 'postgres';
+    case 'mysql':
+      return 'root';
+    case 'mssql':
+      return 'YourStrong(!)Password123';
+    case 'mongodb':
+      return 'admin';
+    default:
+      return 'secret';
   }
 }

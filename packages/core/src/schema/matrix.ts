@@ -83,7 +83,15 @@ export const ECOSYSTEM_CAPABILITIES: Record<Stack, StackCapability> = {
   dotnet: {
     allowedFrameworks: ['webapi', 'mvc', 'minimal-api', 'blazor', 'maui'],
     allowedArchitectures: {
-      webapi: ['clean', 'vertical-slice', 'layered', 'mvc', 'mvvm', 'modular-monolith', 'microservice'],
+      webapi: [
+        'clean',
+        'vertical-slice',
+        'layered',
+        'mvc',
+        'mvvm',
+        'modular-monolith',
+        'microservice',
+      ],
       mvc: ['mvc', 'layered', 'clean'],
       'minimal-api': ['clean', 'vertical-slice', 'layered', 'microservice'],
       blazor: ['mvvm', 'clean', 'layered', 'mvc'],

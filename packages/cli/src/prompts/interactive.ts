@@ -96,7 +96,8 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
   }
 
   // 2. Application Target Shape
-  type ShapeSelection = 'standalone-backend' | 'standalone-frontend' | 'fullstack' | 'microservices';
+  type ShapeSelection =
+    'standalone-backend' | 'standalone-frontend' | 'fullstack' | 'microservices';
   const shapeSelection = await p.select<ShapeSelection>({
     message: 'Select application target shape:',
     options: [
@@ -215,7 +216,10 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
       ],
       dotnet: [
         { value: 'webapi', label: 'ASP.NET Core Web API (Controllers pattern)' },
-        { value: 'minimal-api', label: 'ASP.NET Core Minimal API (High-performance lightweight routes)' },
+        {
+          value: 'minimal-api',
+          label: 'ASP.NET Core Minimal API (High-performance lightweight routes)',
+        },
         { value: 'mvc', label: 'ASP.NET Core MVC (Model-View-Controller with Razor views)' },
       ],
     };
@@ -251,7 +255,10 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
         message: 'Select React framework:',
         options: [
           { value: 'vite', label: 'Vite SPA (Ultra-fast modern Single Page Application)' },
-          { value: 'nextjs', label: 'Next.js App Router (Full-stack React framework with SSR/SSG)' },
+          {
+            value: 'nextjs',
+            label: 'Next.js App Router (Full-stack React framework with SSR/SSG)',
+          },
         ],
         initialValue: 'vite',
       });
@@ -437,7 +444,8 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
       options: [
         {
           value: 'local-native',
-          label: 'Local Native Server (Installed on OS: pgAdmin, SSMS, MongoDB Compass, MySQL Workbench)',
+          label:
+            'Local Native Server (Installed on OS: pgAdmin, SSMS, MongoDB Compass, MySQL Workbench)',
         },
         {
           value: 'local-docker',
@@ -505,7 +513,14 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
         process.exit(0);
       }
 
-      const defaultUser = database === 'postgres' ? 'postgres' : database === 'mysql' ? 'root' : database === 'mssql' ? 'sa' : 'admin';
+      const defaultUser =
+        database === 'postgres'
+          ? 'postgres'
+          : database === 'mysql'
+            ? 'root'
+            : database === 'mssql'
+              ? 'sa'
+              : 'admin';
       const user = await p.text({
         message: 'Database Username:',
         defaultValue: defaultUser,
@@ -535,7 +550,8 @@ export async function promptInteractive(defaults?: Partial<Answer>): Promise<Ans
       };
     } else if (databaseHosting.startsWith('cloud-')) {
       const connectionString = await p.text({
-        message: 'Cloud Database Connection String / URI / Project Ref (leave empty for placeholder):',
+        message:
+          'Cloud Database Connection String / URI / Project Ref (leave empty for placeholder):',
         placeholder: 'postgres://user:pass@ep-cool-cloud.neon.tech/neondb?sslmode=require',
         defaultValue: '',
       });

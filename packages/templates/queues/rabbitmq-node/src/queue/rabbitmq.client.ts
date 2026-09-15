@@ -13,7 +13,7 @@ export class RabbitMqClient {
     // Implementation can hook amqplib.connect(this.url) here
   }
 
-  async consume(queueName: string, onMessage: (msg: unknown) => void): Promise<void> {
+  async consume(queueName: string, _onMessage: (msg: unknown) => void): Promise<void> {
     console.log(`[RabbitMQ] Subscribing to queue "${queueName}" on ${this.url}`);
   }
 }

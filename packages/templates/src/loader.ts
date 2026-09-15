@@ -27,11 +27,12 @@ export class FsTemplateSource implements TemplateSource {
         path.resolve(process.cwd(), 'packages/templates'),
       ];
 
-      const found = candidates.find((c) =>
-        fs.existsSync(path.join(c, 'stacks/node-express/template.manifest.json')) ||
-        fs.existsSync(path.join(c, 'node-express-standalone/template.manifest.json')) ||
-        fs.existsSync(path.join(c, 'fragments/node-clean/template.manifest.json')) ||
-        fs.existsSync(path.join(c, 'package.json')),
+      const found = candidates.find(
+        (c) =>
+          fs.existsSync(path.join(c, 'stacks/node-express/template.manifest.json')) ||
+          fs.existsSync(path.join(c, 'node-express-standalone/template.manifest.json')) ||
+          fs.existsSync(path.join(c, 'fragments/node-clean/template.manifest.json')) ||
+          fs.existsSync(path.join(c, 'package.json')),
       );
 
       this.baseDir = found ?? path.resolve(__dirname, '..');

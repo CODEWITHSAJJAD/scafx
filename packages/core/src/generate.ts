@@ -30,10 +30,7 @@ export function normalizePlaceholders(templateStr: string): string {
   );
 
   // 3. Convert explicit it.* references {{ it.foo }} to <%= it.foo %>
-  result = result.replace(
-    /\{\{\s*(it\.[a-zA-Z0-9_$.()\[\]'"]+)\s*\}\}/g,
-    '<%= $1 %>',
-  );
+  result = result.replace(/\{\{\s*(it\.[a-zA-Z0-9_$.()[\]'"]+)\s*\}\}/g, '<%= $1 %>');
 
   // 4. Convert simple variable interpolation {{ varName }} to <%= it.varName %>
   result = result.replace(
@@ -108,7 +105,12 @@ async function resolveAndMergeArchitectureFragments(
   context: Record<string, unknown>,
   pathPrefix = '',
 ): Promise<FileOp[]> {
-  if (!templateSource.getFragment || !answer.architecture || answer.architecture === 'none' || answer.architecture === 'layered') {
+  if (
+    !templateSource.getFragment ||
+    !answer.architecture ||
+    answer.architecture === 'none' ||
+    answer.architecture === 'layered'
+  ) {
     return currentOps;
   }
 
@@ -204,7 +206,8 @@ async function resolveAndMergeAuthFragments(
   context: Record<string, unknown>,
   pathPrefix = '',
 ): Promise<FileOp[]> {
-  const hasAuth = answer.authScheme && answer.authScheme !== 'none' || answer.extras.includes('auth');
+  const hasAuth =
+    (answer.authScheme && answer.authScheme !== 'none') || answer.extras.includes('auth');
   if (!templateSource.getFragment || !hasAuth) {
     return currentOps;
   }

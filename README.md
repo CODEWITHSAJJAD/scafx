@@ -66,13 +66,13 @@ Unlike generic scaffolding tools that generate simple starter templates, `scafx`
 
 ## 🏗️ Master Polyglot Architecture & Tooling Matrix
 
-| Ecosystem | Supported Frameworks | Architectural Styles | Native ORMs & Query Builders | Migration Engines | Message Queues & Tasks |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Node.js & TypeScript** | Express 4/5, Fastify 4/5, NestJS | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-First / Modular<br>• MVC<br>• Microservices Node RPC | • Prisma<br>• Drizzle ORM<br>• TypeORM<br>• Mongoose (MongoDB) | • Prisma Migrate<br>• Drizzle Kit<br>• TypeORM Migrations<br>• **Flyway** / **Liquibase** | • RabbitMQ (`amqplib`)<br>• Apache Kafka (`kafkajs`)<br>• Redis Streams / BullMQ |
-| **Python** | FastAPI, Flask, Django | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-First / Modular<br>• MVC<br>• Microservices Worker | • SQLAlchemy 2.0<br>• Tortoise ORM<br>• Motor (MongoDB Async)<br>• Django ORM | • Alembic<br>• Aerich<br>• Django Migrations<br>• **Flyway** / **Liquibase** | • Celery (`redis`/`amqp`)<br>• RabbitMQ (`pika`)<br>• Apache Kafka (`confluent-kafka`) |
-| **.NET 8 (C# 12)** | ASP.NET Core Web API, Minimal API, MVC, Blazor Server/Wasm | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-Sliced (Vertical)<br>• MVC / Razor<br>• Microservices Worker | • Entity Framework Core 8<br>• Dapper (Micro-ORM) | • EF Core Migrations<br>• DbUp<br>• **Flyway** / **Liquibase** | • RabbitMQ (`RabbitMQ.Client`)<br>• Apache Kafka (`Confluent.Kafka`)<br>• Azure Service Bus / AWS SQS |
-| **React / Web** | Vite (SPA), Next.js 15 (App Router) | • Feature-First<br>• Component-Driven Atomic<br>• Next.js App Router Layered | • Composable via Backend APIs<br>• LocalStorage / IndexedDB | • Handled by Backend ORM | • WebSockets / Server-Sent Events |
-| **Flutter / Mobile** | Flutter 3.24+ (Dart 3) | • Feature-First Clean<br>• BLoC Pattern<br>• Riverpod Architecture | • Drift (SQLite)<br>• Hive (NoSQL)<br>• Isar Database | • Drift Schema Migrations | • Firebase Cloud Messaging (FCM)<br>• MQTT / WebSocket background client |
+| Ecosystem                | Supported Frameworks                                       | Architectural Styles                                                                                              | Native ORMs & Query Builders                                                  | Migration Engines                                                                         | Message Queues & Tasks                                                                                |
+| :----------------------- | :--------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
+| **Node.js & TypeScript** | Express 4/5, Fastify 4/5, NestJS                           | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-First / Modular<br>• MVC<br>• Microservices Node RPC         | • Prisma<br>• Drizzle ORM<br>• TypeORM<br>• Mongoose (MongoDB)                | • Prisma Migrate<br>• Drizzle Kit<br>• TypeORM Migrations<br>• **Flyway** / **Liquibase** | • RabbitMQ (`amqplib`)<br>• Apache Kafka (`kafkajs`)<br>• Redis Streams / BullMQ                      |
+| **Python**               | FastAPI, Flask, Django                                     | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-First / Modular<br>• MVC<br>• Microservices Worker           | • SQLAlchemy 2.0<br>• Tortoise ORM<br>• Motor (MongoDB Async)<br>• Django ORM | • Alembic<br>• Aerich<br>• Django Migrations<br>• **Flyway** / **Liquibase**              | • Celery (`redis`/`amqp`)<br>• RabbitMQ (`pika`)<br>• Apache Kafka (`confluent-kafka`)                |
+| **.NET 8 (C# 12)**       | ASP.NET Core Web API, Minimal API, MVC, Blazor Server/Wasm | • Layered (3-Tier)<br>• Clean Hexagonal<br>• Feature-Sliced (Vertical)<br>• MVC / Razor<br>• Microservices Worker | • Entity Framework Core 8<br>• Dapper (Micro-ORM)                             | • EF Core Migrations<br>• DbUp<br>• **Flyway** / **Liquibase**                            | • RabbitMQ (`RabbitMQ.Client`)<br>• Apache Kafka (`Confluent.Kafka`)<br>• Azure Service Bus / AWS SQS |
+| **React / Web**          | Vite (SPA), Next.js 15 (App Router)                        | • Feature-First<br>• Component-Driven Atomic<br>• Next.js App Router Layered                                      | • Composable via Backend APIs<br>• LocalStorage / IndexedDB                   | • Handled by Backend ORM                                                                  | • WebSockets / Server-Sent Events                                                                     |
+| **Flutter / Mobile**     | Flutter 3.24+ (Dart 3)                                     | • Feature-First Clean<br>• BLoC Pattern<br>• Riverpod Architecture                                                | • Drift (SQLite)<br>• Hive (NoSQL)<br>• Isar Database                         | • Drift Schema Migrations                                                                 | • Firebase Cloud Messaging (FCM)<br>• MQTT / WebSocket background client                              |
 
 ---
 
@@ -95,6 +95,7 @@ The interactive wizard dynamically adapts prompts based on your selections (targ
 Scaffold projects instantly in automated CI/CD pipelines, Docker scripts, or shell automations:
 
 #### Standalone Node + Fastify API with PostgreSQL & Prisma + Flyway + Docker:
+
 ```bash
 scafx new \
   --name my-fastify-service \
@@ -111,6 +112,7 @@ scafx new \
 ```
 
 #### Standalone Python + FastAPI with MongoDB & Motor + Kafka + JWT Auth:
+
 ```bash
 scafx new \
   --name catalog-service \
@@ -126,6 +128,7 @@ scafx new \
 ```
 
 #### Standalone .NET 8 Web API with PostgreSQL & EF Core + RabbitMQ:
+
 ```bash
 scafx new \
   --name payment-service \
@@ -140,6 +143,7 @@ scafx new \
 ```
 
 #### Full-Stack React + FastAPI Monorepo:
+
 ```bash
 scafx new \
   --name enterprise-portal \
@@ -154,6 +158,7 @@ scafx new \
 ```
 
 #### Distributed Microservices Topology:
+
 ```bash
 scafx new \
   --name enterprise-mesh \

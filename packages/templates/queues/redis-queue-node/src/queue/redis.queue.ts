@@ -14,10 +14,13 @@ export class RedisQueueWorker {
   }
 
   async enqueue(jobName: string, payload: Record<string, unknown>): Promise<void> {
-    console.log(`[RedisQueue] Enqueueing "${jobName}" on ${this.redisHost}:${this.redisPort} ->`, payload);
+    console.log(
+      `[RedisQueue] Enqueueing "${jobName}" on ${this.redisHost}:${this.redisPort} ->`,
+      payload,
+    );
   }
 
-  startWorker(jobName: string, handler: (data: unknown) => Promise<void>): void {
+  startWorker(jobName: string, _handler: (data: unknown) => Promise<void>): void {
     console.log(`[RedisQueue Worker] Listening for "${jobName}" tasks...`);
   }
 }

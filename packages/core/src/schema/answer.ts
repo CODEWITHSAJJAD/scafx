@@ -35,10 +35,7 @@ export const AppShapeEnum = z.enum([
 ]);
 export type AppShape = z.infer<typeof AppShapeEnum>;
 
-export const RepositoryStructureEnum = z.enum([
-  'monorepo-isolated',
-  'colocated-standalone',
-]);
+export const RepositoryStructureEnum = z.enum(['monorepo-isolated', 'colocated-standalone']);
 export type RepositoryStructure = z.infer<typeof RepositoryStructureEnum>;
 
 export const ArchitectureEnum = z.enum([
@@ -55,14 +52,7 @@ export const ArchitectureEnum = z.enum([
 ]);
 export type Architecture = z.infer<typeof ArchitectureEnum>;
 
-export const DatabaseEnum = z.enum([
-  'postgres',
-  'mysql',
-  'mssql',
-  'mongodb',
-  'sqlite',
-  'none',
-]);
+export const DatabaseEnum = z.enum(['postgres', 'mysql', 'mssql', 'mongodb', 'sqlite', 'none']);
 export type Database = z.infer<typeof DatabaseEnum>;
 
 export const DatabaseHostingEnum = z.enum([
@@ -110,21 +100,10 @@ export const OrmEnum = z.enum([
 ]);
 export type Orm = z.infer<typeof OrmEnum>;
 
-export const MigrationToolEnum = z.enum([
-  'native',
-  'flyway',
-  'atlas',
-  'none',
-]);
+export const MigrationToolEnum = z.enum(['native', 'flyway', 'atlas', 'none']);
 export type MigrationTool = z.infer<typeof MigrationToolEnum>;
 
-export const MessageQueueEnum = z.enum([
-  'rabbitmq',
-  'kafka',
-  'redis-queue',
-  'masstransit',
-  'none',
-]);
+export const MessageQueueEnum = z.enum(['rabbitmq', 'kafka', 'redis-queue', 'masstransit', 'none']);
 export type MessageQueue = z.infer<typeof MessageQueueEnum>;
 
 export const AuthSchemeEnum = z.enum([

@@ -12,7 +12,7 @@ export class KafkaEventBus {
     console.log(`[Kafka] Emitting to topic "${topic}" via [${this.brokers.join(', ')}] ->`, event);
   }
 
-  async subscribe(topic: string, handler: (event: unknown) => Promise<void>): Promise<void> {
+  async subscribe(topic: string, _handler: (event: unknown) => Promise<void>): Promise<void> {
     console.log(`[Kafka] Subscribed to topic "${topic}"`);
   }
 }
